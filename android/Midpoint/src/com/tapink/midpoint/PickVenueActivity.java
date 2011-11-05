@@ -4,10 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,7 +18,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
@@ -23,7 +25,9 @@ import com.tapink.midpoint.map.VenueItem;
 import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
 
-public class PickVenueActivity extends MapActivity {
+public class PickVenueActivity extends MapActivity implements VenueOverlay.Delegate {
+
+  private static final String TAG = "PickVenueActivity";
 
   private Context mContext = this;
   private ListView mListView;
@@ -55,6 +59,7 @@ public class PickVenueActivity extends MapActivity {
 
     Drawable pin = this.getResources().getDrawable(R.drawable.marker);
     mVenueOverlay = new VenueOverlay(pin, mContext);
+    mVenueOverlay.setDelegate(this);
     mMapView.getOverlays().add(mVenueOverlay);
 
     populateSampleData();
@@ -69,15 +74,52 @@ public class PickVenueActivity extends MapActivity {
   protected boolean isRouteDisplayed() {
     return false;
   }
+  
+  ////////////////////////////////////////
+  // VenueOverlay.Delegate
+  ////////////////////////////////////////
+
+  @Override
+  //public void venueOverlayTappedItem(int index) {
+  public void venueOverlayTappedItem(VenueItem item) {
+    Log.v(TAG, String.format("venueOverlayTappedItem(%s)", item.toString()));
+
+    // TODO Auto-generated method stub
+    
+    //OverlayItem item = mOverlays.get(index);
+//    OverlayItem item = mVenueOverlay.createItem(index);
+    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+    dialog.setTitle(item.getTitle());
+    dialog.setMessage(item.getSnippet());
+
+    dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface arg0, int arg1) {
+        // TODO Auto-generated method stub
+        
+      }
+
+    });
+
+    dialog.setPositiveButton(R.string.view_venue, new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        // TODO Auto-generated method stub
+        
+      }
+
+    });
+
+    dialog.show();
+
+  }
 
   ////////////////////////////////////////
   // Data
   ////////////////////////////////////////
 
-  private GeoPoint getPoint(double lat, double lon) {
-    return(new GeoPoint((int)(lat*1000000.0),
-                        (int)(lon*1000000.0)));
-  }
 
   private void populateMapFromListAdapter() {
 
@@ -85,48 +127,10 @@ public class PickVenueActivity extends MapActivity {
 
     for (int i = 0; i < count; i++) {
       JSONObject json = (JSONObject) mAdapter.getItem(i);
-
-      String name    = "Venue";
-      String snippet = "Snippet";
-      try {
-        name = json.getString("display_name");
-        snippet = json.getString("phone_number");
-      } catch (JSONException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-        continue;
-      }
-
-      JSONArray locations;
-      double lat = 0.0;
-      double lon = 0.0;
-      try {
-        locations = json.getJSONArray("locations");
-        JSONObject location = locations.getJSONObject(0);
-
-        lat = location.getDouble("lat");
-        lon = location.getDouble("lon");
-      } catch (JSONException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-      VenueItem sampleItem = new VenueItem(
-          getPoint(40.77765, -73.951704),
-          "Test Item",
-          "Snippet"
-          );
       mVenueOverlay.addItem(
-          new VenueItem(
-              getPoint(lat, lon),
-              name,
-              snippet
-              )
-          );
+          VenueItem.Factory.VenueItemFromJSONObject(json)
+      );
     }
-
-
-
   }
 
   private void populateSampleData() {
@@ -184,5 +188,6 @@ public class PickVenueActivity extends MapActivity {
     }
 
   }
+
 
 }
