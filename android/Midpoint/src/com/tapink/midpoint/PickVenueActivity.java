@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
@@ -66,6 +68,36 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
     populateSampleData();
     populateMapFromListAdapter();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    //me.enableCompass();
+    me.enableMyLocation();
+
+    Location pos = me.getLastFix();
+    if (pos != null) {
+      Log.v(TAG, "Pos found: " + pos);
+      //mMapView.getController().setCenter(
+      //    pos
+      //);
+    }
+    GeoPoint loc = me.getMyLocation();
+    if (loc != null) {
+      mMapView.getController().setCenter(
+          loc
+      );
+    }
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+
+    //me.disableCompass();
+    me.disableMyLocation();
   }
 
   ////////////////////////////////////////
