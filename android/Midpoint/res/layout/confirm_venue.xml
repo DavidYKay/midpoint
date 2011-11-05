@@ -7,17 +7,35 @@
   <ListView
     android:id="@+id/list"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="0px"
+    android:layout_weight="90"
     />
-  <TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/confirm_venue" />
 
-  <Button
-    android:id="@+id/button"
+  <LinearLayout
+    android:id="@+id/footer_confirm"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/advance" />
+    android:layout_height="0px"
+    android:layout_weight="10"
+    android:layout_alignParentBottom="true"
+    >
+    <Button
+      android:id="@+id/button_confirm"
+      android:layout_width="0px"
+      android:layout_height="fill_parent"
+      android:layout_weight="10"
+      android:text="@string/confirm"
+
+      />
+    <Button
+      android:id="@+id/button_cancel"
+      android:layout_width="0px"
+      android:layout_height="fill_parent"
+      android:layout_weight="10"
+      android:text="@string/cancel"
+
+
+      />
+  </LinearLayout>
 
 </LinearLayout>
