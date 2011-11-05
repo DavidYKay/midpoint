@@ -48,22 +48,11 @@ public class ConfirmVenueActivity extends Activity {
     // Grab venue data from intent
 
     Intent i = getIntent();
-    //String jsonString = i.getStringExtra("venue");
-    //Venue venue = i.getStringExtra("venue");
     Venue venue = i.getParcelableExtra("venue");
     if (venue != null) {
       mVenue = venue;
     }
     Log.v(TAG, "Venue is now: " + venue);
-
-    //if (jsonString != null) {
-    //  Log.v(TAG, "Json passed in: " + jsonString);
-    //  try {
-    //    mVenue = new Venue(jsonString);
-    //  } catch (JSONException e) {
-    //    e.printStackTrace();
-    //  }
-    //}
 
     mListView = (ListView) findViewById(R.id.list);
     mListView.setAdapter(new ArrayAdapter<String>(this, 

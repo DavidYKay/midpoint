@@ -81,14 +81,9 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   ////////////////////////////////////////
 
   @Override
-  //public void venueOverlayTappedItem(int index) {
   public void venueOverlayTappedItem(final VenueItem item) {
     Log.v(TAG, String.format("venueOverlayTappedItem(%s)", item.toString()));
 
-    // TODO Auto-generated method stub
-    
-    //OverlayItem item = mOverlays.get(index);
-//    OverlayItem item = mVenueOverlay.createItem(index);
     AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
     dialog.setTitle(item.getTitle());
     dialog.setMessage(item.getSnippet());
@@ -105,7 +100,6 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     dialog.setPositiveButton(R.string.view_venue, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        // Navigate to the next screen.
 
         // Pass in our venue data.
         Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
@@ -113,11 +107,10 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
         Venue venue = item.getVenue();
         JSONObject json = venue.getJson();
         if (json != null) {
-          //String jsonString = json.toString();
-          //i.putExtra("venue", jsonString);
           i.putExtra("venue", venue);
         }
 
+        // Navigate to the next screen.
         startActivity(i);
       }
 
@@ -130,7 +123,6 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   ////////////////////////////////////////
   // Data
   ////////////////////////////////////////
-
 
   private void populateMapFromListAdapter() {
 
