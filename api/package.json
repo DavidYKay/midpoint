@@ -1,0 +1,11 @@
+{
+  "name": "node-example",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "2.2.0",
+    "coffee-script": "1.1.1",
+    "mongodb": "0.9.6-21",
+    "mongoose": "1.4.0",
+    "jasmine-node": "1.0.11"
+  }
+}
