@@ -82,7 +82,7 @@ public class ConfirmVenueActivity extends Activity {
 
     mListView = (ListView) findViewById(R.id.list);
     mListView.setAdapter(new ArrayAdapter<String>(this, 
-                                                  R.layout.list_item,
+                                                  R.layout.confirm_list_item,
                                                   VENUE_DATA));
 
   }
