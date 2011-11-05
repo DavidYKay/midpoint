@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-  <string name="maps_api_key">@string/kennedy_dev_key</string>
-  <string name="dk_dev_key">0pWhwn4ry9OOjV9WUVqDYZy0GJPtsvMbOEkwGZQ</string>
-  <string name="kennedy_dev_key">03c_Uqrlw_mh3CTdyg78fytSzKXtIfiEZ8vLo8Q</string>
-
-</resources>
