@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +15,21 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
+import com.tapink.midpoint.map.VenueItem;
+import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
 
 public class PickVenueActivity extends MapActivity {
 
   private Context mContext = this;
   private ListView mListView;
-
-  private static final String[] VENUES = new String[] {
-    "Pizza Hut",
-    "Burger King",
-    "Starbucks",
-    "McDonalds",
-  };
+  private MapView mMapView;
+  private VenueOverlay mVenueOverlay;
+  private MyLocationOverlay me;
   
   /** Called when the activity is first created. */
   @Override
@@ -45,25 +47,48 @@ public class PickVenueActivity extends MapActivity {
     });
 
     mListView = (ListView) findViewById(R.id.list);
-//    mListView.setAdapter(new ArrayAdapter<String>(this, 
-//                                                  //R.layout.list_item, 
-//                                                  android.R.layout.simple_list_item_1,
-//                                                  VENUES));
+    
+    mMapView = (MapView) findViewById(R.id.mapview);
+
     populateSampleData();
+    populateMapFromListAdapter();
   }
 
   ////////////////////////////////////////
   // MapActivity
   ////////////////////////////////////////
-  
+
   @Override
   protected boolean isRouteDisplayed() {
     return false;
   }
-  
+
   ////////////////////////////////////////
-  // JSON Parsing
+  // Data
   ////////////////////////////////////////
+
+  private GeoPoint getPoint(double lat, double lon) {
+    return(new GeoPoint((int)(lat*1000000.0),
+                        (int)(lon*1000000.0)));
+  }
+
+  private void populateMapFromListAdapter() {
+    me = new MyLocationOverlay(this, mMapView);
+    mMapView.getOverlays().add(me);
+
+    Drawable pin = this.getResources().getDrawable(R.drawable.marker);
+    mVenueOverlay = new VenueOverlay(pin, mContext);
+
+    mVenueOverlay.addItem(
+      new VenueItem(
+                    getPoint(40.77765, -73.951704),
+                    "Test Item",
+                    "Snippet"
+                   )
+      );
+
+    mMapView.getOverlays().add(mVenueOverlay);
+  }
 
   private void populateSampleData() {
     DummyDataHelper helper = new DummyDataHelper(mContext);
