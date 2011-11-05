@@ -15,6 +15,8 @@ public final class R {
     }
     public static final class color {
         public static final int button_cancel=0x7f060001;
+        /**  Kennedy, these are examples. You can kill these. 
+         */
         public static final int red=0x7f060000;
     }
     public static final class drawable {
@@ -60,6 +62,8 @@ public final class R {
         public static final int their_location=0x7f04000e;
     }
     public static final class style {
+        /**  This is the default style for our fancy buttons. Feel free to change it. 
+         */
         public static final int ButtonText=0x7f070000;
     }
 }
