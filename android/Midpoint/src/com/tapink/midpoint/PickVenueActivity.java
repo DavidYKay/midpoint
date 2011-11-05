@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.map.VenueItem;
 import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
@@ -81,7 +82,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
   @Override
   //public void venueOverlayTappedItem(int index) {
-  public void venueOverlayTappedItem(VenueItem item) {
+  public void venueOverlayTappedItem(final VenueItem item) {
     Log.v(TAG, String.format("venueOverlayTappedItem(%s)", item.toString()));
 
     // TODO Auto-generated method stub
@@ -96,18 +97,29 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
       @Override
       public void onClick(DialogInterface arg0, int arg1) {
-        // TODO Auto-generated method stub
-        
+        // No need to do anything. Just dismiss the view.
       }
 
     });
 
     dialog.setPositiveButton(R.string.view_venue, new DialogInterface.OnClickListener() {
-
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        // TODO Auto-generated method stub
-        
+        // Navigate to the next screen.
+
+        // Pass in our venue data.
+        Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
+
+        //JSONObject json = (JSONObject) mAdapter.getItem(which);
+        //JSONObject json = (JSONObject) mAdapter.getItem(which);
+        Venue venue = item.getVenue();
+        JSONObject json = venue.getJson();
+        if (json != null) {
+          String jsonString = json.toString();
+          i.putExtra("venue", jsonString);
+        }
+
+        startActivity(i);
       }
 
     });
@@ -186,8 +198,6 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
       return test;
     }
-
   }
-
 
 }

@@ -1,12 +1,17 @@
 package com.tapink.midpoint;
 
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.tapink.midpoint.map.Venue;
 
 public class ConfirmVenueActivity extends Activity {
   
@@ -15,7 +20,9 @@ public class ConfirmVenueActivity extends Activity {
     "This is a great venue. Really",
     "Great tex-mex.",
   };
+  private static final String TAG = "ConfirmVenueActivity";
   private ListView mListView;
+  private Venue mVenue;
 
     
   /** Called when the activity is first created. */
@@ -41,9 +48,22 @@ public class ConfirmVenueActivity extends Activity {
       }
     });
 
+    // Grab venue data from intent
+
+    Intent i = getIntent();
+    String jsonString = i.getStringExtra("venue");
+
+    if (jsonString != null) {
+      Log.v(TAG, "Json passed in: " + jsonString);
+      try {
+        mVenue = new Venue(jsonString);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
     mListView = (ListView) findViewById(R.id.list);
     mListView.setAdapter(new ArrayAdapter<String>(this, 
-                                                  //R.layout.list_item, 
                                                   android.R.layout.simple_list_item_1,
                                                   VENUE_DATA));
 
