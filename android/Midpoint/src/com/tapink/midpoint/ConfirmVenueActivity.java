@@ -23,7 +23,6 @@ public class ConfirmVenueActivity extends Activity {
   private static final String TAG = "ConfirmVenueActivity";
   private ListView mListView;
   private Venue mVenue;
-
     
   /** Called when the activity is first created. */
   @Override
