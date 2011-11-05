@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical" >
+
+
+  <EditText
+    android:id="@+id/my_location"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="0px"
+    android:layout_weight="10"
+    android:hint="@string/my_location"
+    />
+
+  <EditText
+    android:id="@+id/their_location"
+    android:layout_width="fill_parent"
+    android:layout_height="0px"
+    android:layout_weight="10"
+    android:hint="@string/their_location"
+    />
+
 
   <com.google.android.maps.MapView
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="90"
+    android:layout_weight="70"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"

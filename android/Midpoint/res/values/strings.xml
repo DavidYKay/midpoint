@@ -11,6 +11,8 @@
   <string name="pick_venue">Pick a Venue</string>
   <string name="confirm_venue">Confirm Venue</string>
   <string name="push_me">Push Me!</string>
+  <string name="my_location">My Location</string>
+  <string name="their_location">Their Location</string>
   
   <string name="maps_api_key">@string/maps_dev_key</string>
   <string name="maps_dev_key">0pWhwn4ry9OOjV9WUVqDYZy0GJPtsvMbOEkwGZQ</string>
