@@ -3,13 +3,15 @@ package com.tapink.midpoint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 public class CalendarListActivity extends Activity {
-
 
   private static final String[] MEETINGS = new String[] {
     "Lunch with Fred Wilson",
@@ -17,6 +19,9 @@ public class CalendarListActivity extends Activity {
     "Holiday Party",
     "Meeting with Alice",
   };
+  protected static final int NEW_CALENDAR_EVENT = 1;
+  private static final String TAG = "CalendarListActivity";
+  
   private ListView mListView;
 
   /** Called when the activity is first created. */
@@ -29,8 +34,8 @@ public class CalendarListActivity extends Activity {
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
-        startActivity(i);
+        Intent i = launchCalendarIntent();
+        startActivityForResult(i, NEW_CALENDAR_EVENT);
       }
     });
 
@@ -38,14 +43,48 @@ public class CalendarListActivity extends Activity {
     mListView.setAdapter(new ArrayAdapter<String>(this,
                                                   R.layout.list_item,
                                                   MEETINGS));
+    mListView.setOnItemClickListener(new OnItemClickListener() {
 
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position,
+          long id) {
+
+        Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
+
+        // TODO: Pass in the calendar event ID
+
+        startActivity(i);
+        
+      }
+    });
   }
 
 //  private class CalendarAdapter extends ArrayAdapter<String> {
 //
 //  }
 
-  private void launchCalendar() {
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    Log.v(TAG,
+          String.format(
+              "onActivityResult(%d, %d, %s)",
+              requestCode,
+              resultCode,
+              data
+              )
+         );
+
+    if (requestCode == NEW_CALENDAR_EVENT) {
+      Log.v(TAG, "Wahoo! calendar event received.");
+
+    }
+
+  }
+
+
+  private Intent launchCalendarIntent() {
     long eventStartInMillis = System.currentTimeMillis();
     long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
 
@@ -55,7 +94,8 @@ public class CalendarListActivity extends Activity {
     intent.putExtra("description", "Some description");
     intent.putExtra("beginTime", eventStartInMillis);
     intent.putExtra("endTime", eventEndInMillis);
-    startActivity(intent);
+    return intent;
   }
+
 
 }

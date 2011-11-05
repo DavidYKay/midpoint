@@ -19,7 +19,7 @@
     android:layout_width="fill_parent"
     android:layout_height="10dp"
     android:layout_weight="7"
-    android:text="@string/advance" 
+    android:text="@string/create_new_event" 
     android:background="@drawable/btn_blue"
     style="@style/ButtonText"
     />
