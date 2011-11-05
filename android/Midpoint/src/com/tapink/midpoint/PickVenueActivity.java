@@ -113,8 +113,9 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
         Venue venue = item.getVenue();
         JSONObject json = venue.getJson();
         if (json != null) {
-          String jsonString = json.toString();
-          i.putExtra("venue", jsonString);
+          //String jsonString = json.toString();
+          //i.putExtra("venue", jsonString);
+          i.putExtra("venue", venue);
         }
 
         startActivity(i);

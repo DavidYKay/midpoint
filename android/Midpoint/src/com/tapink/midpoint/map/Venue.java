@@ -25,6 +25,14 @@ public class Venue implements Parcelable {
   public JSONObject getJson() {
     return mJson;
   }
+  
+  ////////////////////////////////////////
+  // Object
+  ////////////////////////////////////////
+
+  public String toString() {
+    return mJson.toString();
+  }
 
   ////////////////////////////////////////
   // Parcelable
