@@ -4,6 +4,7 @@
   <!-- Kennedy, these are examples. You can kill these. -->
 
   <color name="red">#ff0000ff</color>
+  
   <color name="button_cancel">@color/red</color>
 
 </resources>

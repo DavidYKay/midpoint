@@ -2,20 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#f4f4f4" >
 
   <ListView
     android:id="@+id/list"
     android:layout_width="fill_parent"
     android:layout_height="0px"
     android:layout_weight="30"
+    android:divider="#ccc"
+    android:dividerHeight="2px"
     />
 
   <com.google.android.maps.MapView
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="50"
+    android:layout_weight="53"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"
@@ -26,10 +29,10 @@
     android:id="@+id/button"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="10"
+    android:layout_weight="7"
     android:text="@string/advance"
 
-    android:background="@drawable/btn_black"
+    android:background="@drawable/btn_blue"
     style="@style/ButtonText"
     />
 

@@ -2,18 +2,17 @@
 <resources>
   <!-- This is the default style for our fancy buttons. Feel free to change it. -->
   <style name="ButtonText">
-    <!-- <item name="android:textSize">30dp</item> -->
     <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_height">fill_parent</item>
     <item name="android:textColor">#ffffff</item>
-    <item name="android:gravity">center</item>
-    <item name="android:layout_margin">3dp</item>
-    <item name="android:textSize">26dp</item>
+    <item name="android:layout_margin">5dp</item>
+    <item name="android:paddingTop">0px</item>
+    <item name="android:textSize">22dp</item>
     <item name="android:textStyle">bold</item>
-    <item name="android:shadowColor">#000000</item>
-    <item name="android:shadowDx">1</item>
+    <item name="android:shadowColor">#ff008cbf</item>
+    <item name="android:shadowDx">0</item>
     <item name="android:shadowDy">1</item>
-    <item name="android:shadowRadius">2</item>
+    <item name="android:shadowRadius">0.2</item>
   </style>
 
 </resources>

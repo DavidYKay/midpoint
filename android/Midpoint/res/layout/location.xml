@@ -2,11 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:orientation="vertical" >
+  android:orientation="vertical"
+  android:background="#f4f4f4" >
 
 
   <EditText
     android:id="@+id/my_location"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="3dp"
     android:layout_width="fill_parent"
     android:layout_height="0px"
     android:layout_weight="10"
@@ -16,6 +21,10 @@
   <EditText
     android:id="@+id/their_location"
     android:layout_width="fill_parent"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="3dp"
     android:layout_height="0px"
     android:layout_weight="10"
     android:hint="@string/their_location"
@@ -26,7 +35,7 @@
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="70"
+    android:layout_weight="73"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"
@@ -38,10 +47,10 @@
     android:id="@+id/button"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="10"
+    android:layout_weight="7"
     android:text="@string/advance" 
     
-    android:background="@drawable/btn_yellow"
+    android:background="@drawable/btn_blue"
     style="@style/ButtonText"
     />
 
