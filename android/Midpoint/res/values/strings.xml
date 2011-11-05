@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, MidpointActivity!</string>
-    <string name="app_name">Midpoint</string>
+  <string name="hello">Hello World, MidpointActivity!</string>
+  <string name="app_name">Midpoint</string>
+
+  <string name="advance">Advance</string>
+  
+  <string name="calendar">Calendar</string>
+  <string name="location">Location</string>
+  <string name="pick_venue">Pick a Venue</string>
+  <string name="confirm_venue">Confirm Venue</string>
 
 </resources>
