@@ -30,7 +30,8 @@ public class PickVenueActivity extends MapActivity {
   private MapView mMapView;
   private VenueOverlay mVenueOverlay;
   private MyLocationOverlay me;
-  
+  private JSONVenueAdapter mAdapter;
+
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class PickVenueActivity extends MapActivity {
     });
 
     mListView = (ListView) findViewById(R.id.list);
-    
+
     mMapView = (MapView) findViewById(R.id.mapview);
     me = new MyLocationOverlay(this, mMapView);
     mMapView.getOverlays().add(me);
@@ -80,13 +81,51 @@ public class PickVenueActivity extends MapActivity {
 
   private void populateMapFromListAdapter() {
 
-    mVenueOverlay.addItem(
-      new VenueItem(
-                    getPoint(40.77765, -73.951704),
-                    "Test Item",
-                    "Snippet"
-                   )
-      );
+    int count = mAdapter.getCount();
+
+    for (int i = 0; i < count; i++) {
+      JSONObject json = (JSONObject) mAdapter.getItem(i);
+
+      String name    = "Venue";
+      String snippet = "Snippet";
+      try {
+        name = json.getString("display_name");
+        snippet = json.getString("phone_number");
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        continue;
+      }
+
+      JSONArray locations;
+      double lat = 0.0;
+      double lon = 0.0;
+      try {
+        locations = json.getJSONArray("locations");
+        JSONObject location = locations.getJSONObject(0);
+
+        lat = location.getDouble("lat");
+        lon = location.getDouble("lon");
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      VenueItem sampleItem = new VenueItem(
+          getPoint(40.77765, -73.951704),
+          "Test Item",
+          "Snippet"
+          );
+      mVenueOverlay.addItem(
+          new VenueItem(
+              getPoint(lat, lon),
+              name,
+              snippet
+              )
+          );
+    }
+
+
 
   }
 
@@ -95,10 +134,11 @@ public class PickVenueActivity extends MapActivity {
     JSONArray venues = helper.getSampleVenues();
     JSONVenueAdapter adapter = new JSONVenueAdapter(venues);
     mListView.setAdapter(adapter);
+    mAdapter = adapter;
   }
-  
+
   private class JSONVenueAdapter extends BaseAdapter {
-    
+
     private JSONArray mVenues;
 
     public JSONVenueAdapter(JSONArray venues) {
@@ -106,12 +146,12 @@ public class PickVenueActivity extends MapActivity {
     }
 
     @Override
-    public int getCount() {      
+    public int getCount() {
       return mVenues.length();
     }
 
     @Override
-    public Object getItem(int index) {     
+    public Object getItem(int index) {
       try {
         return mVenues.getJSONObject(index);
       } catch (JSONException e) {
@@ -137,12 +177,12 @@ public class PickVenueActivity extends MapActivity {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      
+
       test.setText(name);
 
       return test;
     }
-    
+
   }
 
 }
