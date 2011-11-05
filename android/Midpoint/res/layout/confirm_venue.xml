@@ -21,7 +21,7 @@
       android:src="@drawable/placeholder_venue"
       />
     <TextView
-      android:id="@+id/image"
+      android:id="@+id/venue_name"
       android:layout_width="0px"
       android:layout_height="fill_parent"
       android:layout_weight="50"

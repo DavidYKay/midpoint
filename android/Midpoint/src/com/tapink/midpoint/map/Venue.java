@@ -10,6 +10,10 @@ public class Venue implements Parcelable {
 
   private JSONObject mJson;
   
+  ////////////////////////////////////////
+  // Constructors
+  ////////////////////////////////////////
+  
   public Venue(String jsonString) throws JSONException {
     this(new JSONObject(jsonString));
   }
@@ -21,7 +25,25 @@ public class Venue implements Parcelable {
     }
     this.mJson = json;
   }
+  
+  ////////////////////////////////////////
+  // Convenience methods
+  ////////////////////////////////////////
 
+  public String getName() {
+    try {
+      return mJson.getString("display_name");
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
+  }
+  
+  ////////////////////////////////////////
+  // Accessors
+  ////////////////////////////////////////
+  
   public JSONObject getJson() {
     return mJson;
   }
