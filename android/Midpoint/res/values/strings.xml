@@ -12,6 +12,7 @@
   <string name="location">Location</string>
   <string name="pick_venue">Pick a Venue</string>
   <string name="confirm_venue">Confirm Venue</string>
+  <string name="view_venue">View Venue</string>
   <string name="push_me">Push Me!</string>
   <string name="my_location">My Location</string>
   <string name="their_location">Their Location</string>
