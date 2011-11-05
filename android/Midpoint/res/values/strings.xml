@@ -15,5 +15,8 @@
   <string name="push_me">Push Me!</string>
   <string name="my_location">My Location</string>
   <string name="their_location">Their Location</string>
+
+  <!-- Placeholders -->
+  <string name="placeholder_venue">This is an awesome venue!</string>
  
 </resources>

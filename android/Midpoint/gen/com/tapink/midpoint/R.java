@@ -27,16 +27,18 @@ public final class R {
         public static final int btn_red=0x7f020004;
         public static final int btn_yellow=0x7f020005;
         public static final int ic_launcher=0x7f020006;
+        public static final int placeholder_venue=0x7f020007;
     }
     public static final class id {
-        public static final int button=0x7f080007;
-        public static final int button_cancel=0x7f080003;
-        public static final int button_confirm=0x7f080002;
-        public static final int footer_confirm=0x7f080001;
-        public static final int list=0x7f080000;
-        public static final int mapview=0x7f080006;
-        public static final int my_location=0x7f080004;
-        public static final int their_location=0x7f080005;
+        public static final int button=0x7f080008;
+        public static final int button_cancel=0x7f080004;
+        public static final int button_confirm=0x7f080003;
+        public static final int footer_confirm=0x7f080000;
+        public static final int image=0x7f080001;
+        public static final int list=0x7f080002;
+        public static final int mapview=0x7f080007;
+        public static final int my_location=0x7f080005;
+        public static final int their_location=0x7f080006;
     }
     public static final class layout {
         public static final int confirm_venue=0x7f030000;
@@ -58,6 +60,9 @@ public final class R {
         public static final int maps_api_key=0x7f040000;
         public static final int my_location=0x7f04000d;
         public static final int pick_venue=0x7f04000a;
+        /**  Placeholders 
+         */
+        public static final int placeholder_venue=0x7f04000f;
         public static final int push_me=0x7f04000c;
         public static final int their_location=0x7f04000e;
     }
