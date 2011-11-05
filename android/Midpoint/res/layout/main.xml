@@ -16,6 +16,10 @@
     android:layout_width="fill_parent"
     android:layout_height="0px"
     android:layout_weight="10"
-    android:text="@string/advance" />
+    android:text="@string/advance" 
+
+    android:background="@drawable/btn_green"
+    style="@style/ButtonText"
+    />
 
 </LinearLayout>
