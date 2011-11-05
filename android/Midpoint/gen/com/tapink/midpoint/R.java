@@ -48,6 +48,7 @@ public final class R {
         public static final int location=0x7f030002;
         public static final int main=0x7f030003;
         public static final int pick_venue=0x7f030004;
+        public static final int venue_list_item=0x7f030005;
     }
     public static final class raw {
         public static final int sample_venues=0x7f040000;

@@ -37,7 +37,6 @@ public class CalendarListActivity extends Activity {
     mListView = (ListView) findViewById(R.id.list);
     mListView.setAdapter(new ArrayAdapter<String>(this,
                                                   R.layout.list_item,
-                                                  //android.R.layout.simple_list_item_1,
                                                   MEETINGS));
 
   }

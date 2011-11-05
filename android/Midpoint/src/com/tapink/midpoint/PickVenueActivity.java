@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -174,7 +175,13 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView test = new TextView(mContext);
+      LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+      // Kennedy, this is where you supply an XML file to base it on.
+      View view = inflater.inflate(R.layout.venue_list_item, null);
+      TextView test = (TextView) view;
+      
+      //TextView test = new TextView(mContext);
 
       JSONObject json = (JSONObject) getItem(position);
       String name = "Venue";
