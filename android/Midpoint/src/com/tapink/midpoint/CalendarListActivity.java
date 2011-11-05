@@ -1,8 +1,16 @@
 package com.tapink.midpoint;
 
+import java.lang.reflect.Field;
+import java.sql.Date;
+
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,14 +29,19 @@ public class CalendarListActivity extends Activity {
   };
   protected static final int NEW_CALENDAR_EVENT = 1;
   private static final String TAG = "CalendarListActivity";
-  
+
   private ListView mListView;
+  private ContentResolver mContentResolver;
+  
+  private Uri mCalendarUri;
 
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+    
+    mContentResolver = getContentResolver();
 
     final Button actionConfirmButton = (Button) findViewById(R.id.button);
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -54,9 +67,55 @@ public class CalendarListActivity extends Activity {
         // TODO: Pass in the calendar event ID
 
         startActivity(i);
-        
+
       }
     });
+
+
+    mCalendarUri = getCalendarUri();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    //mEventLoader.startBackgroundThread();
+    //eventsChanged();
+    //CalendarView view = (CalendarView) mViewSwitcher.getNextView();
+    //view.updateIs24HourFormat();
+    //view.updateView();
+
+    //view = (CalendarView) mViewSwitcher.getCurrentView();
+    //view.updateIs24HourFormat();
+    //view.updateView();
+
+    // Register for Intent broadcasts
+    //IntentFilter filter = new IntentFilter();
+
+    //filter.addAction(Intent.ACTION_TIME_CHANGED);
+    //filter.addAction(Intent.ACTION_DATE_CHANGED);
+    //filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+    //registerReceiver(mIntentReceiver, filter);
+
+    mContentResolver.registerContentObserver(
+        //Calendar.Events.CONTENT_URI,
+        mCalendarUri,
+        true,
+        mObserver);
+    
+    readCalendar();
+  }
+    
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mContentResolver.unregisterContentObserver(mObserver);
+    //unregisterReceiver(mIntentReceiver);
+
+    //CalendarView view = (CalendarView) mViewSwitcher.getCurrentView();
+    //view.cleanup();
+    //view = (CalendarView) mViewSwitcher.getNextView();
+    //view.cleanup();
+    //mEventLoader.stopBackgroundThread();
   }
 
 //  private class CalendarAdapter extends ArrayAdapter<String> {
@@ -83,6 +142,39 @@ public class CalendarListActivity extends Activity {
 
   }
 
+  private void readCalendar() {
+    Uri baseUri = mCalendarUri;
+    Uri eventUri = baseUri.buildUpon().appendPath("events").build();
+    Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
+    Log.v(TAG, "eventsUri: " + eventUri);
+    Log.v(TAG, "calendarsUri: " + calendarsUri);
+    Cursor cursor = getContentResolver().query(eventUri, new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
+    //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
+    //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/calendars"), new String[]{ "_id", "name" }, null, null, null);
+
+    String add = null;
+    cursor.moveToFirst();
+    String[] CalNames = new String[cursor.getCount()];
+    int[] CalIds = new int[cursor.getCount()];
+    for (int i = 0; i < CalNames.length; i++) {
+      CalIds[i] = cursor.getInt(0);
+      CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1) + "\nDescription: " + cursor.getString(2) + "\nStart Date: " + new Date(cursor.getLong(3)) + "\nEnd Date : " + new Date(cursor.getLong(4)) + "\nLocation : " + cursor.getString(5);
+      //CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1);
+      if(add == null)
+        add = CalNames[i];
+      else{
+        add += CalNames[i];
+      }
+      Log.v(TAG, "Calendar events: " + add);
+      Log.v(TAG, "-----");
+
+      //((TextView)findViewById(R.id.calendars)).setText(add);
+
+      cursor.moveToNext();
+    }
+    cursor.close();
+
+  }
 
   private Intent launchCalendarIntent() {
     long eventStartInMillis = System.currentTimeMillis();
@@ -98,4 +190,57 @@ public class CalendarListActivity extends Activity {
   }
 
 
+  // Create an observer so that we can update the views whenever a
+  // Calendar event changes.
+  private ContentObserver mObserver = new ContentObserver(new Handler())
+  {
+    private static final String TAG = "ContentObserver";
+    @Override
+    public boolean deliverSelfNotifications() {
+      return true;
+    }
+
+    @Override
+    public void onChange(boolean selfChange) {
+      Log.v(TAG, "onChange");
+      //eventsChanged();
+    }
+  };
+
+  private Uri getCalendarUri() {
+    Class<?> calendarProviderClass = null;
+    try {
+      calendarProviderClass = Class.forName("android.provider.Calendar");
+    } catch (ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    Field uriField = null;
+    try {
+      uriField = calendarProviderClass.getField("CONTENT_URI");
+    } catch (SecurityException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (NoSuchFieldException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    Uri calendarUri = null;
+    try {
+      calendarUri = (Uri) uriField.get(null);
+    } catch (IllegalArgumentException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    //if (calendarUri == null) {
+    //  throw new IllegalStateException("Couldn't find calendar URI!");
+    //}
+    assert calendarUri != null;
+    Log.v(TAG, "Calendar URI: " + calendarUri);
+    return calendarUri;
+  }
+  
 }

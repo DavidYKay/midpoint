@@ -61,6 +61,7 @@ public final class R {
         public static final int cancel=0x7f050006;
         public static final int confirm=0x7f050007;
         public static final int confirm_venue=0x7f05000b;
+        public static final int create_new_event=0x7f050010;
         public static final int dk_dev_key=0x7f050001;
         public static final int hello=0x7f050003;
         public static final int kennedy_dev_key=0x7f050002;
@@ -70,7 +71,7 @@ public final class R {
         public static final int pick_venue=0x7f05000a;
         /**  Placeholders 
          */
-        public static final int placeholder_venue=0x7f050010;
+        public static final int placeholder_venue=0x7f050011;
         public static final int push_me=0x7f05000d;
         public static final int their_location=0x7f05000f;
         public static final int view_venue=0x7f05000c;
