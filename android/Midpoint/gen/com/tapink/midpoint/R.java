@@ -16,6 +16,7 @@ public final class R {
     public static final class id {
         public static final int button=0x7f050001;
         public static final int list=0x7f050000;
+        public static final int mapview=0x7f050002;
     }
     public static final class layout {
         public static final int confirm_venue=0x7f030000;
@@ -30,6 +31,9 @@ public final class R {
         public static final int confirm_venue=0x7f040006;
         public static final int hello=0x7f040000;
         public static final int location=0x7f040004;
+        public static final int maps_api_key=0x7f040008;
+        public static final int maps_dev_key=0x7f040009;
         public static final int pick_venue=0x7f040005;
+        public static final int push_me=0x7f040007;
     }
 }

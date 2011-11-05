@@ -1,12 +1,24 @@
 package com.tapink.midpoint;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
-public class PickVenueActivity extends Activity {
+import com.google.android.maps.MapActivity;
+
+public class PickVenueActivity extends MapActivity {
+
+  private ListView mListView;
+
+  private static final String[] VENUES = new String[] {
+    "Pizza Hut",
+    "Burger King",
+    "Starbucks",
+    "McDonalds",
+  };
   
   /** Called when the activity is first created. */
   @Override
@@ -22,6 +34,18 @@ public class PickVenueActivity extends Activity {
         startActivity(i);
       }
     });
+
+    mListView = (ListView) findViewById(R.id.list);
+    mListView.setAdapter(new ArrayAdapter<String>(this, 
+                                                  //R.layout.list_item, 
+                                                  android.R.layout.simple_list_item_1,
+                                                  VENUES));
+    
+  }
+  
+  @Override
+  protected boolean isRouteDisplayed() {
+    return false;
   }
 
 }

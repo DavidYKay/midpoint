@@ -1,12 +1,13 @@
 package com.tapink.midpoint;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class LocationActivity extends Activity {
+import com.google.android.maps.MapActivity;
+
+public class LocationActivity extends MapActivity {
 
   /** Called when the activity is first created. */
   @Override
@@ -22,6 +23,11 @@ public class LocationActivity extends Activity {
         startActivity(i);
       }
     });
+  }
+
+  @Override
+  protected boolean isRouteDisplayed() {
+    return false;
   }
 
 
