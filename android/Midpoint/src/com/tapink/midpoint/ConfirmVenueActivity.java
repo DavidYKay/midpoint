@@ -1,6 +1,10 @@
 package com.tapink.midpoint;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -8,9 +12,11 @@ import java.net.URLConnection;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -68,8 +74,8 @@ public class ConfirmVenueActivity extends Activity {
     Venue venue = i.getParcelableExtra("venue");
     if (venue != null) {
       mVenue = venue;
+      initViewsFromVenue(mVenue);
       
-      mVenueName.setText(mVenue.getName());
       
     }
     Log.v(TAG, "Venue is now: " + venue);
@@ -78,6 +84,17 @@ public class ConfirmVenueActivity extends Activity {
     mListView.setAdapter(new ArrayAdapter<String>(this, 
                                                   android.R.layout.simple_list_item_1,
                                                   VENUE_DATA));
+
+  }
+
+  private void initViewsFromVenue(Venue venue) {
+    mVenueName.setText(venue.getName());
+    
+    DownloadBitmapTask task = new DownloadBitmapTask();
+
+    String imageUrl = venue.getLargeImageUrl();
+
+    task.execute(imageUrl);
 
   }
 
@@ -90,6 +107,8 @@ public class ConfirmVenueActivity extends Activity {
 
     @Override
     protected Bitmap doInBackground(String... urls) {
+      //Log.v(TAG, "doInBackground: " + urls);
+      Log.v(TAG, "doInBackground: " + urls[0]);
       return loadBitmap(urls[0]);
     }
 
@@ -98,20 +117,24 @@ public class ConfirmVenueActivity extends Activity {
     //}
 
     protected void onPostExecute(Bitmap bitmap) {
-      mImageView.setImageDrawable(
-          new BitmapDrawable(bitmap)
-      );
+      Log.v(TAG, "onPostExecute: " + bitmap);
+      if (bitmap != null) {
+        mImageView.setImageDrawable(
+            new BitmapDrawable(bitmap)
+            );
+      }
     }
     
   }
 
   private Bitmap loadBitmap(String strUrl) {
     URL url = null;
+    Bitmap bitmap = null;
     try {
       url = new URL(strUrl);
     } catch (MalformedURLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+      throw new IllegalArgumentException("Must be a properly formed URL. Received: " + strUrl);
     }
     URLConnection connection;
     try {
@@ -119,15 +142,44 @@ public class ConfirmVenueActivity extends Activity {
       connection.setUseCaches(true);
       Object response = connection.getContent();
       if (response instanceof Bitmap) {
-        Bitmap bitmap = (Bitmap)response;
-        return bitmap;
-      } 
+        bitmap = (Bitmap)response;        
+      } else {
+        Log.e(TAG, "Object received: " + response);
+        InputStream in = connection.getInputStream();           
+        //saveStreamToDisk(in);
+        bitmap = BitmapFactory.decodeStream(in);
+      }
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
   
-    return null;
+    return bitmap;
+  }
+
+  private void saveStreamToDisk(InputStream in) {
+    File sdCard = Environment.getExternalStorageDirectory();
+    File dir = new File (sdCard.getAbsolutePath() + "/localhack/images");
+    dir.mkdirs();
+    File file = new File(dir, "downloaded-image.png");
+
+    FileOutputStream f;
+    try {
+      f = new FileOutputStream(file);
+    } catch (FileNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new IllegalStateException("Couldn't open file: " + file);
+    }
+    
+    try {
+      while (in.available() > 0) {
+        f.write(in.read());
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
 }

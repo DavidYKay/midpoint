@@ -19,6 +19,7 @@
       android:layout_height="fill_parent"
       android:layout_weight="50"
       android:src="@drawable/placeholder_venue"
+      android:background="@color/red"
       />
     <TextView
       android:id="@+id/venue_name"
