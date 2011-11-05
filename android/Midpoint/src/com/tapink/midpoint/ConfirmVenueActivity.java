@@ -82,7 +82,7 @@ public class ConfirmVenueActivity extends Activity {
 
     mListView = (ListView) findViewById(R.id.list);
     mListView.setAdapter(new ArrayAdapter<String>(this, 
-                                                  android.R.layout.simple_list_item_1,
+                                                  R.layout.list_item,
                                                   VENUE_DATA));
 
   }
