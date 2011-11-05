@@ -28,25 +28,29 @@ public class CalendarListActivity extends Activity {
     final Button actionConfirmButton = (Button) findViewById(R.id.button);
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View v) {        
+      public void onClick(View v) {
         Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
         startActivity(i);
       }
     });
-    
+
     mListView = (ListView) findViewById(R.id.list);
-    mListView.setAdapter(new ArrayAdapter<String>(this, 
-                                                  //R.layout.list_item, 
-                                                  android.R.layout.simple_list_item_1,
+    mListView.setAdapter(new ArrayAdapter<String>(this,
+                                                  R.layout.list_item,
+                                                  //android.R.layout.simple_list_item_1,
                                                   MEETINGS));
 
   }
+
+//  private class CalendarAdapter extends ArrayAdapter<String> {
+//
+//  }
 
   private void launchCalendar() {
     long eventStartInMillis = System.currentTimeMillis();
     long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
 
-    Intent intent = new Intent(Intent.ACTION_EDIT);  
+    Intent intent = new Intent(Intent.ACTION_EDIT);
     intent.setType("vnd.android.cursor.item/event");
     intent.putExtra("title", "Some title");
     intent.putExtra("description", "Some description");
