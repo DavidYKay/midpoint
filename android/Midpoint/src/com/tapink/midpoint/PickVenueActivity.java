@@ -110,8 +110,6 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
         // Pass in our venue data.
         Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
 
-        //JSONObject json = (JSONObject) mAdapter.getItem(which);
-        //JSONObject json = (JSONObject) mAdapter.getItem(which);
         Venue venue = item.getVenue();
         JSONObject json = venue.getJson();
         if (json != null) {
