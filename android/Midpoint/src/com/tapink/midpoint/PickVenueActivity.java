@@ -49,6 +49,12 @@ public class PickVenueActivity extends MapActivity {
     mListView = (ListView) findViewById(R.id.list);
     
     mMapView = (MapView) findViewById(R.id.mapview);
+    me = new MyLocationOverlay(this, mMapView);
+    mMapView.getOverlays().add(me);
+
+    Drawable pin = this.getResources().getDrawable(R.drawable.marker);
+    mVenueOverlay = new VenueOverlay(pin, mContext);
+    mMapView.getOverlays().add(mVenueOverlay);
 
     populateSampleData();
     populateMapFromListAdapter();
@@ -73,11 +79,6 @@ public class PickVenueActivity extends MapActivity {
   }
 
   private void populateMapFromListAdapter() {
-    me = new MyLocationOverlay(this, mMapView);
-    mMapView.getOverlays().add(me);
-
-    Drawable pin = this.getResources().getDrawable(R.drawable.marker);
-    mVenueOverlay = new VenueOverlay(pin, mContext);
 
     mVenueOverlay.addItem(
       new VenueItem(
@@ -87,7 +88,6 @@ public class PickVenueActivity extends MapActivity {
                    )
       );
 
-    mMapView.getOverlays().add(mVenueOverlay);
   }
 
   private void populateSampleData() {
