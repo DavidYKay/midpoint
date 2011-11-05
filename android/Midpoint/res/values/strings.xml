@@ -6,6 +6,8 @@
 
   <string name="advance">Advance</string>
   
+  <string name="cancel">Cancel</string>
+  <string name="confirm">Confirm</string>
   <string name="calendar">Calendar</string>
   <string name="location">Location</string>
   <string name="pick_venue">Pick a Venue</string>

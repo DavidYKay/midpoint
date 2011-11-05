@@ -4,9 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 public class CalendarListActivity extends Activity {
+
+
+  private static final String[] MEETINGS = new String[] {
+    "Lunch with Fred Wilson",
+    "Meeting with DFJ Gotham",
+    "Holiday Party",
+    "Meeting with Alice",
+  };
+  private ListView mListView;
+
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -21,6 +33,12 @@ public class CalendarListActivity extends Activity {
         startActivity(i);
       }
     });
+    
+    mListView = (ListView) findViewById(R.id.list);
+    mListView.setAdapter(new ArrayAdapter<String>(this, 
+                                                  //R.layout.list_item, 
+                                                  android.R.layout.simple_list_item_1,
+                                                  MEETINGS));
 
   }
 
