@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
@@ -368,6 +369,69 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       mListView.setVisibility(View.GONE);
       mButton.setText(R.string.list);
     }
+  }
+
+//  // Minimum & maximum latitude so we can span it
+//  // The latitude is clamped between -80 degrees and +80 degrees inclusive
+//  // thus we ensure that we go beyond that number
+//  private final int minLatitude = (int)(+81 * 1E6);
+//  private final int maxLatitude = (int)(-81 * 1E6);
+//  // Minimum & maximum longitude so we can span it
+//  // The longitude is clamped between -180 degrees and +180 degrees inclusive
+//  // thus we ensure that we go beyond that number
+//  private final int minLongitude = (int)(+181 * 1E6);
+//  private final int maxLongitude = (int)(-181 * 1E6);
+
+  private void setupMap(Iterable<GeoPoint> points, MapController mapController) {
+    // Minimum & maximum latitude so we can span it
+    // The latitude is clamped between -80 degrees and +80 degrees inclusive
+    // thus we ensure that we go beyond that number
+    int minLatitude = (int)(+81 * 1E6);
+    int maxLatitude = (int)(-81 * 1E6);
+    // Minimum & maximum longitude so we can span it
+    // The longitude is clamped between -180 degrees and +180 degrees inclusive
+    // thus we ensure that we go beyond that number
+    int minLongitude = (int)(+181 * 1E6);
+    int maxLongitude = (int)(-181 * 1E6);
+
+    // Holds all the picture location as Point
+    //List<Point> mPoints = new ArrayList<Point>();
+    for (GeoPoint point : points) {
+
+      //You get the latitude/longitude as you want, here I take it from the db
+      int latitude   = point.getLatitudeE6();
+      int longitude  = point.getLongitudeE6();
+
+      // Sometimes the longitude or latitude gathering
+      // did not work so skipping the point
+      // doubt anybody would be at 0 0
+      if (latitude != 0 && longitude !=0)  {
+
+        // Sets the minimum and maximum latitude so we can span and zoom
+        minLatitude = (minLatitude > latitude) ? latitude : minLatitude;
+        maxLatitude = (maxLatitude < latitude) ? latitude : maxLatitude;               
+        // Sets the minimum and maximum latitude so we can span and zoom
+        minLongitude = (minLongitude > longitude) ? longitude : minLongitude;
+        maxLongitude = (maxLongitude < longitude) ? longitude : maxLongitude;
+
+        //mPoints.add(new Point(latitude, longitude));
+      }
+    }
+
+    // Zoom to span from the list of points
+    mapController.zoomToSpan(
+        (maxLatitude - minLatitude),
+        (maxLongitude - minLongitude));
+    // Animate to the center cluster of points
+    mapController.animateTo(new GeoPoint(
+        (maxLatitude + minLatitude)/2,
+        (maxLongitude + minLongitude)/2 ));
+
+    // Add all the point to the overlay
+    //mMapOverlay = new MyPhotoMapOverlay(mPoints);
+    //mMapOverlayController = mMapView.createOverlayController();
+    //// Add the overlay to the mapview
+    //mMapOverlayController.add(mMapOverlay, true);
   }
   
   ////////////////////////////////////////
