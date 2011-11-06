@@ -14,6 +14,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.util.GeoHelper;
+import com.tapink.midpoint.util.TextHelper;
 
 public class LocationActivity extends MapActivity {
 
@@ -45,6 +46,16 @@ public class LocationActivity extends MapActivity {
       @Override
       public void onClick(View v) {
         Intent i = new Intent(LocationActivity.this, PickVenueActivity.class);
+
+        // If the user didn't enter anything:
+        String userInput = mMyLocation.getText().toString();
+        Location location = null;
+        if (!TextHelper.isEmptyString(userInput)) {
+          i.putExtra("address", userInput);
+        } else {
+          location = mLastKnownLocation;
+          i.putExtra("location", location);
+        }
 
         i.putExtra("event", mEvent);
 
@@ -106,7 +117,6 @@ public class LocationActivity extends MapActivity {
     return false;
   }
 
-
   ////////////////////////////////////////
   // Location Management
   ////////////////////////////////////////
@@ -129,6 +139,7 @@ public class LocationActivity extends MapActivity {
         GeoHelper.geoPointToLocation(loc)
         );
   }
+
   private void updateLocationText(Location loc) {
     mMyLocation.setText(
         GeoHelper.locationToHumanReadable(

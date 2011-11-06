@@ -4,6 +4,13 @@ import android.text.format.DateUtils;
 import android.text.format.Time;
 
 public class TextHelper {
+  
+  public static boolean isEmptyString(String string) {
+    if (string == null || string.length() == 0) {
+      return true;
+    }
+    return false;
+  }
 
   public static String unixTimeToNiceTime(long unixTime) {
     String niceTime;

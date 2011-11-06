@@ -46,7 +46,9 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private VenueAdapter mAdapter;
   private Button mButton;
   
+  // Model
   private Event mEvent;
+  //private Location mLocation;
 
   /** Called when the activity is first created. */
   @Override
@@ -84,8 +86,24 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mMapView.getOverlays().add(mVenueOverlay);
 
     Intent i = getIntent();
-    mEvent = i.getParcelableExtra("event");
+    mEvent         = i.getParcelableExtra("event");
+    Location loc   = i.getParcelableExtra("location");
+    String address = i.getStringExtra("address");
+    
     Log.v(TAG, "Event: " + mEvent);
+    Log.v(TAG, "Location: " + loc);
+    Log.v(TAG, "Address: " + address);
+
+    if (loc != null) {
+      //mLocation = loc;
+      // Make a query using the location
+
+    } else if (address != null) {
+      // Make a query using the address
+
+    } else {
+      throw new IllegalStateException("Need to have either a location or an address!");
+    }
 
     populateSampleData();
     populateMapFromListAdapter();
