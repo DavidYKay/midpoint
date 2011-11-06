@@ -7,11 +7,18 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.util.Rfc822Tokenizer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TimePicker;
+
+import com.android.calendar.EmailAddressAdapter;
+import com.android.common.Rfc822InputFilter;
+import com.android.common.Rfc822Validator;
 
 public class InviteActivity extends Activity {
 
@@ -22,7 +29,7 @@ public class InviteActivity extends Activity {
 
   private Button mStartTimeButton;
   private Button mStartDateButton;
-  
+
   private Button mEndTimeButton;
   private Button mEndDateButton;
 
@@ -39,13 +46,16 @@ public class InviteActivity extends Activity {
 
   private TimeWrapper mStartTime = new TimeWrapper();
   private TimeWrapper mEndTime   = new TimeWrapper();
+  private EmailAddressAdapter mAddressAdapter;
+  private Rfc822Validator mEmailValidator;
+
 
   private class DateWrapper {
     public int year;
     public int month;
     public int day;
   }
-  
+
   private class TimeWrapper {
     public int hour;
     public int minute;
@@ -56,6 +66,9 @@ public class InviteActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.invite);
+
+
+    mAddressAdapter = new EmailAddressAdapter(this);
 
     mStartDateButton = (Button) findViewById(R.id.start_date);
     mStartDateButton.setOnClickListener(new View.OnClickListener() {
@@ -83,10 +96,10 @@ public class InviteActivity extends Activity {
       }
     });
 
-    
+
     // get the current date
     final Calendar c = Calendar.getInstance();
-    
+
     mStartDate.year  = c.get(Calendar.YEAR);
     mStartDate.month = c.get(Calendar.MONTH);
     mStartDate.day   = c.get(Calendar.DAY_OF_MONTH);
@@ -97,10 +110,10 @@ public class InviteActivity extends Activity {
 
     mStartTime.hour   = c.get(Calendar.HOUR_OF_DAY);
     mStartTime.minute = c.get(Calendar.MINUTE);
-    
+
     mEndTime.hour   = c.get(Calendar.HOUR_OF_DAY) + 1;
     mEndTime.minute = c.get(Calendar.MINUTE);
-    
+
     updateStartDate();
     updateEndDate();
     updateStartTime();
@@ -116,14 +129,14 @@ public class InviteActivity extends Activity {
                                     mStartDate.year, 
                                     mStartDate.month, 
                                     mStartDate.day
-                                    );
+                                   );
       case END_DATE_DIALOG_ID:
         return new DatePickerDialog(this,
                                     mEndDateSetListener,
                                     mEndDate.year, 
                                     mEndDate.month, 
                                     mEndDate.day
-                                    );
+                                   );
       case START_TIME_DIALOG_ID:
         return new TimePickerDialog(this,
                                     mStartTimeSetListener, 
@@ -136,7 +149,7 @@ public class InviteActivity extends Activity {
                                     mEndTime.hour, 
                                     mEndTime.minute, 
                                     false);
-        
+
     }
     return null;
   }
@@ -150,7 +163,7 @@ public class InviteActivity extends Activity {
         .append(mStartDate.day).append("-")
         .append(mStartDate.year).append(" "));
   }
-  
+
   private void updateEndDate() {
     mEndDateButton.setText(
         new StringBuilder()
@@ -167,7 +180,7 @@ public class InviteActivity extends Activity {
         .append(mStartTime.hour).append("-")
         .append(mStartTime.minute).append(" "));
   }
-  
+
   private void updateEndTime() {
     mEndTimeButton.setText(
         new StringBuilder()
@@ -189,14 +202,14 @@ public class InviteActivity extends Activity {
       };
 
   private TimePickerDialog.OnTimeSetListener mStartTimeSetListener =
-    new TimePickerDialog.OnTimeSetListener() {
+      new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mStartTime.hour = hourOfDay;
-            mStartTime.minute = minute;
-            updateStartTime();
+          mStartTime.hour = hourOfDay;
+          mStartTime.minute = minute;
+          updateStartTime();
         }
-    };
-  
+      };
+
   private DatePickerDialog.OnDateSetListener mEndDateSetListener =
       new DatePickerDialog.OnDateSetListener() {
 
@@ -210,13 +223,37 @@ public class InviteActivity extends Activity {
       };
 
   private TimePickerDialog.OnTimeSetListener mEndTimeSetListener =
-    new TimePickerDialog.OnTimeSetListener() {
+      new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mEndTime.hour = hourOfDay;
-            mEndTime.minute = minute;
-            updateEndTime();
+          mEndTime.hour = hourOfDay;
+          mEndTime.minute = minute;
+          updateEndTime();
         }
-    };
+      };
+
+  // Autocomplete emails
+
+  private MultiAutoCompleteTextView initMultiAutoCompleteTextView(int res) {
+    MultiAutoCompleteTextView list = (MultiAutoCompleteTextView) findViewById(res);
+    list.setAdapter(mAddressAdapter);
+    list.setTokenizer(new Rfc822Tokenizer());
+    list.setValidator(mEmailValidator);
+
+    // NOTE: assumes no other filters are set
+    list.setFilters(sRecipientFilters);
+
+    return list;
+  }
 
 
+
+  private static String extractDomain(String email) {
+    int separator = email.lastIndexOf('@');
+    if (separator != -1 && ++separator < email.length()) {
+      return email.substring(separator);
+    }
+    return null;
+  }
+
+  private static InputFilter[] sRecipientFilters = new InputFilter[] { new Rfc822InputFilter() };
 }
