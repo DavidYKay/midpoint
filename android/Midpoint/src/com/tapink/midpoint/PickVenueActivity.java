@@ -67,10 +67,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position,
                               long id) {
-
-        //Venue venue = 
-        //navigateToConfirmWithVenue(venue);
-
+        Venue venue = (Venue) mAdapter.getItem(position);
+        navigateToConfirmWithVenue(venue);
       }
     });
 
