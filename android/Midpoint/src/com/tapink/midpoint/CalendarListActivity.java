@@ -1,5 +1,6 @@
 package com.tapink.midpoint;
 
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +22,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -266,13 +271,10 @@ public class CalendarListActivity extends ListActivity {
   public void onListItemClick(ListView l, View v, int position, long id) {  
     Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
 
-    //Event event = (Event) mListView.getAdapter().getItem(position);
     Event event = (Event) getListAdapter().getItem(position);
 
-    //Cursor c = getAttendeesForEvent(
-    Attendee[] attendees = getAttendeesForEvent(
-        event.getDatabaseId()
-    );
+    //Attendee[] attendees = getAttendeesForEvent( event.getDatabaseId());
+    Attendee[] attendees = event.getAttendees();
 
     if (attendees.length > 0) {
       i.putExtra("attendee", attendees[0]);
@@ -393,6 +395,15 @@ public class CalendarListActivity extends ListActivity {
     }
 
     return address;
+  }
+
+  public Bitmap loadContactPhoto(long contactId) {
+    Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+    InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri);
+    if (input == null) {
+      return null;
+    }
+    return BitmapFactory.decodeStream(input);
   }
 
   private HashSet<String> mUserEmails = null;
@@ -619,6 +630,11 @@ public class CalendarListActivity extends ListActivity {
         new Date(cursor.getLong(4)),
         new Date(cursor.getLong(5))
       );
+    
+      Attendee[] attendees = getAttendeesForEvent(
+          event.getDatabaseId()
+          );
+      event.setAttendees(attendees);
       events.add(event);
       cursor.moveToNext();
     }
@@ -626,7 +642,6 @@ public class CalendarListActivity extends ListActivity {
 
     Event[] eventArray = new Event[events.size()];
     events.toArray(eventArray);
-    //mListView.setAdapter(new EventArrayAdapter(
     setListAdapter(new EventArrayAdapter(
         eventArray
     ));
@@ -779,12 +794,19 @@ public class CalendarListActivity extends ListActivity {
       View view = inflater.inflate(R.layout.event_list_item, null);
       
       final ImageView icon = (ImageView) view.findViewById(R.id.icon);
-      
 
-      final TextView name = (TextView) view.findViewById(R.id.name);
-      final TextView date = (TextView) view.findViewById(R.id.date);
+      final ImageView userpic = (ImageView) view.findViewById(R.id.userpic);
 
       Event event = mEvents[position];
+      Attendee[] attendees = event.getAttendees();
+      if (attendees.length > 0) {
+        long contactId = getContactIdForEmail(attendees[0].getEmail());
+        Bitmap bmp = loadContactPhoto(contactId);     
+        userpic.setImageDrawable(new BitmapDrawable(bmp));
+      }
+
+      final TextView name = (TextView) view.findViewById(R.id.name);
+      final TextView date = (TextView) view.findViewById(R.id.date);     
 
       name.setText(event.getName());
       //date.setText(event.getDescription());
