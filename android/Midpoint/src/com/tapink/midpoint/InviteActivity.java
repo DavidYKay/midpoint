@@ -1,11 +1,13 @@
 package com.tapink.midpoint;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.util.Rfc822Tokenizer;
@@ -291,14 +293,21 @@ public class InviteActivity extends Activity {
         mStartTime.hour,
         mStartTime.minute
         );
-    
-    endDate.getTimeInMillis()
-    startDate.getTimeInMillis()
-    mDescription.getText().toString()
-    mGuests.getText().toString()
-    mLocation.getText().toString()
-    mTitle.getText().toString()
-    mLocation.getText().toString()
 
+    Intent i = new Intent();
+
+    i.putExtra("end_date", endDate.getTimeInMillis());
+    i.putExtra("start_date", startDate.getTimeInMillis());
+
+    i.putExtra("description" , mDescription.getText().toString());
+    i.putExtra("guests"      , mGuests.getText().toString());
+    i.putExtra("location"    , mLocation.getText().toString());
+    i.putExtra("title"       , mTitle.getText().toString());
+
+    setResult(
+        Activity.RESULT_OK,
+        i
+    );
+    finish();
   }
 }

@@ -40,6 +40,7 @@ import com.tapink.midpoint.calendar.Attendee;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.TextHelper;
+import com.tapink.midpoint.util.TimeHelper;
 
 public class CalendarListActivity extends ListActivity {
 
@@ -62,6 +63,10 @@ public class CalendarListActivity extends ListActivity {
   private Uri mEventUri;
   private Uri mCalendarsUri;
   private Uri mAttendeesUri;
+  
+  // User Credentials
+  private String mUserDisplayName;
+  private String mUserEmail;
 
   /** Called when the activity is first created. */
   @Override
@@ -207,6 +212,27 @@ public class CalendarListActivity extends ListActivity {
 
     if (requestCode == NEW_CALENDAR_EVENT) {
       Log.v(TAG, "Wahoo! calendar event received.");
+      if (resultCode == Activity.RESULT_OK) {
+        // Break apart the guests string so we have names and emails separate
+        String guests = data.getStringExtra("guests");
+        Log.v(TAG, "guests: " + guests);
+
+        //TODO: Insert location
+        //data.getStringExtra("location"    )
+
+        long startDate = data.getLongExtra("start_date", TimeHelper.getTimeNow());
+        long endDate = data.getLongExtra("end_date", TimeHelper.timePlusHours(startDate, 1, 0, 0));
+        insertEventAndGuest(
+            data.getStringExtra("title"),
+            data.getStringExtra("description"),
+            startDate,
+            endDate,
+            "DK",
+            "dk@gargoyle.co"
+        );
+      } else {
+        Log.e(TAG, "Error! Reply came: " + resultCode);
+      }
     }
   }
 
@@ -330,6 +356,7 @@ public class CalendarListActivity extends ListActivity {
       String possibleEmail = account.name;
       if (TextHelper.checkEmail(possibleEmail)) {
         set.add(possibleEmail);
+        Log.v(TAG, "Email found: " + possibleEmail);
       }
     }
 
@@ -470,8 +497,10 @@ public class CalendarListActivity extends ListActivity {
   private Uri insertEventAndGuest(String title, String description, long startTime, long endTime, String guestName, String email) {
     Uri eventUri = insertEvent(title, description, startTime, endTime);
     String idString = eventUri.getLastPathSegment();
+    // Insert self
+    insertGuest(Long.parseLong(idString), mUserDisplayName, mUserEmail);
+    // Insert guest
     insertGuest(Long.parseLong(idString), guestName, email);
-    insertGuest(Long.parseLong(idString), "David Kay", "davidykay@gmail.com");
 
     return eventUri;
   }
