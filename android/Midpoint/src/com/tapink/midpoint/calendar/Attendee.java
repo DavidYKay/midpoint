@@ -23,6 +23,10 @@ public class Attendee implements Parcelable {
     this.address = address;
   }
   
+  public void setAddress(String address) {
+    this.address = address;
+  }
+  
   public String getAddress() {
     return address;
   }
@@ -82,7 +86,7 @@ public class Attendee implements Parcelable {
     this(
      in.readLong(),
      in.readString(),
-     in.readString()
+     in.readString(),
      in.readString()
     );
   }

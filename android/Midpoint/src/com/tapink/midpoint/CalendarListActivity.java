@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -218,6 +219,61 @@ public class CalendarListActivity extends ListActivity {
   // Contact Queries
   ////////////////////////////////////////
   
+  private long getContactIdForEmail(String email) {
+    String[] projection = new String[]{ 
+      ContactsContract.Data._ID,
+      ContactsContract.CommonDataKinds.Email.DATA1,
+      ContactsContract.Data.CONTACT_ID,
+    };
+
+    Uri lookupUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+    //Uri lookupUri = ContactsContract.Contacts.CONTENT_URI;
+    Cursor c = managedQuery(
+        lookupUri,
+        projection,
+        //ContactsContract.Data.CONTACT_ID + " = ?",
+        //new String[] {Long.toString(contactId)},
+        ContactsContract.CommonDataKinds.Email.DATA1 + " = ?",
+        new String[] {email},
+        null
+        );
+
+    long contactId = -1;
+
+    c.moveToFirst();
+
+    String foundEmail = c.getString(1);
+    assert foundEmail.equals(email);
+
+    contactId = c.getLong(2);
+    assert contactId != -1;
+
+    return contactId;
+  }
+
+  private String getAddressForContactId(long contactId) {
+    String[] attendeesProjection = new String[]{ 
+      ContactsContract.Data.CONTACT_ID, 
+      ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
+    };
+    
+    Uri uri = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI;
+    Cursor c = managedQuery(
+        uri,
+        attendeesProjection,
+        ContactsContract.Data.CONTACT_ID + " = ?",
+        new String[] {Long.toString(contactId)},
+        null
+        );
+
+    assert c.getCount() > 0;
+    c.moveToFirst();
+    assert c.getLong(0) == contactId;
+
+    String address = c.getString(1);
+    return address;
+  }
+
   private HashSet<String> mUserEmails = null;
   private HashSet<String> populateEmailSet() {
     HashSet<String> set = new HashSet<String>();
@@ -268,6 +324,16 @@ public class CalendarListActivity extends ListActivity {
 
       if (!isUserEmail(attendee.getEmail())) {
         Log.v(TAG, "Attendee found: " + attendee);
+        // Go fetch the attendee's address
+
+        long contactId = getContactIdForEmail(attendee.getEmail());
+        String address = getAddressForContactId(
+            contactId
+            );
+        if (!TextHelper.isEmptyString(address)) {
+          attendee.setAddress(address);
+        }
+
         attendees.add(attendee);
       } else {
         Log.v(TAG, "User attendee found: " + attendee);
