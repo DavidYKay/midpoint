@@ -72,7 +72,6 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       }
     });
 
-
     mMapView = (MapView) findViewById(R.id.mapview);
     me = new MyLocationOverlay(this, mMapView);
     mMapView.getOverlays().add(me);

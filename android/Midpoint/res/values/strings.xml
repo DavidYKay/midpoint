@@ -19,6 +19,7 @@
   <string name="my_location">My Location</string>
   <string name="their_location">Their Location</string>
   <string name="create_new_event">Create New Event</string>
+  <string name="pick_calendar">Pick a Calendar</string>
 
   <!-- Placeholders -->
   <string name="placeholder_venue">This is an awesome venue!</string>

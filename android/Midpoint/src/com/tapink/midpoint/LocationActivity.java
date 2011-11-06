@@ -13,6 +13,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.tapink.midpoint.calendar.Event;
+import com.tapink.midpoint.util.GeoHelper;
 
 public class LocationActivity extends MapActivity {
 
@@ -75,7 +76,10 @@ public class LocationActivity extends MapActivity {
       mMapView.getController().setCenter(
           loc
       );
-      mMyLocation.setText(loc.toString());
+      mMyLocation.setText(
+          GeoHelper.locationToHumanReadable(
+              loc
+              ));
     }
   }
 

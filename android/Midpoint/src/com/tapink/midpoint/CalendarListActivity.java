@@ -5,9 +5,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,6 +18,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,6 +41,8 @@ public class CalendarListActivity extends Activity {
     "Holiday Party",
     "Meeting with Alice",
   };
+  protected static final int MENU_PICK_CALENDAR = 1;
+
   protected static final int NEW_CALENDAR_EVENT = 1;
   private static final String TAG = "CalendarListActivity";
 
@@ -94,7 +101,6 @@ public class CalendarListActivity extends Activity {
     }
     Log.v(TAG, "Event: " + event);
     Log.v(TAG, "Venue: " + venue);
-    
 
     mCalendarUri = getCalendarUri();
   }
@@ -160,11 +166,63 @@ public class CalendarListActivity extends Activity {
     }
   }
 
-  private void readCalendar() {
-    readCalendar(System.currentTimeMillis());
+  ////////////////////////////////////////
+  // Options Menu
+  ////////////////////////////////////////
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    super.onCreateOptionsMenu(menu);
+
+    menu.add(0, MENU_PICK_CALENDAR, 0, R.string.pick_calendar)
+    .setShortcut('3', 'i')
+    .setIcon(android.R.drawable.ic_menu_add);
+
+    return true;
   }
 
-  private void readCalendar(long time) {
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+    case MENU_PICK_CALENDAR:
+
+      showCalendarPicker();
+
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+
+
+  ////////////////////////////////////////
+  // Calendar Queries
+  ////////////////////////////////////////
+
+  private Cursor getSystemCalendars() {
+    Uri baseUri = mCalendarUri;
+    Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
+    String[] calendarsProjection = new String[]{ "_id", "name" };
+
+    Cursor cursor = managedQuery(calendarsUri,
+                                               calendarsProjection,
+                                               null,
+                                               null,
+                                               null
+                                               );
+
+    return cursor;
+  }
+
+  private void readCalendar() {
+    final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    readCalendar(
+        System.currentTimeMillis(),
+        preferences.getInt("calendar_id", 1)
+        );
+  }
+
+  private void readCalendar(long time, int calendarId) {
     Uri baseUri = mCalendarUri;
     Uri eventUri = baseUri.buildUpon().appendPath("events").build();
     Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
@@ -172,7 +230,7 @@ public class CalendarListActivity extends Activity {
     String[] eventProjection = new String[]{ "_id", "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" };
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
-    int calendarId = 1; // Personal calendar
+    //int calendarId = 1; // Target calendar
 
     //int attendeeStatus = getAttendeeAccepted();
     int attendeeStatus = 1; // Yes?
@@ -215,38 +273,6 @@ public class CalendarListActivity extends Activity {
     ));
   }
 
-  private ArrayList<Event> processCursor(Cursor cursor) {
-    ArrayList<Event> events = new ArrayList<Event>();
-    cursor.moveToNext();
-    cursor.moveToNext();
-    //for (int i = 0; i < CalNames.length; i++) {
-      Event event = new Event(
-        cursor.getLong(0),
-        cursor.getString(2),
-        cursor.getString(3),
-        cursor.getString(6),
-        new Date(cursor.getLong(4)),
-        new Date(cursor.getLong(5))
-      );
-      events.add(event);
-    //}
-
-    return events;
-  }
-
-  private Intent launchCalendarIntent() {
-    long eventStartInMillis = System.currentTimeMillis();
-    long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
-
-    Intent intent = new Intent(Intent.ACTION_EDIT);
-    intent.setType("vnd.android.cursor.item/event");
-    intent.putExtra("title", "Some title");
-    intent.putExtra("description", "Some description");
-    intent.putExtra("beginTime", eventStartInMillis);
-    intent.putExtra("endTime", eventEndInMillis);
-    return intent;
-  }
-
   // Create an observer so that we can update the views whenever a
   // Calendar event changes.
   private ContentObserver mObserver = new ContentObserver(new Handler())
@@ -263,6 +289,28 @@ public class CalendarListActivity extends Activity {
       //eventsChanged();
     }
   };
+
+
+  ////////////////////////////////////////
+  // Data
+  ////////////////////////////////////////
+
+  private Intent launchCalendarIntent() {
+    long eventStartInMillis = System.currentTimeMillis();
+    long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
+
+    Intent intent = new Intent(Intent.ACTION_EDIT);
+    intent.setType("vnd.android.cursor.item/event");
+    intent.putExtra("title", "Some title");
+    intent.putExtra("description", "Some description");
+    intent.putExtra("beginTime", eventStartInMillis);
+    intent.putExtra("endTime", eventEndInMillis);
+    return intent;
+  }
+
+  ////////////////////////////////////////
+  // Reflection
+  ////////////////////////////////////////
 
   private Uri getCalendarUri() {
     Class<?> calendarProviderClass = null;
@@ -323,6 +371,10 @@ public class CalendarListActivity extends Activity {
     return attendeeStatus;
   }
 
+  ////////////////////////////////////////
+  // ArrayAdapter
+  ////////////////////////////////////////
+
   private class EventArrayAdapter extends BaseAdapter {
 
     private Event[] mEvents;
@@ -367,5 +419,60 @@ public class CalendarListActivity extends Activity {
       return view;
     }
   }
+  
+  ////////////////////////////////////////
+  // View Management
+  ////////////////////////////////////////
 
+  private void showCalendarPicker() {
+    final Cursor cursor = getSystemCalendars();
+
+    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int item) {
+        cursor.moveToFirst();
+        cursor.moveToPosition(item);
+        String name = cursor.getString(
+            cursor.getColumnIndex("name")
+            );
+        long id = cursor.getLong(
+            cursor.getColumnIndex("_id")
+            );
+        Log.v(TAG,
+              String.format("Clicked: %s, %d",
+                            name,
+                            id));
+
+        // Update our preferences
+
+
+        final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("calendar_id", (int) id);
+        editor.commit();
+
+        // TODO: refresh
+        readCalendar();
+        //readCalendar(
+        //    System.currentTimeMillis(),
+        //    item
+        //    );
+
+        dialog.dismiss();
+      }
+    };
+
+    final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    builder.setTitle(R.string.pick_calendar);
+    builder.setSingleChoiceItems(
+        cursor,
+        preferences.getInt("calendar_id", -1),
+        "name",
+        listener
+        );
+
+    AlertDialog alert = builder.create();
+    alert.show();
+  }
 }
