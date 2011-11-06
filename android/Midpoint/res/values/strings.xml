@@ -16,7 +16,7 @@
   <string name="go">Go</string>
   <string name="map">Map</string>
   <string name="my_location">My Location</string>
-  <string name="no_events">No events found. Please add a new one.</string>
+  <string name="no_events">No events found. Use MENU to change to a different calendar.</string>
   <string name="pick_calendar">Pick a Calendar</string>
   <string name="pick_venue">Pick a Venue</string>
   <string name="push_me">Push Me!</string>
