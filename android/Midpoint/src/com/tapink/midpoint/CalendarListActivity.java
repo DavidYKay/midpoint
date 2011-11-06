@@ -323,9 +323,15 @@ public class CalendarListActivity extends Activity {
   // Data
   ////////////////////////////////////////
 
+  private static final long SECOND = 1000;
+  private static final long MINUTE = 60;
+  private static final long HOUR   = 60;
+  private static final long DAY    = 24;
+
   private Intent launchCalendarIntent() {
-    long eventStartInMillis = System.currentTimeMillis();
-    long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
+    long eventStartInMillis = System.currentTimeMillis() + 5 * MINUTE * SECOND;
+    //long eventStartInMillis = System.currentTimeMillis() + 1 * HOUR * MINUTE * SECOND;
+    long eventEndInMillis = eventStartInMillis + HOUR * MINUTE * SECOND;
 
     Intent intent = new Intent(Intent.ACTION_EDIT);
     intent.setType("vnd.android.cursor.item/event");
