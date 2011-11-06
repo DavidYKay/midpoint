@@ -1,5 +1,9 @@
 package com.tapink.midpoint;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -10,8 +14,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +60,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
   private VenueAdapter mAdapter;
   private Button mButton;
-  
+
   // Model
   private Event mEvent;
   private Location mLastLocation;
@@ -93,14 +99,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mVenueOverlay = new VenueOverlay(pin, mContext);
     mVenueOverlay.setDelegate(this);
     mMapView.getOverlays().add(mVenueOverlay);
-    
+
     Intent i = getIntent();
     mEvent                 = i.getParcelableExtra("event");
     mLastLocation          = i.getParcelableExtra("my_location");
     Location midpoint      = i.getParcelableExtra("midpoint");
     Location theirLocation = i.getParcelableExtra("their_location");
     String address         = i.getStringExtra("address");
-    
+
     Log.v(TAG, "Event: " + mEvent);
     Log.v(TAG, "Midpoint: " + midpoint);
     Log.v(TAG, "Address: " + address);
@@ -183,7 +189,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   protected boolean isRouteDisplayed() {
     return false;
   }
-  
+
   ////////////////////////////////////////
   // VenueOverlay.Delegate
   ////////////////////////////////////////
@@ -240,11 +246,11 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     DummyDataHelper helper = new DummyDataHelper(mContext);
     JSONArray venues = helper.getSampleVenues();
 
-    //ArrayList<String> list = new ArrayList<String>();     
-    //ArrayList<JSONObject> list = new ArrayList<JSONObject>();     
-    ArrayList<Venue> list = new ArrayList<Venue>();     
-    if (venues != null) { 
-      for (int i=0;i<venues.length();i++){ 
+    //ArrayList<String> list = new ArrayList<String>();
+    //ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+    ArrayList<Venue> list = new ArrayList<Venue>();
+    if (venues != null) {
+      for (int i=0;i<venues.length();i++){
         //list.add(venues.get(i).toString());
         try {
           //list.add((JSONObject) venues.get(i));
@@ -254,8 +260,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-      } 
-    } 
+      }
+    }
 
     //VenueAdapter adapter = new VenueAdapter(venues);
     Venue[] venueArray = new Venue[list.size()];
@@ -264,7 +270,76 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mListView.setAdapter(adapter);
     mAdapter = adapter;
   }
-  
+
+  private void populateRealData(GeoPoint point, String query) {
+    String queryString = "https://api.hyperpublic.com/api/v1/places?client_id=8UufhI6bCKQXKMBn7AUWO67Yq6C8RkfD0BGouTke&client_secret=zdoROY5XRN0clIWsEJyKzHedSK4irYee8jpnOXaP&location=240%20E%2086th%20st,%20new%20york,%20ny&q=cafe";
+
+    HyperPublicFetchTask task = new HyperPublicFetchTask();
+    task.execute(
+      queryString
+    );
+
+  }
+
+  ////////////////////////////////////////
+  // HyperPublicFetchTask
+  ////////////////////////////////////////
+
+  class HyperPublicFetchTask extends AsyncTask<String, Integer, String> {
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... urls) {
+      //Log.v(TAG, "doInBackground: " + urls);
+      Log.v(TAG, "doInBackground: " + urls[0]);
+      return getJsonString(urls[0]);
+    }
+
+    //protected void onProgressUpdate(Integer... progress) {
+    //  setProgressPercent(progress[0]);
+    //}
+
+    protected void onPostExecute(String jsonString) {
+      Log.v(TAG, "onPostExecute: " + jsonString);
+      
+    }
+
+  }
+
+  private String getJsonString(String strUrl) {
+    URL url = null;
+    String jsonString = null;
+    try {
+      url = new URL(strUrl);
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+      throw new IllegalArgumentException("Must be a properly formed URL. Received: " + strUrl);
+    }
+    URLConnection connection;
+    try {
+      connection = url.openConnection();
+      connection.setUseCaches(true);
+      Object response = connection.getContent();
+      if (response instanceof String) {
+        jsonString = (String)response;
+      } else {
+        Log.e(TAG, "Object received: " + response);
+        //InputStream in = connection.getInputStream();
+        //saveStreamToDisk(in);
+        //bitmap = BitmapFactory.decodeStream(in);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return jsonString;
+  }
+
+
   ////////////////////////////////////////
   // JSONVenueAdapter
   ////////////////////////////////////////
@@ -304,7 +379,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       // Kennedy, this is where you supply an XML file to base it on.
       View view = inflater.inflate(R.layout.venue_list_item, null);
       TextView test = (TextView) view;
-      
+
       JSONObject json = (JSONObject) getItem(position);
       String name = "Venue";
       try {
@@ -318,7 +393,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       return test;
     }
   }
-  
+
   private class VenueAdapter extends BaseAdapter {
 
     private Venue[] mVenues;
@@ -349,14 +424,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       // Kennedy, this is where you supply an XML file to base it on.
       View view = inflater.inflate(R.layout.venue_list_item, null);
       TextView test = (TextView) view;
-      
+
       Venue venue = mVenues[position];
       String name = venue.getName();
       test.setText(name);
       return test;
     }
   }
-  
+
   ////////////////////////////////////////
   // View Management
   ////////////////////////////////////////
@@ -397,12 +472,12 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private void setupMap() {
     MapController controller = mMapView.getController();
     ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
-    
+
     GeoPoint current = getMyLocation();
     if (current != null) {
       points.add(current);
     }
-    
+
     for (int i = 0; i < mMidpointOverlay.size(); i++) {
       GeoPoint point = mMidpointOverlay.getItem(i).getPoint();
       if (point != null) {
@@ -416,7 +491,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
         points.add(point);
       }
     }
-    
+
     for (int i = 0; i < mTheirOverlay.size(); i++) {
       GeoPoint point = mTheirOverlay.getItem(i).getPoint();
       if (point != null) {
@@ -457,7 +532,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
         // Sets the minimum and maximum latitude so we can span and zoom
         minLatitude = (minLatitude > latitude) ? latitude : minLatitude;
-        maxLatitude = (maxLatitude < latitude) ? latitude : maxLatitude;               
+        maxLatitude = (maxLatitude < latitude) ? latitude : maxLatitude;
         // Sets the minimum and maximum latitude so we can span and zoom
         minLongitude = (minLongitude > longitude) ? longitude : minLongitude;
         maxLongitude = (maxLongitude < longitude) ? longitude : maxLongitude;
@@ -481,14 +556,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     //// Add the overlay to the mapview
     //mMapOverlayController.add(mMapOverlay, true);
   }
-  
+
   ////////////////////////////////////////
   // Navigation
   ////////////////////////////////////////
-  
+
   private void navigateToConfirmWithVenue(Venue venue) {
     Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
-    
+
     JSONObject json = venue.getJson();
     if (json == null) {
       // Shit hit the fan!

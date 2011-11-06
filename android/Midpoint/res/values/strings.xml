@@ -36,5 +36,9 @@
 
   <!-- Placeholders -->
   <string name="placeholder_venue">This is an awesome venue!</string>
+  
+  <!-- API Keys -->
+  <string name="hyperpublic_client_id">JfNbzpmqrggD2A3UFXHgk9ZPY2XlKsJipWpyDIsb</string>
+  <string name="hyperpublic_client_secret">KN60APwlTlGavfmdJDX51j9JWKxlITVURp3zP4iH</string>
  
 </resources>
