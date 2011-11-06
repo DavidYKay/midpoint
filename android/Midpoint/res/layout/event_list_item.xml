@@ -1,38 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:orientation="horizontal"
-  >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    
+    android:padding="6dip">
 
-  <TextView 
-    android:id="@+id/name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="21dp"
-    android:textColor="#555555"
-    android:paddingTop="15px"
-    android:paddingRight="20px"
-    android:paddingBottom="15px"
-    android:paddingLeft="20px"
-    android:shadowColor="#ffffffff"
-    android:shadowDx="0"
-    android:shadowDy="1"
-    android:shadowRadius="0.2" />
+    
+    <!-- ?android:attr/listPreferredItemHeight -->
+    
+    <ImageView
+        android:id="@+id/icon"
+        
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        
+        android:layout_centerVertical="true"
+        
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="6dip"
+        
+        android:gravity="center"
+        
+        android:src="@drawable/arrow" />   
+     
+     <TextView
+        android:id="@+id/name"
+        
+        android:layout_width="wrap_content"
+        android:layout_height="26dip" 
+        
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+                
+        android:gravity="center_vertical"
+        android:text="Sound the tumpits, this is the title"
+        
+        android:textSize="21dp"
+		android:textColor="#555555"
+		android:shadowColor="#ffffffff"
+		android:shadowDx="0"
+		android:shadowDy="1"
+		android:shadowRadius="0.2"
+		
+		/> 
+    
+    <TextView  
+        android:id="@+id/date"
 
-  <TextView 
-    android:id="@+id/date"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="21dp"
-    android:textColor="#555555"
-    android:paddingTop="15px"
-    android:paddingRight="20px"
-    android:paddingBottom="15px"
-    android:paddingLeft="20px"
-    android:shadowColor="#ffffffff"
-    android:shadowDx="0"
-    android:shadowDy="1"
-    android:shadowRadius="0.2" />
+        android:layout_width="wrap_content"
+        android:layout_height="26dip" 
+        
+        android:layout_below="@id/name"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:text="Filler date text line"
 
-</LinearLayout>
+		android:textSize="16dp"
+		android:textColor="#555555"
+		android:shadowColor="#ffffffff"
+		android:shadowDx="0"
+		android:shadowDy="1"
+		android:shadowRadius="0.2" />
+
+<!--
+        android:layout_above="@id/date"
+        android:layout_toLeftOf="@id/icon"
+        android:layout_alignWithParentIfMissing="true"
+-->
+    
+   
+
+</RelativeLayout>
+    

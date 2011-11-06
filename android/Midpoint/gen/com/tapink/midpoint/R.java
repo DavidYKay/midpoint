@@ -20,34 +20,36 @@ public final class R {
         public static final int red=0x7f070000;
     }
     public static final class drawable {
-        public static final int btn_black=0x7f020000;
-        public static final int btn_blue=0x7f020001;
-        public static final int btn_green=0x7f020002;
-        public static final int btn_purple=0x7f020003;
-        public static final int btn_red=0x7f020004;
-        public static final int btn_yellow=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
-        public static final int marker=0x7f020007;
-        public static final int placeholder_venue=0x7f020008;
+        public static final int arrow=0x7f020000;
+        public static final int btn_black=0x7f020001;
+        public static final int btn_blue=0x7f020002;
+        public static final int btn_green=0x7f020003;
+        public static final int btn_purple=0x7f020004;
+        public static final int btn_red=0x7f020005;
+        public static final int btn_yellow=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int marker=0x7f020008;
+        public static final int placeholder_venue=0x7f020009;
     }
     public static final class id {
         public static final int button=0x7f090006;
         public static final int button_cancel=0x7f090005;
         public static final int button_confirm=0x7f090004;
-        public static final int button_my=0x7f09000b;
-        public static final int date=0x7f090008;
+        public static final int button_my=0x7f09000c;
+        public static final int date=0x7f090009;
         public static final int footer_confirm=0x7f090000;
+        public static final int icon=0x7f090007;
         public static final int image=0x7f090001;
-        public static final int keywords=0x7f090010;
-        public static final int layout_keywords=0x7f09000f;
-        public static final int layout_my=0x7f090009;
-        public static final int layout_their=0x7f09000c;
+        public static final int keywords=0x7f090011;
+        public static final int layout_keywords=0x7f090010;
+        public static final int layout_my=0x7f09000a;
+        public static final int layout_their=0x7f09000d;
         public static final int list=0x7f090003;
-        public static final int mapview=0x7f090011;
-        public static final int my_location=0x7f09000a;
-        public static final int name=0x7f090007;
-        public static final int their_button=0x7f09000e;
-        public static final int their_location=0x7f09000d;
+        public static final int mapview=0x7f090012;
+        public static final int my_location=0x7f09000b;
+        public static final int name=0x7f090008;
+        public static final int their_button=0x7f09000f;
+        public static final int their_location=0x7f09000e;
         public static final int venue_name=0x7f090002;
     }
     public static final class layout {
