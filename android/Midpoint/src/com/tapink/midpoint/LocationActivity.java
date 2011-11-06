@@ -73,6 +73,7 @@ public class LocationActivity extends MapActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
               // No need to do anything. Just dismiss the view.
+              
             }
           });
 
@@ -80,7 +81,7 @@ public class LocationActivity extends MapActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               // Pass in our venue data.
-             
+              findMidPointAndFinish(true);
             }
           });
 
