@@ -252,8 +252,16 @@ public class InviteActivity extends Activity {
   private TimePickerDialog.OnTimeSetListener mStartTimeSetListener =
       new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+          int hourDelta   = mStartTime.hour   - hourOfDay ; 
+          int minuteDelta = mStartTime.minute - minute    ; 
+
           mStartTime.hour = hourOfDay;
           mStartTime.minute = minute;
+
+          mEndTime.hour   -= hourDelta;
+          mEndTime.minute -= minuteDelta;
+
           updateStartTime();
         }
       };
