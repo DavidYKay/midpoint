@@ -9,7 +9,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,8 +23,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,6 +44,8 @@ public class ConfirmVenueActivity extends Activity {
     "Great tex-mex.",
   };
   private static final String TAG = "ConfirmVenueActivity";
+  
+  private Context mContext = this;
 
   private ListView mListView;
   private ImageView mImageView;
@@ -90,9 +100,22 @@ public class ConfirmVenueActivity extends Activity {
     Log.v(TAG, "Venue is now: " + mVenue);
 
     mListView = (ListView) findViewById(R.id.list);
-    mListView.setAdapter(new ArrayAdapter<String>(this, 
-                                                  R.layout.confirm_list_item,
-                                                  VENUE_DATA));
+
+    JSONObject json = mVenue.getJson();
+    JSONArray properties = null;
+    try {
+      properties = json.getJSONArray("properties");
+      mListView.setAdapter(new JSONPropertiesAdapter(properties));
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      mListView.setAdapter(new ArrayAdapter<String>(this, 
+          R.layout.confirm_list_item,
+          VENUE_DATA));
+    }
+  
+
+  
 
   }
 
@@ -188,6 +211,73 @@ public class ConfirmVenueActivity extends Activity {
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+    }
+  }
+
+  ////////////////////////////////////////
+  // JSONVenueAdapter
+  ////////////////////////////////////////
+  
+  private class JSONPropertiesAdapter extends BaseAdapter {
+
+    private JSONArray mProperties;
+
+    public JSONPropertiesAdapter(JSONArray properties) {
+      this.mProperties = properties;
+    }
+
+    @Override
+    public int getCount() {
+      return mProperties.length();
+    }
+
+    @Override
+    public Object getItem(int index) {
+      try {
+        return mProperties.getJSONObject(index);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+      // Kennedy, this is where you supply an XML file to base it on.
+      View view = inflater.inflate(R.layout.confirm_list_item, null);
+      TextView test = (TextView) view;
+
+      JSONObject json = (JSONObject) getItem(position);
+
+      // properties: [
+      // Key: value
+      // ]
+      String key = "";
+      String value = "";
+      try {
+        value = json.getString("value");
+        key = json.getString("key");
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+
+      String hybrid = String.format(
+          "%s : %s",
+          key,
+          value
+          );
+      test.setText(
+          hybrid
+          );
+
+      return test;
     }
   }
 
