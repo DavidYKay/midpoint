@@ -3,7 +3,10 @@ package com.tapink.midpoint;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -170,24 +173,14 @@ public class CalendarListActivity extends ListActivity {
     //Event event = (Event) mListView.getAdapter().getItem(position);
     Event event = (Event) getListAdapter().getItem(position);
 
-    Cursor c = getAttendeesForEvent(
+    //Cursor c = getAttendeesForEvent(
+    Attendee[] attendees = getAttendeesForEvent(
         event.getDatabaseId()
-        );
+    );
 
-    c.moveToFirst();
-    while (c.isAfterLast() == false) {
-    //if (c.getCount() > 0) {
-      Attendee attendee = new Attendee(
-          c.getLong(0),
-          c.getString(1),
-          c.getString(2)
-          );
-
-      Log.v(TAG, "Attendee found: " + attendee);
-
-      c.moveToNext();
+    if (attendees.length > 0) {
+      i.putExtra("attendee", attendees[0]);
     }
-    //i.putExtra("attendee", attendee);
 
     i.putExtra("event", event);
 
@@ -220,22 +213,73 @@ public class CalendarListActivity extends ListActivity {
     }
     return super.onOptionsItemSelected(item);
   }
+  
+  ////////////////////////////////////////
+  // Contact Queries
+  ////////////////////////////////////////
+  
+  private HashSet<String> mUserEmails = null;
+  private HashSet<String> populateEmailSet() {
+    HashSet<String> set = new HashSet<String>();
+    Account[] accounts = AccountManager.get(this).getAccounts();
+    for (Account account : accounts) {
+      // Check possibleEmail against an email regex or treat
+      // account.name as an email address only for certain account.type values.
+      String possibleEmail = account.name;
+      if (TextHelper.checkEmail(possibleEmail)) {
+        set.add(possibleEmail);
+      }
+    }
+
+    return set;
+  }
+
+  private boolean isUserEmail(String email) {
+    if (mUserEmails == null) {
+      mUserEmails = populateEmailSet();
+    }
+
+    return mUserEmails.contains(email);
+  }
 
   ////////////////////////////////////////
   // Attendee Queries
   ////////////////////////////////////////
 
-  private Cursor getAttendeesForEvent(long eventId) {
+  private Attendee[] getAttendeesForEvent(long eventId) {
     String[] attendeesProjection = new String[]{ "_id", "attendeeName", "attendeeEmail" };
 
-    Cursor cursor = managedQuery(mAttendeesUri,
+    Cursor c = managedQuery(mAttendeesUri,
                                  attendeesProjection,
                                  "event_id = ?",
                                  new String[] {Long.toString(eventId)},
                                  null
                                 );
 
-    return cursor;
+    ArrayList<Attendee> attendees = new ArrayList<Attendee>();
+
+    c.moveToFirst();
+    while (c.isAfterLast() == false) {
+      Attendee attendee = new Attendee(
+          c.getLong(0),
+          c.getString(1),
+          c.getString(2)
+          );
+
+      if (!isUserEmail(attendee.getEmail())) {
+        Log.v(TAG, "Attendee found: " + attendee);
+        attendees.add(attendee);
+      } else {
+        Log.v(TAG, "User attendee found: " + attendee);
+      }
+
+      c.moveToNext();
+    }
+
+    Attendee[] array = new Attendee[attendees.size()];
+    attendees.toArray(array);
+
+    return array;
   }
 
 
