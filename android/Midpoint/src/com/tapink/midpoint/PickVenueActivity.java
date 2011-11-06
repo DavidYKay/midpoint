@@ -94,7 +94,6 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mVenueOverlay.setDelegate(this);
     mMapView.getOverlays().add(mVenueOverlay);
     
-
     Intent i = getIntent();
     mEvent            = i.getParcelableExtra("event");
     Location midpoint = i.getParcelableExtra("midpoint");
@@ -381,6 +380,35 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 //  // thus we ensure that we go beyond that number
 //  private final int minLongitude = (int)(+181 * 1E6);
 //  private final int maxLongitude = (int)(-181 * 1E6);
+  
+  private void setupMap() {
+    MapController controller = mMapView.getController();
+    ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
+    
+    GeoPoint current = me.getMyLocation();
+    if (current != null) {
+      points.add(current);
+    }
+
+    for (int i = 0; i < mVenueOverlay.size(); i++) {
+      GeoPoint point = mVenueOverlay.getItem(i).getPoint();
+      if (point != null) {
+        points.add(point);
+      }
+    }
+    
+    for (int i = 0; i < mTheirOverlay.size(); i++) {
+      GeoPoint point = mTheirOverlay.getItem(i).getPoint();
+      if (point != null) {
+        points.add(point);
+      }
+    }
+
+    setupMap(
+        points,
+        controller
+        );
+  }
 
   private void setupMap(Iterable<GeoPoint> points, MapController mapController) {
     // Minimum & maximum latitude so we can span it
