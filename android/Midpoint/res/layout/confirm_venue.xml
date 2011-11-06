@@ -5,7 +5,6 @@
   android:orientation="vertical"
   android:background="#f4f4f4" >
 
-
   <LinearLayout
     android:id="@+id/footer_confirm"
     android:orientation="horizontal"
@@ -13,24 +12,32 @@
     android:layout_height="0px"
     android:layout_weight="20"
     android:layout_alignParentBottom="true"
+    android:background="#75858b"
     >
     <ImageView
       android:id="@+id/image"
       android:layout_width="0px"
       android:layout_height="fill_parent"
-      android:layout_weight="50"
+      android:layout_weight="30"
       android:src="@drawable/placeholder_venue"
-      android:background="@color/red"
       />
     <TextView
       android:id="@+id/venue_name"
       android:layout_width="0px"
       android:layout_height="fill_parent"
-      android:layout_weight="50"
+      android:layout_weight="70"
       android:text="@string/placeholder_venue"
+      
+		android:paddingTop="8dip"
+        android:textSize="24dip"
+        android:textStyle="bold"
+		android:textColor="#ffffff"
+		android:shadowColor="#3e474a"
+		android:shadowDx="0"
+		android:shadowDy="1"
+		android:shadowRadius="0.2"
       />
   </LinearLayout>
-
 
   <ListView
     android:id="@+id/list"
