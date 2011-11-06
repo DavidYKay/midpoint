@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/userpic"
         
-        android:layout_width="54dip"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         
         android:layout_centerVertical="true"
@@ -50,7 +50,7 @@
                 
         android:text="Sound the tumpits, this is the title"
         
-        android:paddingTop="10dip"
+        android:paddingTop="8dip"
         
         android:textSize="21dp"
 		android:textColor="#111111"
