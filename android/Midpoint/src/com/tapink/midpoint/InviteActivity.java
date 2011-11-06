@@ -38,7 +38,6 @@ public class InviteActivity extends Activity {
   private EditText mTitle;
   private EditText mLocation;
   private EditText mDescription;
-  private EditText mGuests;
 
   private Button mDoneButton;
   private Button mCancelButton;
@@ -70,6 +69,9 @@ public class InviteActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.invite);
 
+    mTitle       = (EditText) findViewById(R.id.title);
+    mLocation    = (EditText) findViewById(R.id.location);
+    mDescription = (EditText) findViewById(R.id.description);
 
     mAddressAdapter = new EmailAddressAdapter(this);
     
@@ -195,14 +197,14 @@ public class InviteActivity extends Activity {
   private void updateStartTime() {
     mStartTimeButton.setText(
         new StringBuilder()
-        .append(mStartTime.hour).append("-")
+        .append(mStartTime.hour).append(":")
         .append(mStartTime.minute).append(" "));
   }
 
   private void updateEndTime() {
     mEndTimeButton.setText(
         new StringBuilder()
-        .append(mEndTime.hour).append("-")
+        .append(mEndTime.hour).append(":")
         .append(mEndTime.minute).append(" "));
   }
 
@@ -300,7 +302,7 @@ public class InviteActivity extends Activity {
     i.putExtra("start_date", startDate.getTimeInMillis());
 
     i.putExtra("description" , mDescription.getText().toString());
-    i.putExtra("guests"      , mGuests.getText().toString());
+    i.putExtra("guests"      , mAttendeesList.getText().toString());
     i.putExtra("location"    , mLocation.getText().toString());
     i.putExtra("title"       , mTitle.getText().toString());
 

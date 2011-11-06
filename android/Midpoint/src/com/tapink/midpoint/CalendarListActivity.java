@@ -238,8 +238,8 @@ public class CalendarListActivity extends ListActivity {
             data.getStringExtra("description"),
             startDate,
             endDate,
-            "DK",
-            "dk@gargoyle.co"
+            mUserDisplayName,
+            mUserEmail
         );
       } else {
         Log.e(TAG, "Error! Reply came: " + resultCode);
