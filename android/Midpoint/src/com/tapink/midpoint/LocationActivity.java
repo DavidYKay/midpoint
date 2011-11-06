@@ -61,10 +61,8 @@ public class LocationActivity extends MapActivity {
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        String theirInput = mMyLocation.getText().toString();
-        if (!TextHelper.isEmptyString(theirInput)) {
-          findMidPointAndFinish();
-        } else {
+        String theirInput = mTheirLocation.getText().toString();
+        if (TextHelper.isEmptyString(theirInput)) {
           AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
           dialog.setTitle(R.string.their_location_missing);
           dialog.setMessage(R.string.their_location_missing_explanation);
@@ -73,7 +71,7 @@ public class LocationActivity extends MapActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
               // No need to do anything. Just dismiss the view.
-              
+
             }
           });
 
@@ -86,6 +84,8 @@ public class LocationActivity extends MapActivity {
           });
 
           dialog.show();
+        } else {
+          findMidPointAndFinish();
         }
       }
     });
