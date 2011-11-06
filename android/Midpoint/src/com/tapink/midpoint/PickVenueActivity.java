@@ -1,7 +1,24 @@
 package com.tapink.midpoint;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +29,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +55,9 @@ import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.map.VenueItem;
 import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
+import com.tapink.midpoint.util.GeneralConstants;
 import com.tapink.midpoint.util.GeoHelper;
+import com.tapink.midpoint.util.TextHelper;
 
 public class PickVenueActivity extends MapActivity implements VenueOverlay.Delegate {
 
@@ -54,7 +74,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
   private VenueAdapter mAdapter;
   private Button mButton;
-  
+
   // Model
   private Event mEvent;
   private Location mLastLocation;
@@ -93,14 +113,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mVenueOverlay = new VenueOverlay(pin, mContext);
     mVenueOverlay.setDelegate(this);
     mMapView.getOverlays().add(mVenueOverlay);
-    
+
     Intent i = getIntent();
     mEvent                 = i.getParcelableExtra("event");
     mLastLocation          = i.getParcelableExtra("my_location");
     Location midpoint      = i.getParcelableExtra("midpoint");
     Location theirLocation = i.getParcelableExtra("their_location");
     String address         = i.getStringExtra("address");
-    
+
     Log.v(TAG, "Event: " + mEvent);
     Log.v(TAG, "Midpoint: " + midpoint);
     Log.v(TAG, "Address: " + address);
@@ -113,7 +133,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
           new OverlayItem(
               GeoHelper.locationToGeoPoint(theirLocation),
               "Their Location",
-              "Brett is here."
+              "Your friend is here."
               )
           );
     }
@@ -139,10 +159,17 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       throw new IllegalStateException("Need to have either a location or an address!");
     }
 
-    populateSampleData();
-    populateMapFromListAdapter();
-
-    setupMap();
+    if (GeneralConstants.OFFLINE_MODE) {
+      populateSampleData();
+      //populateMapFromListAdapter();
+      //setupMap();
+    } else {
+      // Fetch live data
+      populateRealData(
+          midpoint,
+          "cafe"
+          );
+    }
   }
 
   @Override
@@ -183,7 +210,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   protected boolean isRouteDisplayed() {
     return false;
   }
-  
+
   ////////////////////////////////////////
   // VenueOverlay.Delegate
   ////////////////////////////////////////
@@ -235,36 +262,201 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       );
     }
   }
-
+  
+  
   private void populateSampleData() {
     DummyDataHelper helper = new DummyDataHelper(mContext);
     JSONArray venues = helper.getSampleVenues();
+    loadData(venues);
+  }
 
-    //ArrayList<String> list = new ArrayList<String>();     
-    //ArrayList<JSONObject> list = new ArrayList<JSONObject>();     
-    ArrayList<Venue> list = new ArrayList<Venue>();     
-    if (venues != null) { 
-      for (int i=0;i<venues.length();i++){ 
-        //list.add(venues.get(i).toString());
+  private void loadData(JSONArray venues) {
+    ArrayList<Venue> list = new ArrayList<Venue>();
+    if (venues != null) {
+      for (int i=0;i<venues.length();i++){
         try {
-          //list.add((JSONObject) venues.get(i));
           Venue venue = new Venue((JSONObject) venues.get(i));
           list.add(venue);
         } catch (JSONException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
-      } 
-    } 
+      }
+    }
 
-    //VenueAdapter adapter = new VenueAdapter(venues);
     Venue[] venueArray = new Venue[list.size()];
     list.toArray(venueArray);
     VenueAdapter adapter = new VenueAdapter(venueArray);
     mListView.setAdapter(adapter);
     mAdapter = adapter;
+
+    populateMapFromListAdapter();
+    setupMap();
   }
-  
+
+  //private void populateRealData(GeoPoint point, String query) {
+  private void populateRealData(Location loc, String query) {
+    // TODO: Use real params
+
+    ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+    if (!TextHelper.isEmptyString(query)) {
+      params.add(new BasicNameValuePair(
+          "q",
+          query));
+    }
+    params.add(new BasicNameValuePair(
+        "lat",
+        Double.toString(
+            loc.getLatitude()
+            )));
+    params.add(new BasicNameValuePair(
+        "lon",
+        Double.toString(
+            loc.getLongitude()
+            )));
+    params.add(new BasicNameValuePair(
+        "client_secret", 
+        getResources().getText(
+            R.string.hyperpublic_client_secret
+            ).toString()
+        ));
+    params.add(new BasicNameValuePair(
+        "client_id", 
+        getResources().getText(
+            R.string.hyperpublic_client_id
+            ).toString()
+        ));
+    String parameterString = URLEncodedUtils.format(params, "utf-8");
+    String baseUrl = "https://api.hyperpublic.com/api/v1/places";
+    String customString = String.format("%s?%s",
+        baseUrl,
+        parameterString
+    );
+
+    String queryString = "https://api.hyperpublic.com/api/v1/places?client_id=8UufhI6bCKQXKMBn7AUWO67Yq6C8RkfD0BGouTke&client_secret=zdoROY5XRN0clIWsEJyKzHedSK4irYee8jpnOXaP&location=240%20E%2086th%20st,%20new%20york,%20ny&q=cafe";
+
+    Log.v(TAG, "queryString: " + queryString);
+    Log.v(TAG, "customString: " + customString);
+
+    HyperPublicFetchTask task = new HyperPublicFetchTask();
+    task.execute(
+      //queryString
+      customString
+    );
+  }
+
+  ////////////////////////////////////////
+  // HyperPublicFetchTask
+  ////////////////////////////////////////
+
+  class HyperPublicFetchTask extends AsyncTask<String, Integer, String> {
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... urls) {
+      //Log.v(TAG, "doInBackground: " + urls);
+      Log.v(TAG, "doInBackground: " + urls[0]);
+      return getJsonString(urls[0]);
+    }
+
+    //protected void onProgressUpdate(Integer... progress) {
+    //  setProgressPercent(progress[0]);
+    //}
+
+    protected void onPostExecute(String jsonString) {
+      Log.v(TAG, "onPostExecute: " + jsonString);
+      JSONArray venues = null;
+      try {
+        venues = new JSONArray(jsonString);
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      loadData(venues);
+    }
+
+  }
+
+  private String getJsonString(String strUrl) {
+    URL url = null;
+    String jsonString = null;
+    try {
+      url = new URL(strUrl);
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+      throw new IllegalArgumentException("Must be a properly formed URL. Received: " + strUrl);
+    }
+
+    URLConnection conn;
+    //HttpsURLConnection connection;
+
+    // Code block for determining HTTP or https
+    if (url.getProtocol().toLowerCase().equals("https")) {
+        trustAllHosts();
+        HttpsURLConnection https;
+        try {
+          https = (HttpsURLConnection) url.openConnection();
+        } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+        }
+        https.setHostnameVerifier(DO_NOT_VERIFY);
+        conn = https;
+    } else {
+        try {
+          conn = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+        }
+    }
+
+    try {
+      Object response = conn.getContent();
+      if (response instanceof String) {
+        jsonString = (String)response;
+      } else if (response instanceof GZIPInputStream) {
+        Log.e(TAG, "GZIPInputStream received: " + response);
+        GZIPInputStream zis = (GZIPInputStream) response;
+        try {
+          // Reading from 'zis' gets you the uncompressed bytes...
+          jsonString = processStream(zis);
+        } finally {
+          zis.close();
+        }
+      } else {
+        Log.e(TAG, "Object received: " + response);
+        //InputStream in = connection.getInputStream();
+        //saveStreamToDisk(in);
+        //bitmap = BitmapFactory.decodeStream(in);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return jsonString;
+  }
+
+  private String processStream(GZIPInputStream zis) {
+    InputStreamReader reader = new InputStreamReader(zis);
+    BufferedReader in = new BufferedReader(reader);
+
+    String readed;
+    try {
+      while ((readed = in.readLine()) != null) {
+        System.out.println(readed);
+        return readed;
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   ////////////////////////////////////////
   // JSONVenueAdapter
   ////////////////////////////////////////
@@ -304,7 +496,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       // Kennedy, this is where you supply an XML file to base it on.
       View view = inflater.inflate(R.layout.venue_list_item, null);
       TextView test = (TextView) view;
-      
+
       JSONObject json = (JSONObject) getItem(position);
       String name = "Venue";
       try {
@@ -318,7 +510,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       return test;
     }
   }
-  
+
   private class VenueAdapter extends BaseAdapter {
 
     private Venue[] mVenues;
@@ -349,14 +541,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       // Kennedy, this is where you supply an XML file to base it on.
       View view = inflater.inflate(R.layout.venue_list_item, null);
       TextView test = (TextView) view;
-      
+
       Venue venue = mVenues[position];
       String name = venue.getName();
       test.setText(name);
       return test;
     }
   }
-  
+
   ////////////////////////////////////////
   // View Management
   ////////////////////////////////////////
@@ -397,12 +589,12 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private void setupMap() {
     MapController controller = mMapView.getController();
     ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
-    
+
     GeoPoint current = getMyLocation();
     if (current != null) {
       points.add(current);
     }
-    
+
     for (int i = 0; i < mMidpointOverlay.size(); i++) {
       GeoPoint point = mMidpointOverlay.getItem(i).getPoint();
       if (point != null) {
@@ -416,7 +608,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
         points.add(point);
       }
     }
-    
+
     for (int i = 0; i < mTheirOverlay.size(); i++) {
       GeoPoint point = mTheirOverlay.getItem(i).getPoint();
       if (point != null) {
@@ -457,7 +649,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
         // Sets the minimum and maximum latitude so we can span and zoom
         minLatitude = (minLatitude > latitude) ? latitude : minLatitude;
-        maxLatitude = (maxLatitude < latitude) ? latitude : maxLatitude;               
+        maxLatitude = (maxLatitude < latitude) ? latitude : maxLatitude;
         // Sets the minimum and maximum latitude so we can span and zoom
         minLongitude = (minLongitude > longitude) ? longitude : minLongitude;
         maxLongitude = (maxLongitude < longitude) ? longitude : maxLongitude;
@@ -481,14 +673,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     //// Add the overlay to the mapview
     //mMapOverlayController.add(mMapOverlay, true);
   }
-  
+
   ////////////////////////////////////////
   // Navigation
   ////////////////////////////////////////
-  
+
   private void navigateToConfirmWithVenue(Venue venue) {
     Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
-    
+
     JSONObject json = venue.getJson();
     if (json == null) {
       // Shit hit the fan!
@@ -501,4 +693,52 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       startActivity(i);
     }
   }
+
+
+    // always verify the host - dont check for certificate
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+      public boolean verify(String hostname, SSLSession session) {
+        return true;
+      }
+    };
+
+
+    /**
+     * Trust every server - dont check for any certificate
+     */
+    private static void trustAllHosts() {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+          return new java.security.cert.X509Certificate[] {};
+        }
+
+        @Override
+        public void checkClientTrusted(
+            java.security.cert.X509Certificate[] chain, String authType)
+            throws java.security.cert.CertificateException {
+          // TODO Auto-generated method stub
+          
+        }
+
+        @Override
+        public void checkServerTrusted(
+            java.security.cert.X509Certificate[] chain, String authType)
+            throws java.security.cert.CertificateException {
+          // TODO Auto-generated method stub
+          
+        }
+      } };
+
+      // Install the all-trusting trust manager
+      try {
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection
+            .setDefaultSSLSocketFactory(sc.getSocketFactory());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
 }
