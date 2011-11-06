@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -59,6 +61,17 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     });
 
     mListView = (ListView) findViewById(R.id.list);
+    mListView.setOnItemClickListener(new OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position,
+                              long id) {
+
+        //Venue venue = 
+        //navigateToConfirmWithVenue(venue);
+
+      }
+    });
+
 
     mMapView = (MapView) findViewById(R.id.mapview);
     me = new MyLocationOverlay(this, mMapView);
@@ -140,19 +153,9 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     dialog.setPositiveButton(R.string.view_venue, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-
         // Pass in our venue data.
-        Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
-
         Venue venue = item.getVenue();
-        JSONObject json = venue.getJson();
-        if (json != null) {
-          i.putExtra("venue", venue);
-          i.putExtra("event", mEvent);
-        }
-
-        // Navigate to the next screen.
-        startActivity(i);
+        navigateToConfirmWithVenue(venue);
       }
 
     });
@@ -225,19 +228,54 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       View view = inflater.inflate(R.layout.venue_list_item, null);
       TextView test = (TextView) view;
       
-      //TextView test = new TextView(mContext);
-
       JSONObject json = (JSONObject) getItem(position);
       String name = "Venue";
       try {
         name = json.getString("display_name");
       } catch (JSONException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
 
       test.setText(name);
 
+      return test;
+    }
+  }
+  
+  private class VenueAdapter extends BaseAdapter {
+
+    private Venue[] mVenues;
+
+    public VenueAdapter(Venue[] venues) {
+      this.mVenues = venues;
+    }
+
+    @Override
+    public int getCount() {
+      return mVenues.length;
+    }
+
+    @Override
+    public Object getItem(int index) {
+      return mVenues[index];
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+      // Kennedy, this is where you supply an XML file to base it on.
+      View view = inflater.inflate(R.layout.venue_list_item, null);
+      TextView test = (TextView) view;
+      
+      Venue venue = mVenues[position];
+      String name = venue.getName();
+      test.setText(name);
       return test;
     }
   }
@@ -255,6 +293,26 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       mMapView.setVisibility(View.VISIBLE);
       mListView.setVisibility(View.GONE);
       mButton.setText(R.string.list);
+    }
+  }
+  
+  ////////////////////////////////////////
+  // Navigation
+  ////////////////////////////////////////
+  
+  private void navigateToConfirmWithVenue(Venue venue) {
+    Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
+    
+    JSONObject json = venue.getJson();
+    if (json != null) {
+      // Shit hit the fan!
+      Log.e(TAG, "Illegal venue!");
+      throw new IllegalStateException("Venue didn't have any underlying JSON object!");
+    } else {
+      i.putExtra("event", mEvent);
+      i.putExtra("venue", venue);
+
+      startActivity(i);
     }
   }
 }
