@@ -29,6 +29,18 @@
     android:layout_weight="10"
     android:hint="@string/their_location"
     />
+  
+  <EditText
+    android:id="@+id/keywords"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="3dp"
+    android:layout_height="0px"
+    android:layout_weight="10"
+    android:hint="@string/hint_keyword"
+    />
 
   <com.google.android.maps.MapView
     android:id="@+id/mapview"

@@ -37,8 +37,9 @@ public final class R {
         public static final int date=0x7f090008;
         public static final int footer_confirm=0x7f090000;
         public static final int image=0x7f090001;
+        public static final int keywords=0x7f09000b;
         public static final int list=0x7f090003;
-        public static final int mapview=0x7f09000b;
+        public static final int mapview=0x7f09000c;
         public static final int my_location=0x7f090009;
         public static final int name=0x7f090007;
         public static final int their_location=0x7f09000a;
@@ -66,6 +67,9 @@ public final class R {
         public static final int create_new_event=0x7f050012;
         public static final int dk_dev_key=0x7f050001;
         public static final int hello=0x7f050003;
+        /**  Hints 
+         */
+        public static final int hint_keyword=0x7f050014;
         public static final int kennedy_dev_key=0x7f050002;
         public static final int list=0x7f050007;
         public static final int location=0x7f05000b;
@@ -76,7 +80,7 @@ public final class R {
         public static final int pick_venue=0x7f05000c;
         /**  Placeholders 
          */
-        public static final int placeholder_venue=0x7f050014;
+        public static final int placeholder_venue=0x7f050015;
         public static final int push_me=0x7f05000f;
         public static final int their_location=0x7f050011;
         public static final int view_venue=0x7f05000e;
