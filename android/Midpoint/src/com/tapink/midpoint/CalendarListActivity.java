@@ -90,6 +90,19 @@ public class CalendarListActivity extends ListActivity {
     if (accountName != null) {
       mUserEmail = accountName;
       Log.v(TAG, "mUserEmail: " + mUserEmail);
+      if (mUserEmail != null) {
+        // go fetch the display name
+        long contactId = getContactIdForEmail(mUserEmail);
+        Cursor c = getContact(contactId);
+        c.moveToFirst();
+        mUserDisplayName = c.getString(
+            c.getColumnIndex(
+            ContactsContract.Contacts.DISPLAY_NAME
+            )
+        );
+        Log.v(TAG, "mUserDisplayName: " + mUserDisplayName);
+        c.close();
+      }
     }
 
     mCalendarUri  = getCalendarUri();
@@ -295,6 +308,29 @@ public class CalendarListActivity extends ListActivity {
   // Contact Queries
   ////////////////////////////////////////
   
+  public Cursor getContact(long contactId) {
+    Uri uri = ContactsContract.Contacts.CONTENT_URI;
+
+    //String[] projection = new String[] {
+    //  ContactsContract.Contacts._ID,
+    //  ContactsContract.Contacts.DISPLAY_NAME,
+    //};
+    String[] projection = null;
+
+    String selection = ContactsContract.Contacts._ID + " = ?";
+    String[] selectionArgs = new String[] { String.valueOf(contactId) };
+    String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
+
+    return mContentResolver.query(
+        uri,
+        projection,
+        selection,
+        selectionArgs,
+        sortOrder);
+  }
+
+  
+  
   private long getContactIdForEmail(String email) {
     String[] projection = new String[]{ 
       ContactsContract.Data._ID,
@@ -426,7 +462,6 @@ public class CalendarListActivity extends ListActivity {
 
     return array;
   }
-
 
   ////////////////////////////////////////
   // Calendar Queries
