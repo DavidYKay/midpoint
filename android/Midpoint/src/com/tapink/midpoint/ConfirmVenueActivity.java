@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -62,6 +63,9 @@ public class ConfirmVenueActivity extends Activity {
     
     mImageView = (ImageView) findViewById(R.id.image);
     mVenueName = (TextView) findViewById(R.id.venue_name);
+
+    mImageView.setOnClickListener(mGrouponListener);
+    mVenueName.setOnClickListener(mGrouponListener);
 
     final Button actionConfirmButton = (Button) findViewById(R.id.button_confirm);
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -114,9 +118,6 @@ public class ConfirmVenueActivity extends Activity {
           VENUE_DATA));
     }
   
-
-  
-
   }
 
   private void initViewsFromVenue(Venue venue) {
@@ -280,5 +281,16 @@ public class ConfirmVenueActivity extends Activity {
       return test;
     }
   }
+
+  private View.OnClickListener mGrouponListener = new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String affiliateUrl = "http://oxcart.hyperpublic.com/redirect/a51b1c8b4d45d9c204b27bf1de4d6d30304b30c042fe329a41cff1907983ae97/LS0tIAo6dXJsOiBodHRwOi8vd3d3Lmtxenlmai5jb20vY2xpY2stNTQyOTI2Ny0xMDg5MDQyMj91cmw9aHR0cCUzQSUyRiUyRnd3dy5rZ2JkZWFscy5jb20lMkZuZXcteW9yay1jaXR5JTJGZGVhbHMlMkY1NDY2NyUyRjU2LW9mZi1hLXBhc3RhLWRpbm5lci13aXRoLXdpbmUtYXQtY2xvdWQtOS1kaW5lciZzaWQ9SmZOYnpwbXFyZ2dEMkEzVUZYSGdrOVpQWTJYbEtzSmlwV3B5RElzYgo6Y2xpZW50X2lkOiBKZk5ienBtcXJnZ0QyQTNVRlhIZ2s5WlBZMlhsS3NKaXBXcHlESXNiCjpwcm9wczogCiAgOm9mZmVyX2lkOiAhcnVieS9vYmplY3Q6QlNPTjo6T2JqZWN0SWQgCiAgICBkYXRhOiAKICAgIC0gNzgKICAgIC0gMTc3CiAgICAtIDcxCiAgICAtIDEyCiAgICAtIDQxCiAgICAtIDc0CiAgICAtIDE4NAogICAgLSAwCiAgICAtIDEKICAgIC0gMAogICAgLSAzNwogICAgLSA4Mgo=";
+        
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(affiliateUrl));
+        startActivity(browserIntent);
+      }
+    
+  };
 
 }
