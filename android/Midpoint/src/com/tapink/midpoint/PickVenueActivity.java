@@ -87,14 +87,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
     Intent i = getIntent();
     mEvent         = i.getParcelableExtra("event");
-    Location loc   = i.getParcelableExtra("location");
+    Location midpoint   = i.getParcelableExtra("midpoint");
     String address = i.getStringExtra("address");
     
     Log.v(TAG, "Event: " + mEvent);
-    Log.v(TAG, "Location: " + loc);
+    Log.v(TAG, "Midpoint: " + midpoint);
     Log.v(TAG, "Address: " + address);
 
-    if (loc != null) {
+    if (midpoint != null) {
       //mLocation = loc;
       // Make a query using the location
 
