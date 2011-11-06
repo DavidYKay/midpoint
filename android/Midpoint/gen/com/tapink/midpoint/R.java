@@ -31,15 +31,17 @@ public final class R {
         public static final int placeholder_venue=0x7f020008;
     }
     public static final class id {
-        public static final int button=0x7f090009;
+        public static final int button=0x7f09000b;
         public static final int button_cancel=0x7f090005;
         public static final int button_confirm=0x7f090004;
+        public static final int description=0x7f090007;
         public static final int footer_confirm=0x7f090000;
         public static final int image=0x7f090001;
         public static final int list=0x7f090003;
-        public static final int mapview=0x7f090008;
-        public static final int my_location=0x7f090006;
-        public static final int their_location=0x7f090007;
+        public static final int mapview=0x7f09000a;
+        public static final int my_location=0x7f090008;
+        public static final int name=0x7f090006;
+        public static final int their_location=0x7f090009;
         public static final int venue_name=0x7f090002;
     }
     public static final class layout {
