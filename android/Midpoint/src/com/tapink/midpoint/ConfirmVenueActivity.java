@@ -56,6 +56,9 @@ public class ConfirmVenueActivity extends Activity {
       @Override
       public void onClick(View v) {
         Intent i = new Intent(ConfirmVenueActivity.this, CalendarListActivity.class);
+
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         startActivity(i);
       }
     });
@@ -75,7 +78,6 @@ public class ConfirmVenueActivity extends Activity {
     if (venue != null) {
       mVenue = venue;
       initViewsFromVenue(mVenue);
-      
       
     }
     Log.v(TAG, "Venue is now: " + venue);
