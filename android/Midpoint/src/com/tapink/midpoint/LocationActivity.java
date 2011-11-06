@@ -11,12 +11,15 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.tapink.midpoint.calendar.Event;
 
 public class LocationActivity extends MapActivity {
 
   private static final String TAG = "LocationActivity";
   private MyLocationOverlay me;
   private MapView mMapView;
+  
+  private Event mEvent;
 
   /** Called when the activity is first created. */
   @Override
@@ -29,6 +32,9 @@ public class LocationActivity extends MapActivity {
       @Override
       public void onClick(View v) {
         Intent i = new Intent(LocationActivity.this, PickVenueActivity.class);
+
+        i.putExtra("event", mEvent);
+
         startActivity(i);
       }
     });
@@ -36,6 +42,11 @@ public class LocationActivity extends MapActivity {
     mMapView = (MapView) findViewById(R.id.mapview);
     me = new MyLocationOverlay(this, mMapView);
     mMapView.getOverlays().add(me);
+
+
+    Intent i = getIntent();
+    mEvent = i.getParcelableExtra("event");
+    Log.v(TAG, "Event: " + mEvent);
 
   }
   

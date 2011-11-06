@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tapink.midpoint.calendar.Event;
+import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.TextHelper;
 
 public class CalendarListActivity extends Activity {
@@ -62,7 +63,6 @@ public class CalendarListActivity extends Activity {
     });
 
     mListView = (ListView) findViewById(R.id.list);
-    //mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, MEETINGS));
 
     mListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -72,10 +72,7 @@ public class CalendarListActivity extends Activity {
 
         Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
 
-        // TODO: Pass in the calendar event ID
         Event event = (Event) mListView.getAdapter().getItem(position);
-
-        //i.putExtra("event_id", event.getDatabaseId());
 
         i.putExtra("event", event);
 
@@ -83,6 +80,21 @@ public class CalendarListActivity extends Activity {
 
       }
     });
+
+    Intent intent = getIntent();
+    Event event = intent.getParcelableExtra("event");
+    Venue venue = intent.getParcelableExtra("venue");
+
+    if (event != null && venue != null) {
+      Log.v(TAG, "Sweet! Received both an event and a venue.");
+      // Sweet!
+      // Let's update the calendar event.
+    } else {
+      Log.v(TAG, "Aw snap. No event received.");
+    }
+    Log.v(TAG, "Event: " + event);
+    Log.v(TAG, "Venue: " + venue);
+    
 
     mCalendarUri = getCalendarUri();
   }

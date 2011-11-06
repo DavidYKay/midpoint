@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.Venue;
 
 public class ConfirmVenueActivity extends Activity {
@@ -40,6 +41,7 @@ public class ConfirmVenueActivity extends Activity {
   private ImageView mImageView;
   private TextView mVenueName;
 
+  private Event mEvent;
   private Venue mVenue;
     
   /** Called when the activity is first created. */
@@ -59,6 +61,9 @@ public class ConfirmVenueActivity extends Activity {
 
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+        i.putExtra("event", mEvent);
+        i.putExtra("venue", mVenue);
+
         startActivity(i);
       }
     });
@@ -74,13 +79,15 @@ public class ConfirmVenueActivity extends Activity {
     // Grab venue data from intent
 
     Intent i = getIntent();
-    Venue venue = i.getParcelableExtra("venue");
-    if (venue != null) {
-      mVenue = venue;
+    
+    mEvent = i.getParcelableExtra("event");
+    Log.v(TAG, "Event is now: " + mEvent);
+
+    mVenue = i.getParcelableExtra("venue");
+    if (mVenue != null) {
       initViewsFromVenue(mVenue);
-      
     }
-    Log.v(TAG, "Venue is now: " + venue);
+    Log.v(TAG, "Venue is now: " + mVenue);
 
     mListView = (ListView) findViewById(R.id.list);
     mListView.setAdapter(new ArrayAdapter<String>(this, 
