@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tapink.midpoint.calendar.Attendee;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.TextHelper;
@@ -53,6 +54,7 @@ public class CalendarListActivity extends ListActivity {
   private Uri mCalendarUri;
   private Uri mEventUri;
   private Uri mCalendarsUri;
+  private Uri mAttendeesUri;
 
   /** Called when the activity is first created. */
   @Override
@@ -71,22 +73,10 @@ public class CalendarListActivity extends ListActivity {
       }
     });
 
-    //mListView = (ListView) findViewById(R.id.list);
-
-    //mListView.setOnItemClickListener(new OnItemClickListener() {
-    //  @Override
-    //  public void onItemClick(AdapterView<?> parent, View view, int position,
-    //      long id) {
-    //    Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
-    //    Event event = (Event) mListView.getAdapter().getItem(position);
-    //    i.putExtra("event", event);
-    //    startActivity(i);
-    //  }
-    //});
-
     mCalendarUri  = getCalendarUri();
     mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
     mCalendarsUri = mCalendarUri.buildUpon().appendPath("calendars").build();
+    mAttendeesUri = mCalendarUri.buildUpon().appendPath("attendees").build();
     Log.v(TAG, "eventsUri: " + mEventUri);
     Log.v(TAG, "calendarsUri: " + mCalendarsUri);
 
@@ -180,6 +170,23 @@ public class CalendarListActivity extends ListActivity {
     //Event event = (Event) mListView.getAdapter().getItem(position);
     Event event = (Event) getListAdapter().getItem(position);
 
+    Cursor c = getAttendeesForEvent(
+        event.getDatabaseId()
+        );
+
+    if (c.getCount() > 0) {
+      c.moveToNext();
+      Attendee attendee = new Attendee(
+          //c.getLong(1),
+          //c.getString(2),
+          //c.getString(3)
+          c.getLong(0),
+          c.getString(1),
+          c.getString(2)
+          );
+      i.putExtra("attendee", attendee);
+    }
+
     i.putExtra("event", event);
 
     startActivity(i);
@@ -212,6 +219,22 @@ public class CalendarListActivity extends ListActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  ////////////////////////////////////////
+  // Attendee Queries
+  ////////////////////////////////////////
+
+  private Cursor getAttendeesForEvent(long eventId) {
+    String[] attendeesProjection = new String[]{ "_id", "attendeeName", "attendeeEmail" };
+
+    Cursor cursor = managedQuery(mAttendeesUri,
+                                 attendeesProjection,
+                                 null,
+                                 null,
+                                 null
+                                );
+
+    return cursor;
+  }
 
 
   ////////////////////////////////////////

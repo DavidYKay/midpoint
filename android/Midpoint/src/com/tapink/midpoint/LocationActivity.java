@@ -12,6 +12,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.tapink.midpoint.calendar.Attendee;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.util.GeoHelper;
 import com.tapink.midpoint.util.TextHelper;
@@ -76,7 +77,9 @@ public class LocationActivity extends MapActivity {
 
     Intent i = getIntent();
     mEvent = i.getParcelableExtra("event");
+    Attendee attendee = i.getParcelableExtra("attendee");
     Log.v(TAG, "Event: " + mEvent);
+    Log.v(TAG, "attendee: " + attendee);
 
   }
 
