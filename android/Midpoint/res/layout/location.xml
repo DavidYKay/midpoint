@@ -6,41 +6,69 @@
   android:background="#f4f4f4" >
 
 
-  <EditText
-    android:id="@+id/my_location"
-    android:layout_marginTop="6dp"
-    android:layout_marginRight="3dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginLeft="3dp"
+  <LinearLayout
+    android:id="@+id/layout_my"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
     android:layout_weight="10"
-    android:hint="@string/my_location"
-    />
+    android:layout_alignParentBottom="true"
+    >
+    <EditText
+      android:id="@+id/my_location"
+      android:layout_marginTop="6dp"
+      android:layout_marginRight="3dp"
+      android:layout_marginBottom="2dp"
+      android:layout_marginLeft="3dp"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="10"
+      android:hint="@string/my_location"
+      />
+  </LinearLayout>
 
-  <EditText
-    android:id="@+id/their_location"
+  <LinearLayout
+    android:id="@+id/layout_their"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_marginTop="0dp"
-    android:layout_marginRight="3dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginLeft="3dp"
     android:layout_height="0px"
     android:layout_weight="10"
-    android:hint="@string/their_location"
-    />
-  
-  <EditText
-    android:id="@+id/keywords"
+    android:layout_alignParentBottom="true"
+    >
+    <EditText
+      android:id="@+id/their_location"
+      android:layout_marginTop="0dp"
+      android:layout_marginRight="3dp"
+      android:layout_marginBottom="2dp"
+      android:layout_marginLeft="3dp"
+      android:layout_height="wrap_content"
+      android:layout_width="fill_parent"
+      android:layout_weight="10"
+      android:hint="@string/their_location"
+      />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/layout_keywords"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_marginTop="0dp"
-    android:layout_marginRight="3dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginLeft="3dp"
     android:layout_height="0px"
     android:layout_weight="10"
-    android:hint="@string/hint_keyword"
-    />
+    android:layout_alignParentBottom="true"
+    >
+    <EditText
+      android:id="@+id/keywords"
+      android:layout_width="fill_parent"
+      android:layout_marginTop="0dp"
+      android:layout_marginRight="3dp"
+      android:layout_marginBottom="2dp"
+      android:layout_marginLeft="3dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="10"
+      android:hint="@string/hint_keyword"
+      />
+
+  </LinearLayout>
 
   <com.google.android.maps.MapView
     android:id="@+id/mapview"
@@ -53,7 +81,7 @@
     android:apiKey="@string/maps_api_key"
     />
 
- <LinearLayout
+  <LinearLayout
     android:id="@+id/footer_confirm"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
@@ -61,11 +89,11 @@
     android:layout_weight="10"
     android:layout_alignParentBottom="true"
     >
-  <Button
-    android:id="@+id/button"
-    android:text="@string/advance" 
-    android:background="@drawable/btn_blue"
-    style="@style/ButtonText"
-    />
-</LinearLayout>
+    <Button
+      android:id="@+id/button"
+      android:text="@string/advance" 
+      android:background="@drawable/btn_blue"
+      style="@style/ButtonText"
+      />
+  </LinearLayout>
 </LinearLayout>
