@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -228,6 +230,19 @@ public class CalendarListActivity extends ListActivity {
         String guests = data.getStringExtra("guests");
         Log.v(TAG, "guests: " + guests);
 
+        Pattern p = Pattern.compile("(\\S+) <(\\S+)>");
+        Matcher m = p.matcher(guests);
+        String name = null;
+        String email = null;
+        while (m.find()) { // Find each match in turn; String can't do this.
+          name = m.group(1); // Access a submatch group; String can't do this.
+          email = m.group(2); // Access a submatch group; String can't do this.
+          Log.v(TAG, "found name: " + name);
+          Log.v(TAG, "found email: " + email);
+          break;
+         
+        }
+
         //TODO: Insert location
         //data.getStringExtra("location"    )
 
@@ -238,8 +253,8 @@ public class CalendarListActivity extends ListActivity {
             data.getStringExtra("description"),
             startDate,
             endDate,
-            mUserDisplayName,
-            mUserEmail
+            name,
+            email
         );
       } else {
         Log.e(TAG, "Error! Reply came: " + resultCode);
