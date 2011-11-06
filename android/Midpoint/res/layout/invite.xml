@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2006 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/scroll_view"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout android:id="@+id/event"
+    android:background="#fafafa"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- WHAT -->
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/EditEvent_Layout">
+
+      <TextView android:id="@+id/what_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/what_label"
+        style="@style/TextAppearance.EditEvent_Label"/>
+
+      <EditText android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_what"
+        android:capitalize="sentences"
+        android:contentDescription="@string/what_label"/>
+    </LinearLayout>
+
+    <!-- WHEN -->
+    <LinearLayout android:id="@+id/when_container"
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/EditEvent_Layout">
+
+      <TextView android:id="@+id/from_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_event_from_label"
+        style="@style/TextAppearance.EditEvent_Label"/>
+
+      <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button android:id="@+id/start_date"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight="7"
+          android:gravity="left|center_vertical"
+          android:contentDescription="@string/content_description_edit_event_from_date"
+          style="?android:attr/textAppearanceMediumInverse"/>
+
+        <Button android:id="@+id/start_time"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight="4"
+          android:gravity="left|center_vertical"
+          android:contentDescription="@string/content_description_edit_event_from_time"
+          style="?android:attr/textAppearanceMediumInverse"/>
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="3dip"
+        android:paddingLeft="3dip" >
+
+        <TextView android:id="@+id/start_date_home"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="left"
+          android:visibility="gone"
+          style="@style/TextAppearance.EditEvent_homeTime"/>
+
+        <TextView android:id="@+id/start_time_home"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="right"
+          android:visibility="gone"
+          style="@style/TextAppearance.EditEvent_homeTime"/>
+
+      </LinearLayout>
+
+      <TextView android:id="@+id/to_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_event_to_label"
+        style="@style/TextAppearance.EditEvent_Label"/>
+
+      <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button android:id="@+id/end_date"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight="7"
+          android:gravity="left|center_vertical"
+          android:contentDescription="@string/content_description_edit_event_to_date"
+          style="?android:attr/textAppearanceMediumInverse"/>
+
+        <Button android:id="@+id/end_time"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight="4"
+          android:gravity="left|center_vertical"
+          android:contentDescription="@string/content_description_edit_event_to_time"
+          style="?android:attr/textAppearanceMediumInverse"/>
+      </LinearLayout>
+
+      <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="3dip"
+        android:paddingLeft="3dip" >
+
+        <TextView android:id="@+id/end_date_home"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="left"
+          android:visibility="gone"
+          style="@style/TextAppearance.EditEvent_homeTime"/>
+
+        <TextView android:id="@+id/end_time_home"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="right"
+          android:visibility="gone"
+          style="@style/TextAppearance.EditEvent_homeTime"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- WHERE -->
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dip"
+      android:background="@android:drawable/divider_horizontal_bright"
+      />
+    <LinearLayout android:id="@+id/where_container"
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/EditEvent_Layout">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/where_label"
+        style="@style/TextAppearance.EditEvent_Label"/>
+
+      <EditText android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_where"
+        android:capitalize="sentences"
+        android:contentDescription="@string/where_label"/>
+    </LinearLayout>
+
+    <!-- DESCRIPTION -->
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/EditEvent_Layout">
+
+      <TextView android:id="@+id/description_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description_label"
+        style="@style/TextAppearance.EditEvent_Label"/>
+
+      <EditText android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_description"
+        android:capitalize="sentences"
+        android:contentDescription="@string/description_label"/>
+    </LinearLayout>
+
+    <!-- GUESTS/ATTENDEES -->
+    <LinearLayout android:id="@+id/attendees_group"
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/EditEvent_Layout">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/attendees_label"
+        style="@style/TextAppearance.EditEvent_Label"/>
+
+      <MultiAutoCompleteTextView android:id="@+id/attendees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress|textMultiLine"
+        android:hint="@string/hint_attendees"
+        android:layout_marginTop="6dip"
+        android:layout_marginBottom="6dip"
+        android:imeOptions="actionNext"
+        android:contentDescription="@string/attendees_label"/>
+    </LinearLayout>
+
+    <!-- BUTTONS -->
+    <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="5dip"
+      android:paddingLeft="4dip"
+      android:paddingRight="4dip"
+      android:paddingBottom="1dip"
+      android:background="@android:drawable/bottom_bar" >
+
+      <Button android:id="@+id/save"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/save_label"
+        />
+
+      <Button android:id="@+id/discard"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/discard_label"
+        />
+    </LinearLayout>
+  </LinearLayout>
+</ScrollView>

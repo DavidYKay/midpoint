@@ -9,112 +9,707 @@ package com.tapink.midpoint;
 
 public final class R {
     public static final class array {
+        public static final int availability=0x7f060009;
+        /**  The list of choices displayed in a dialog box when the user wants to
+    respond to an invitation that repeats. 
+         */
+        public static final int change_response_labels=0x7f060010;
+        public static final int delete_repeating_labels=0x7f06000e;
+        public static final int delete_repeating_labels_no_selected=0x7f06000f;
         public static final int map_actions=0x7f060000;
+        public static final int ordinal_labels=0x7f06000b;
+        /**  The vibrate notification modes 
+         */
+        public static final int prefEntries_alerts_vibrateWhen=0x7f060011;
+        /**  The vibrateWhen values 
+         */
+        public static final int prefValues_alerts_vibrateWhen=0x7f060012;
+        public static final int preferences_alert_type_labels=0x7f060007;
+        public static final int preferences_alert_type_values=0x7f060008;
+        public static final int preferences_default_reminder_labels=0x7f060005;
+        public static final int preferences_default_reminder_values=0x7f060006;
+        /**  Choices for the "Reminder minutes" spinner.
+         These must be kept in sync with the reminder_minutes_values array.
+    
+         */
+        public static final int reminder_minutes_labels=0x7f060001;
+        public static final int reminder_minutes_values=0x7f060002;
+        /**  Invitation responses 
+         */
+        public static final int response_labels1=0x7f06000c;
+        public static final int response_labels2=0x7f06000d;
+        /**  Choices for timezones, must be kept in sync with timezone_values. This
+         list was taken from package/apps/Settings/res/xml/timezones.xml 
+         */
+        public static final int timezone_labels=0x7f060003;
+        /**  This list was taken from package/apps/Settings/res/xml/timezones.xml 
+         */
+        public static final int timezone_values=0x7f060004;
+        public static final int visibility=0x7f06000a;
     }
     public static final class attr {
     }
     public static final class color {
+        public static final int agenda_day_bar_color=0x7f07002d;
         public static final int button_cancel=0x7f070003;
+        public static final int calendar_all_day_background=0x7f07000d;
+        public static final int calendar_ampm_label=0x7f070011;
+        public static final int calendar_date_banner_background=0x7f070014;
+        public static final int calendar_date_banner_text_color=0x7f070016;
+        public static final int calendar_date_selected=0x7f070015;
+        public static final int calendar_event_selected_text_color=0x7f07000a;
+        public static final int calendar_event_text_color=0x7f07000b;
+        public static final int calendar_grid_area_background=0x7f070017;
+        public static final int calendar_grid_area_selected=0x7f070018;
+        public static final int calendar_grid_line_highlight_color=0x7f07001b;
+        public static final int calendar_grid_line_horizontal_color=0x7f070019;
+        public static final int calendar_grid_line_vertical_color=0x7f07001a;
+        public static final int calendar_hour_background=0x7f070012;
+        public static final int calendar_hour_label=0x7f070010;
+        public static final int calendar_hour_selected=0x7f070013;
+        public static final int calendar_owner_text_color=0x7f07000c;
+        public static final int current_time_line=0x7f07002b;
+        public static final int current_time_marker=0x7f07002a;
+        public static final int current_time_marker_border=0x7f07002c;
+        public static final int daynames_background=0x7f070006;
+        public static final int daynames_text_color=0x7f070007;
+        public static final int event_background=0x7f070004;
+        public static final int event_center=0x7f070029;
         /**  Kennedy, these are examples. You can kill these. 
          */
         public static final int hyperpublic_blue=0x7f070000;
         public static final int hyperpublic_blue_pressed=0x7f070001;
+        public static final int month_bgcolor=0x7f070028;
+        public static final int month_busybits=0x7f070027;
+        public static final int month_day_number=0x7f07001e;
+        public static final int month_other_month=0x7f070023;
+        public static final int month_other_month_banner=0x7f070025;
+        public static final int month_other_month_day_number=0x7f070024;
+        public static final int month_saturday=0x7f07001f;
+        public static final int month_sunday=0x7f070020;
+        public static final int month_today_bgcolor=0x7f070022;
+        public static final int month_today_number=0x7f070021;
+        public static final int month_week_banner=0x7f070026;
+        public static final int panel_text_foreground=0x7f070005;
+        public static final int pressed=0x7f07001d;
         public static final int red=0x7f070002;
+        public static final int saturday_text_color=0x7f070009;
+        public static final int selection=0x7f07001c;
+        public static final int sunday_text_color=0x7f070008;
+        public static final int week_saturday=0x7f07000e;
+        public static final int week_sunday=0x7f07000f;
     }
     public static final class drawable {
-        public static final int arrow=0x7f020000;
-        public static final int btn_black=0x7f020001;
-        public static final int btn_blue=0x7f020002;
-        public static final int btn_green=0x7f020003;
-        public static final int btn_grey=0x7f020004;
-        public static final int btn_purple=0x7f020005;
-        public static final int btn_red=0x7f020006;
-        public static final int flag=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int marker=0x7f020009;
-        public static final int marker_grey=0x7f02000a;
-        public static final int marker_inverse=0x7f02000b;
-        public static final int placeholder_venue=0x7f02000c;
-        public static final int userpic=0x7f02000d;
+        public static final int agenda_item_declined=0x7f02001f;
+        public static final int app_icon=0x7f020000;
+        public static final int arrow=0x7f020001;
+        public static final int bg_cal_card=0x7f020002;
+        public static final int btn_black=0x7f020003;
+        public static final int btn_blue=0x7f020004;
+        public static final int btn_circle=0x7f020005;
+        public static final int btn_green=0x7f020006;
+        public static final int btn_grey=0x7f020007;
+        public static final int btn_purple=0x7f020008;
+        public static final int btn_red=0x7f020009;
+        public static final int flag=0x7f02000a;
+        public static final int ic_alarm_dark=0x7f02000b;
+        public static final int ic_alarm_white=0x7f02000c;
+        public static final int ic_btn_round_minus=0x7f02000d;
+        public static final int ic_btn_round_plus=0x7f02000e;
+        public static final int ic_contact_picture=0x7f02000f;
+        public static final int ic_launcher=0x7f020010;
+        public static final int ic_menu_reminder=0x7f020011;
+        public static final int ic_menu_show_list=0x7f020012;
+        public static final int ic_repeat_dark=0x7f020013;
+        public static final int ic_repeat_white=0x7f020014;
+        public static final int marker=0x7f020015;
+        public static final int marker_grey=0x7f020016;
+        public static final int marker_inverse=0x7f020017;
+        public static final int placeholder_venue=0x7f020018;
+        public static final int stat_notify_calendar=0x7f020019;
+        public static final int sym_calendar_event=0x7f02001a;
+        public static final int userpic=0x7f02001b;
+        public static final int widget_off=0x7f02001c;
+        public static final int widget_show=0x7f02001d;
+        public static final int widget_sync=0x7f02001e;
     }
     public static final class id {
-        public static final int button=0x7f090006;
-        public static final int button_cancel=0x7f090005;
-        public static final int button_confirm=0x7f090004;
-        public static final int button_my=0x7f09000d;
-        public static final int date=0x7f09000a;
-        public static final int footer_confirm=0x7f090000;
-        public static final int icon=0x7f090008;
-        public static final int image=0x7f090001;
-        public static final int keywords=0x7f090012;
-        public static final int layout_keywords=0x7f090011;
-        public static final int layout_my=0x7f09000b;
-        public static final int layout_their=0x7f09000e;
-        public static final int list=0x7f090003;
-        public static final int mapview=0x7f090013;
-        public static final int my_location=0x7f09000c;
-        public static final int name=0x7f090009;
-        public static final int their_button=0x7f090010;
-        public static final int their_location=0x7f09000f;
-        public static final int userpic=0x7f090007;
-        public static final int venue_name=0x7f090002;
+        public static final int attendees=0x7f0a0019;
+        public static final int attendees_group=0x7f0a0018;
+        public static final int availability=0x7f0a001e;
+        public static final int button=0x7f0a002f;
+        public static final int button_cancel=0x7f0a002e;
+        public static final int button_confirm=0x7f0a002d;
+        public static final int button_my=0x7f0a0036;
+        public static final int calendar_group=0x7f0a0016;
+        public static final int calendars=0x7f0a0017;
+        public static final int date=0x7f0a0033;
+        public static final int delete=0x7f0a0028;
+        public static final int description=0x7f0a0015;
+        public static final int description_label=0x7f0a0014;
+        public static final int discard=0x7f0a0027;
+        public static final int end_date=0x7f0a000b;
+        public static final int end_date_home=0x7f0a000d;
+        public static final int end_time=0x7f0a000c;
+        public static final int end_time_home=0x7f0a000e;
+        public static final int event=0x7f0a0001;
+        public static final int extra_options_container=0x7f0a001c;
+        public static final int footer_confirm=0x7f0a0029;
+        public static final int from_label=0x7f0a0005;
+        public static final int icon=0x7f0a0031;
+        public static final int image=0x7f0a002a;
+        public static final int is_all_day=0x7f0a0011;
+        public static final int keywords=0x7f0a003b;
+        public static final int layout_keywords=0x7f0a003a;
+        public static final int layout_my=0x7f0a0034;
+        public static final int layout_their=0x7f0a0037;
+        public static final int list=0x7f0a002c;
+        public static final int location=0x7f0a0013;
+        public static final int mapview=0x7f0a003c;
+        public static final int my_location=0x7f0a0035;
+        public static final int name=0x7f0a0032;
+        public static final int presence_label=0x7f0a001d;
+        public static final int privacy_label=0x7f0a001f;
+        public static final int reminder_add=0x7f0a0025;
+        public static final int reminder_items_container=0x7f0a0024;
+        public static final int reminders_container=0x7f0a0022;
+        public static final int reminders_label=0x7f0a0023;
+        public static final int reminders_separator=0x7f0a0021;
+        public static final int repeats=0x7f0a001b;
+        public static final int repeats_label=0x7f0a001a;
+        public static final int save=0x7f0a0026;
+        public static final int scroll_view=0x7f0a0000;
+        public static final int start_date=0x7f0a0006;
+        public static final int start_date_home=0x7f0a0008;
+        public static final int start_time=0x7f0a0007;
+        public static final int start_time_home=0x7f0a0009;
+        public static final int their_button=0x7f0a0039;
+        public static final int their_location=0x7f0a0038;
+        public static final int timezone=0x7f0a0010;
+        public static final int timezone_label=0x7f0a000f;
+        public static final int title=0x7f0a0003;
+        public static final int to_label=0x7f0a000a;
+        public static final int userpic=0x7f0a0030;
+        public static final int venue_name=0x7f0a002b;
+        public static final int visibility=0x7f0a0020;
+        public static final int what_label=0x7f0a0002;
+        public static final int when_container=0x7f0a0004;
+        public static final int where_container=0x7f0a0012;
     }
     public static final class layout {
-        public static final int confirm_list_item=0x7f030000;
-        public static final int confirm_venue=0x7f030001;
-        public static final int event_list=0x7f030002;
-        public static final int event_list_item=0x7f030003;
-        public static final int location=0x7f030004;
-        public static final int pick_venue=0x7f030005;
-        public static final int venue_list_item=0x7f030006;
+        public static final int calendar=0x7f030000;
+        public static final int confirm_list_item=0x7f030001;
+        public static final int confirm_venue=0x7f030002;
+        public static final int event_list=0x7f030003;
+        public static final int event_list_item=0x7f030004;
+        public static final int invite=0x7f030005;
+        public static final int location=0x7f030006;
+        public static final int pick_venue=0x7f030007;
+        public static final int venue_list_item=0x7f030008;
+    }
+    public static final class plurals {
+        /**  This is the number of days displayed for a calendar reminder.  For example,
+         a reminder of 2 days would be displayed as '2 days'.  The translation
+         should use the shortest acceptable abbreviation of 'day' to save space. 
+         */
+        public static final int Ndays=0x7f080003;
+        /**  This is the number of hours displayed for a calendar reminder.  For example,
+         a reminder of 1 hour would be displayed as '1 hour'.  The translation
+         should use the shortest acceptable abbreviation of 'hour' to save space. 
+         */
+        public static final int Nhours=0x7f080002;
+        /**  We use the abbreviation "mins" instead of "minutes" to keep the string short.
+         This is the number of minutes displayed for a calendar reminder.  For example,
+         a reminder of 10 minutes would be displayed as '10 mins'.  The translation
+         should use the shortest acceptable abbreviation to save space. 
+         */
+        public static final int Nmins=0x7f080001;
+        /**  Reminder format strings 
+         */
+        public static final int Nminutes=0x7f080000;
     }
     public static final class raw {
         public static final int sample_venues=0x7f040000;
     }
     public static final class string {
+        /**  Menu item to allow the user to add a reminder to an event 
+         */
+        public static final int add_new_reminder=0x7f050048;
         public static final int advance=0x7f050005;
+        /**  This is shown as part of the heading at the top of a list of today's events. 
+         */
+        public static final int agenda_today=0x7f050061;
+        /**  This is a label on a menu item. Pressing this menu item displays the
+         Agenda view. 
+         */
+        public static final int agenda_view=0x7f05002a;
+        /**  This shows the number of additional reminders that were missed.  For example,
+         if there were two additional reminders then this would show
+         '2 more reminders' 
+         */
+        public static final int alert_missed_events_multiple=0x7f050045;
+        /**  This shows the number of additional reminders that were missed. This
+         is the singular case so it displays '1 more reminder' 
+         */
+        public static final int alert_missed_events_single=0x7f050044;
+        /**  the title of the alert/notification activity 
+         */
+        public static final int alert_title=0x7f050043;
+        /**  This is the label underneath the icon for Calendar 
+         */
+        public static final int app_label=0x7f050020;
         public static final int app_name=0x7f050004;
-        public static final int calendar=0x7f050006;
-        public static final int cancel=0x7f050007;
-        public static final int confirm=0x7f050008;
-        public static final int confirm_venue=0x7f050009;
-        public static final int create_new_event=0x7f05000a;
+        /**  This is the label for the Guests/Attendees of an event 
+         */
+        public static final int attendees_label=0x7f050024;
+        public static final int calendar=0x7f050007;
+        /**  Title of "My calendars" screen 
+         */
+        public static final int calendars_title=0x7f050036;
+        public static final int cancel=0x7f050008;
+        /**  This is the title of a popup dialog that asks for confirmation before
+         changing the response to an invitation. 
+         */
+        public static final int change_response_title=0x7f05007d;
+        public static final int confirm=0x7f050009;
+        public static final int confirm_venue=0x7f05000a;
+        /**  The content description for the date part of the "From" input field. [CHAR LIMIT=NONE] 
+         */
+        public static final int content_description_edit_event_from_date=0x7f050056;
+        /**  The content description for the date part of the "From" input field. [CHAR LIMIT=NONE] 
+         */
+        public static final int content_description_edit_event_from_time=0x7f050057;
+        /**  The content description for the widget for selecting a reminder type. [CHAR LIMIT=NONE] 
+         */
+        public static final int content_description_edit_event_reminders=0x7f05005a;
+        /**  The content description for the widget for removing a reminder from an event. [CHAR LIMIT=NONE] 
+         */
+        public static final int content_description_edit_event_remove_reminder=0x7f05005b;
+        /**  The content description for the date part of the "To" input field. [CHAR LIMIT=NONE] 
+         */
+        public static final int content_description_edit_event_to_date=0x7f050058;
+        /**  The content description for the date part of the "To" input field. [CHAR LIMIT=NONE] 
+         */
+        public static final int content_description_edit_event_to_time=0x7f050059;
+        public static final int create_new_event=0x7f05000b;
+        /**  Toast message displayed when a new event is created 
+         */
+        public static final int creating_event=0x7f05003f;
+        /**  This is a label for telling the user that this event repeats in
+         custom (non-standard) way from the usual repeat rates (such as daily,
+         weekly, etc.) and that the user cannot change this on the phone
+         (but only on the web). 
+         */
+        public static final int custom=0x7f050077;
+        /**  A label in a multiple-choice list for the specifying that an event
+         repeats daily 
+         */
+        public static final int daily=0x7f05006f;
+        /**  This is a label on a menu item. Pressing this menu item displays the
+         Day view. 
+         */
+        public static final int day_view=0x7f05002b;
+        /**  A menu item for deleting an event 
+         */
+        public static final int delete_event_label=0x7f050068;
+        /**  The button label for deleting an event 
+         */
+        public static final int delete_label=0x7f050067;
+        /**  This is a confirmation message in a popup dialog that appears when the
+         user has asked to delete an event. The user still has a chance to cancel
+         this operation. 
+         */
+        public static final int delete_this_event_title=0x7f05007b;
+        /**  This is the title of a popup dialog that asks for confirmation before
+         deleting an event. 
+         */
+        public static final int delete_title=0x7f05007c;
+        /**  Label for the event description 
+         */
+        public static final int description_label=0x7f050050;
+        /**  The button label for discarding changes to an event 
+         */
+        public static final int discard_label=0x7f05006a;
+        /**  The button label for dismissing all the current reminder alarms. This
+         causes them to disappear from the notification screen. 
+         */
+        public static final int dismiss_all_label=0x7f05006d;
         public static final int dk_dev_key=0x7f050001;
-        public static final int go=0x7f05000d;
-        public static final int go_back=0x7f050018;
+        /**  A label in a multiple-choice list for the specifying that an event does
+         not repeat 
+         */
+        public static final int does_not_repeat=0x7f05006e;
+        /**  Check box label that specifies if this is an all-day event 
+         */
+        public static final int edit_event_all_day_label=0x7f05004b;
+        /**  Label for choosing one of the calendars 
+         */
+        public static final int edit_event_calendar_label=0x7f05004c;
+        /**  Events have a start date/time and an end date/time. The display shows
+         the start and end times like 'From start date To end date'. This is the
+         label before the 'start date'. 
+         */
+        public static final int edit_event_from_label=0x7f05004a;
+        /**  Menu item to hide extra options that are used less often 
+         */
+        public static final int edit_event_hide_extra_options=0x7f05004e;
+        /**  This is the title of a popup window that is displayed when the user
+         edits a repeating event. 
+         */
+        public static final int edit_event_label=0x7f050066;
+        /**  Menu item to show all choices [CHAR LIMIT=24]
+         */
+        public static final int edit_event_show_all=0x7f05004f;
+        /**  Menu item to show extra options that are used less often 
+         */
+        public static final int edit_event_show_extra_options=0x7f05004d;
+        /**  Events have a start date/time and an end date/time. The display shows
+         the start and end times like 'From start date To end date'. This is the
+         label before the 'end date'. 
+         */
+        public static final int edit_event_to_label=0x7f050049;
+        /**  This is a label on a menu item. Pressing this menu item allows the
+         user to create a new event. 
+         */
+        public static final int event_create=0x7f05002f;
+        /**  This is a label on a menu item in a popup window. Pressing this menu
+         item allows the user to delete an existing event. 
+         */
+        public static final int event_delete=0x7f050031;
+        /**  This is a label on a menu item in a popup window. Pressing this menu
+         item allows the user to edit or change an existing event. 
+         */
+        public static final int event_edit=0x7f050030;
+        /**  The title of the screen where the user edits an event 
+         */
+        public static final int event_edit_title=0x7f05003a;
+        /**  This is the title of the screen used to view the details of an event 
+         */
+        public static final int event_info_title=0x7f050046;
+        /**  This is the title of the screen used to view the details of an invitation
+         to a meeting or event 
+         */
+        public static final int event_info_title_invite=0x7f050047;
+        /**  This is a label on a menu item. Pressing this menu item displays the
+         details of an event. 
+         */
+        public static final int event_view=0x7f05002e;
+        /**  A label in a multiple-choice list for the specifying that an event
+         repeats every weekday (Monday through Friday) 
+         */
+        public static final int every_weekday=0x7f050070;
+        public static final int go=0x7f05000e;
+        public static final int go_back=0x7f050019;
+        /**  DO NOT TRANSLATE the domain to use for auto-completing email addresses
+         */
+        public static final int google_email_domain=0x7f05005c;
+        /**  This is a label on a menu item. Pressing this menu
+         item takes the user to the current day (today) in whatever view
+         (Day view, Week view, Agenda view, Month view) they are currently in. 
+         */
+        public static final int goto_today=0x7f050032;
         public static final int hello=0x7f050003;
+        /**  Default value of Attendees/Guests field (as a hint to the user) 
+         */
+        public static final int hint_attendees=0x7f05003e;
+        /**  Default value of Description field (as a hint to the user) 
+         */
+        public static final int hint_description=0x7f05003d;
         /**  Hints 
          */
-        public static final int hint_keyword=0x7f05001b;
+        public static final int hint_keyword=0x7f05001c;
+        /**  Default value of What field (as a hint to the user) 
+         */
+        public static final int hint_what=0x7f05003b;
+        /**  Default value of Where field (as a hint to the user) 
+         */
+        public static final int hint_where=0x7f05003c;
         /**  API Keys 
          */
-        public static final int hyperpublic_client_id=0x7f05001d;
-        public static final int hyperpublic_client_secret=0x7f05001e;
+        public static final int hyperpublic_client_id=0x7f05001e;
+        public static final int hyperpublic_client_secret=0x7f05001f;
+        /**  The button label for importing events from another source to the phone 
+         */
+        public static final int import_label=0x7f05006b;
+        public static final int invite=0x7f050006;
         public static final int kennedy_dev_key=0x7f050002;
-        public static final int list=0x7f05000b;
-        public static final int location=0x7f05000c;
-        public static final int map=0x7f05000e;
+        public static final int list=0x7f05000c;
+        /**  This is shown while the calendar events are being loading to the screen. 
+         */
+        public static final int loading=0x7f050062;
+        /**  Body of message displayed to indicate available calendars are being loaded when creating
+         a new event 
+         */
+        public static final int loading_calendars_message=0x7f050042;
+        /**  Title of message displayed to indicate available calendars are being loaded when creating
+         a new event 
+         */
+        public static final int loading_calendars_title=0x7f050041;
+        public static final int location=0x7f05000d;
+        public static final int map=0x7f05000f;
         public static final int maps_api_key=0x7f050000;
-        public static final int my_location=0x7f05000f;
-        public static final int no_events=0x7f050010;
-        public static final int pick_calendar=0x7f050011;
-        public static final int pick_venue=0x7f050012;
+        /**  This is a label on a menu item. Pressing this menu item allows the
+         user to view and edit his Settings (or Preferences) 
+         */
+        public static final int menu_preferences=0x7f050034;
+        /**  This is a label on a menu item. Pressing this menu item allows the
+         user to see the list of calendars that he is viewing and to then add
+         or remove selected calendars. 
+         */
+        public static final int menu_select_calendars=0x7f050033;
+        /**  This is a choice in a list that the user sees when he tries to modify
+         a repeating event.  This choice says to change all occurrences of
+         this repeating event. 
+         */
+        public static final int modify_all=0x7f050079;
+        /**  This is a choice in a list that the user sees when he tries to modify
+         a repeating event.  This choice says to change this instance and all
+         future occurrences of this repeating event. 
+         */
+        public static final int modify_all_following=0x7f05007a;
+        /**  This is a choice in a list that the user sees when he tries to modify
+         a repeating event.  This choice says to change just this one instance
+         of this repeating event. 
+         */
+        public static final int modify_event=0x7f050078;
+        /**  This is a label on a menu item. Pressing this menu item displays the
+         Month view. 
+         */
+        public static final int month_view=0x7f05002d;
+        /**  The common portion of a string describing how often an event repeats,
+         example: 'Monthly (on day 2)' 
+         */
+        public static final int monthly=0x7f050073;
+        /**  Example: "Monthly (on day 15)" 
+         */
+        public static final int monthly_on_day=0x7f050075;
+        /**  Example: 'Monthly (every first Sunday)' 
+   1st parameter is an ordinal number, like 'first' 
+   2nd parameter is a day of the week, like 'Sunday' 
+         */
+        public static final int monthly_on_day_count=0x7f050072;
+        public static final int my_location=0x7f050010;
+        /**  Body of alert shown if the user tries to create an event and has no calendars 
+         */
+        public static final int no_calendars_found=0x7f050055;
+        public static final int no_events=0x7f050011;
+        /**  Title of alert shown if the user tries to create an event and has no calendars 
+         */
+        public static final int no_syncable_calendars=0x7f050054;
+        /**  Title of event when no explicit title is specified by the user 
+         */
+        public static final int no_title_label=0x7f050027;
+        /**  not Synced or visible status message 
+         */
+        public static final int not_synced_not_visible=0x7f050039;
+        /**  This is a abbreviation for 'Number of events' and is a label next to
+         an input for the user to enter the number of events to import. 
+         */
+        public static final int num_events=0x7f050065;
+        public static final int pick_calendar=0x7f050012;
+        public static final int pick_venue=0x7f050013;
         /**  Placeholders 
          */
-        public static final int placeholder_venue=0x7f05001c;
-        public static final int push_me=0x7f050013;
-        public static final int run_solo=0x7f050017;
-        public static final int settings=0x7f050016;
-        public static final int their_location=0x7f050014;
+        public static final int placeholder_venue=0x7f05001d;
+        /**  This string is used in a popup window when there are more events than
+         can be displayed so it displays the events that it can and then displays
+         this line so that the user knows how many more events there are that
+         could not be displayed.  For example, if there are 6 events but we can
+         only display 4 events then we will display the first 4 events and then
+         show 'plus 2 more' to indicate that there are two more events that we
+         could not display because of lack of room. 
+         */
+        public static final int plus_N_more=0x7f050035;
+        /**  The default vibrateWhen value, when none is set 
+         */
+        public static final int prefDefault_alerts_vibrateWhen=0x7f050091;
+        /**  The value to use then migrating from old versions for a false vibrate setting 
+         */
+        public static final int prefDefault_alerts_vibrate_false=0x7f050093;
+        /**  The value to use then migrating from old versions for a true vibrate setting 
+         */
+        public static final int prefDefault_alerts_vibrate_true=0x7f050092;
+        /**  Dialog title for the Vibrate dialog 
+         */
+        public static final int prefDialogTitle_vibrateWhen=0x7f050094;
+        /**  This is the title of a section in the Settings screen for "About" this application 
+         */
+        public static final int preferences_about_title=0x7f05008f;
+        /**  Title of ringtone selector dialog 
+         */
+        public static final int preferences_alerts_ringtone_title=0x7f050087;
+        /**  This is the title of a section in the Settings screen for settings
+         related to reminders for calendar events 
+         */
+        public static final int preferences_alerts_title=0x7f050080;
+        /**  DO NOT TRANSLATE 
+         */
+        public static final int preferences_alerts_type_default=0x7f050084;
+        /**  The title of a popup dialog that lets the user choose how
+         reminder notifications should occur. 
+         */
+        public static final int preferences_alerts_type_dialog=0x7f050083;
+        /**  Settings option to bring up a dialog that lets the user choose how
+         reminder notifications should occur. 
+         */
+        public static final int preferences_alerts_type_title=0x7f050082;
+        /**  Settings screen, setting summary text 
+         */
+        public static final int preferences_alerts_vibrateWhen_summary=0x7f050086;
+        /**  Settings dialog label that specifies when the phone should vibrate 
+         */
+        public static final int preferences_alerts_vibrateWhen_title=0x7f050085;
+        /**  Build version of the application 
+         */
+        public static final int preferences_build_version=0x7f050090;
+        /**  Default value for the number of reminder minutes 
+         */
+        public static final int preferences_default_reminder_default=0x7f05008a;
+        /**  Title of dialog for setting the default number of reminder minutes 
+         */
+        public static final int preferences_default_reminder_dialog=0x7f050089;
+        /**  List item label for setting the default number of reminder minutes 
+         */
+        public static final int preferences_default_reminder_title=0x7f050088;
+        /**  This is the title of a section in the Settings screen for settings
+         related to viewing calendar events 
+         */
+        public static final int preferences_general_title=0x7f05007f;
+        /**  Settings check box label to hide events that the user has declined to attend 
+         */
+        public static final int preferences_hide_declined_title=0x7f050081;
+        /**  DO NOT TRANSLATE 
+         */
+        public static final int preferences_home_tz_default=0x7f05008e;
+        /**  Settings title for selecting a 'home' time zone to display Calendar in [CHAR LIMIT = 18] 
+         */
+        public static final int preferences_home_tz_title=0x7f05008d;
+        /**  This is the title of the screen for setting user preferences. 
+         */
+        public static final int preferences_title=0x7f05007e;
+        /**  Settings description of what setting Calendar to use a fixed 'home' time
+        zone does [CHAR LIMIT = 60]
+         */
+        public static final int preferences_use_home_tz_descrip=0x7f05008c;
+        /**  Settings check box label to keep Calendar in a fixed 'home' time zone [CHAR LIMIT = 18] 
+         */
+        public static final int preferences_use_home_tz_title=0x7f05008b;
+        /**  Label for the 'Presence' of an event, which can be either 'busy' (the default)
+         or 'available' 
+         */
+        public static final int presence_label=0x7f050051;
+        /**  Label for the 'Privacy' of an event, which can be either 'private'
+         or 'public' 
+         */
+        public static final int privacy_label=0x7f050052;
+        public static final int push_me=0x7f050014;
+        /**  Label for the list of reminders for an event 
+         */
+        public static final int reminders_label=0x7f050053;
+        /**  Some events repeat daily, weekly, monthly, or yearly.  This is the label
+         for all the choices about how often an event repeats (including the choice
+         of not repeating). 
+         */
+        public static final int repeats_label=0x7f050026;
+        /**  This is the label for the Guest Responses and count of an event e.g. Yes (3) 
+         */
+        public static final int response_label=0x7f050025;
+        public static final int run_solo=0x7f050018;
+        /**  The button label for saving an event 
+         */
+        public static final int save_label=0x7f050069;
+        /**  Toast message displayed when an existing event is saved after being modified 
+         */
+        public static final int saving_event=0x7f050040;
+        public static final int settings=0x7f050017;
+        /**  This is a label on a context menu item. Pressing this menu item displays the
+         Agenda view. 
+         */
+        public static final int show_agenda_view=0x7f050028;
+        /**  This is a label on a context menu item. Pressing this menu item displays the
+         Day view. 
+         */
+        public static final int show_day_view=0x7f050029;
+        /**  This is shown at the bottom of the agenda view showing the range of events shown. 
+         */
+        public static final int show_newer_events=0x7f050064;
+        /**  This is shown at the top of the agenda view showing the range of events shown. 
+         */
+        public static final int show_older_events=0x7f050063;
+        /**  The button label for making the reminder alarms go away temporarily.
+         The reminder alarms will fire off again in 5 minutes. 
+         */
+        public static final int snooze_all_label=0x7f05006c;
+        /**  Synced but not visible status message 
+         */
+        public static final int synced_not_visible=0x7f050038;
+        /**  Synced and visible status message 
+         */
+        public static final int synced_visible=0x7f050037;
+        public static final int their_location=0x7f050015;
         /**  Long Form 
          */
-        public static final int their_location_missing=0x7f050019;
-        public static final int their_location_missing_explanation=0x7f05001a;
-        public static final int view_venue=0x7f050015;
+        public static final int their_location_missing=0x7f05001a;
+        public static final int their_location_missing_explanation=0x7f05001b;
+        /**  This is the label for the time zone of an event [CHAR LIMIT=30] 
+         */
+        public static final int timezone_label=0x7f050023;
+        /**  Label for which calendar an event is part of 
+         */
+        public static final int view_event_calendar_label=0x7f05005d;
+        /**  Label for the event organizer 
+         */
+        public static final int view_event_organizer_label=0x7f05005e;
+        /**  Label for whether the user is attending this event. This is shown when
+         a user is invited to a meeting or event.  The possible answers are
+         'yes', 'no', and 'maybe' (and, initially, 'no response'). 
+         */
+        public static final int view_event_response_label=0x7f050060;
+        /**  Label for the local timezone 
+         */
+        public static final int view_event_timezone_label=0x7f05005f;
+        public static final int view_venue=0x7f050016;
+        /**  This is a label on a menu item. Pressing this menu item displays the
+         Week view. 
+         */
+        public static final int week_view=0x7f05002c;
+        /**  A label in a multiple-choice list for the specifying that an event
+         repeats weekly on some day of the week.  For example,
+         'Weekly (every Tuesday)'. 
+         */
+        public static final int weekly=0x7f050071;
+        /**  This is the label for the title or name of an event 
+         */
+        public static final int what_label=0x7f050021;
+        /**  This is the label for the location of an event 
+         */
+        public static final int where_label=0x7f050022;
+        /**  Example: "Yearly (on April 15)" 
+         */
+        public static final int yearly=0x7f050076;
+        /**  Calendar spinner item, to select that an event recurs every year. 
+         */
+        public static final int yearly_plain=0x7f050074;
     }
     public static final class style {
+        public static final int Alert=0x7f090001;
         /**  This is the default style for our fancy buttons. Feel free to change it. 
          */
-        public static final int ButtonText=0x7f080000;
+        public static final int ButtonText=0x7f090000;
+        public static final int CalendarTheme=0x7f09000f;
+        public static final int EditEvent_Layout=0x7f09000b;
+        public static final int MinusButton=0x7f090002;
+        public static final int MonthView_DayLabel=0x7f090004;
+        public static final int MultiStateButton=0x7f090010;
+        public static final int PlusButton=0x7f090003;
+        public static final int TextAppearance=0x7f090005;
+        public static final int TextAppearance_AgendaView_ValueLabel=0x7f090007;
+        public static final int TextAppearance_Alert_Label=0x7f09000d;
+        public static final int TextAppearance_Alert_Title=0x7f09000c;
+        public static final int TextAppearance_Alert_Value=0x7f09000e;
+        public static final int TextAppearance_EditEvent_Label=0x7f090008;
+        public static final int TextAppearance_EditEvent_homeTime=0x7f09000a;
+        public static final int TextAppearance_EventInfo_Label=0x7f090009;
+        public static final int TextAppearance_MonthView_DayLabel=0x7f090006;
     }
 }
