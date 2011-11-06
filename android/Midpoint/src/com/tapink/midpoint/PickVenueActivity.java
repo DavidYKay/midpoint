@@ -327,16 +327,20 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
         ));
     String parameterString = URLEncodedUtils.format(params, "utf-8");
     String baseUrl = "https://api.hyperpublic.com/api/v1/places";
-    String.format("%s/%s",
+    String customString = String.format("%s?%s",
         baseUrl,
         parameterString
     );
 
     String queryString = "https://api.hyperpublic.com/api/v1/places?client_id=8UufhI6bCKQXKMBn7AUWO67Yq6C8RkfD0BGouTke&client_secret=zdoROY5XRN0clIWsEJyKzHedSK4irYee8jpnOXaP&location=240%20E%2086th%20st,%20new%20york,%20ny&q=cafe";
 
+    Log.v(TAG, "queryString: " + queryString);
+    Log.v(TAG, "customString: " + customString);
+
     HyperPublicFetchTask task = new HyperPublicFetchTask();
     task.execute(
-      queryString
+      //queryString
+      customString
     );
   }
 
