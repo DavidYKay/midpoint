@@ -31,6 +31,19 @@ public class Venue implements Parcelable {
   ////////////////////////////////////////
   // Convenience methods
   ////////////////////////////////////////
+  
+  public String getAddress() {
+    try {
+      JSONArray locations = mJson.getJSONArray("locations");
+      JSONObject location = locations.getJSONObject(0);
+      return location.getString("name");
+      //"name": "300 E 86th St, New York, NY 10028",
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
+  }
 
   public String getName() {
     try {

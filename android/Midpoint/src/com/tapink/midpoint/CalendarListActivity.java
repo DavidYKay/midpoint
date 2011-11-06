@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,8 @@ public class CalendarListActivity extends Activity {
   private Context mContext = this;
 
   private Uri mCalendarUri;
+  private Uri mEventUri;
+  private Uri mCalendarsUri;
 
   /** Called when the activity is first created. */
   @Override
@@ -88,6 +91,13 @@ public class CalendarListActivity extends Activity {
       }
     });
 
+    mCalendarUri  = getCalendarUri();
+    mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
+    mCalendarsUri = mCalendarUri.buildUpon().appendPath("calendars").build();
+    Log.v(TAG, "eventsUri: " + mEventUri);
+    Log.v(TAG, "calendarsUri: " + mCalendarsUri);
+
+
     Intent intent = getIntent();
     Event event = intent.getParcelableExtra("event");
     Venue venue = intent.getParcelableExtra("venue");
@@ -96,13 +106,17 @@ public class CalendarListActivity extends Activity {
       Log.v(TAG, "Sweet! Received both an event and a venue.");
       // Sweet!
       // Let's update the calendar event.
+
+      updateEvent(
+          event.getDatabaseId(),
+          venue.getAddress()
+          );
     } else {
       Log.v(TAG, "Aw snap. No event received.");
     }
     Log.v(TAG, "Event: " + event);
     Log.v(TAG, "Venue: " + venue);
 
-    mCalendarUri = getCalendarUri();
   }
 
   @Override
@@ -200,18 +214,38 @@ public class CalendarListActivity extends Activity {
   ////////////////////////////////////////
 
   private Cursor getSystemCalendars() {
-    Uri baseUri = mCalendarUri;
-    Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
-    Cursor cursor = managedQuery(calendarsUri,
-                                               calendarsProjection,
-                                               null,
-                                               null,
-                                               null
-                                               );
+    Cursor cursor = managedQuery(mCalendarUri,
+                                 calendarsProjection,
+                                 null,
+                                 null,
+                                 null
+                                );
 
     return cursor;
+  }
+
+  private int updateEvent(long eventId, String eventLocation) {
+    ContentValues values = new ContentValues();
+    values.put("eventLocation", eventLocation);
+
+    //sUriMatcher.addURI(Calendar.AUTHORITY, "events/#", EVENTS_ID);
+    //Uri eventUri = mCalendarUri.buildUpon().appendPath("events").build();
+
+    //String idString = Long.toString(eventId);
+    String idString = Integer.toString((int) eventId);
+    Uri eventUri = mEventUri.buildUpon().appendPath(idString).build();
+    Log.v(TAG, "UPDATING eventUri: " + eventUri);
+    int result = mContentResolver.update(
+        eventUri,
+        values,
+        null, null
+        //"_id = ?",
+        //new String[] { Long.toString(eventId) }
+        );
+    return result;
+
   }
 
   private void readCalendar() {
@@ -223,10 +257,6 @@ public class CalendarListActivity extends Activity {
   }
 
   private void readCalendar(long time, int calendarId) {
-    Uri baseUri = mCalendarUri;
-    Uri eventUri = baseUri.buildUpon().appendPath("events").build();
-    Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
-
     String[] eventProjection = new String[]{ "_id", "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" };
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
@@ -237,9 +267,7 @@ public class CalendarListActivity extends Activity {
     //int attendeeStatus = 2; // No
     //int attendeeStatus = 3; // Maybe
 
-    Log.v(TAG, "eventsUri: " + eventUri);
-    Log.v(TAG, "calendarsUri: " + calendarsUri);
-    Cursor cursor = getContentResolver().query(eventUri,
+    Cursor cursor = getContentResolver().query(mEventUri,
                                                eventProjection,
       //"dtstart > ? AND calendar_id = ? AND selfAttendeeStatus > ? AND eventLocation IS NULL",  //selection
       "dtstart > ? AND calendar_id = ? AND selfAttendeeStatus = ? AND eventLocation IS NULL",  //selection
@@ -419,7 +447,7 @@ public class CalendarListActivity extends Activity {
       return view;
     }
   }
-  
+
   ////////////////////////////////////////
   // View Management
   ////////////////////////////////////////
