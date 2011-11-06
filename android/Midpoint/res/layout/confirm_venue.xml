@@ -28,14 +28,14 @@
       android:layout_weight="70"
       android:text="@string/placeholder_venue"
       
-		android:paddingTop="8dip"
-        android:textSize="24dip"
-        android:textStyle="bold"
-		android:textColor="#ffffff"
-		android:shadowColor="#3e474a"
-		android:shadowDx="0"
-		android:shadowDy="1"
-		android:shadowRadius="0.2"
+      android:paddingTop="8dip"
+      android:textSize="24dip"
+      android:textStyle="bold"
+      android:textColor="#ffffff"
+      android:shadowColor="#3e474a"
+      android:shadowDx="0"
+      android:shadowDy="1"
+      android:shadowRadius="0.2"
       />
   </LinearLayout>
 
