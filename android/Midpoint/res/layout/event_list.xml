@@ -1,32 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#f4f4f4" >
 
-  <ListView
-    android:id="@+id/list"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="0px"
-    android:layout_weight="93"
-    />
- <LinearLayout
-    android:id="@+id/footer_confirm"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="0px"
-    android:layout_weight="10"
-    android:layout_alignParentBottom="true"
-    >
-  <Button
-    android:id="@+id/button"
-    android:layout_width="fill_parent"
-    android:layout_height="10dp"
-    android:layout_weight="7"
-    android:text="@string/create_new_event" 
-    android:background="@drawable/btn_blue"
-    style="@style/ButtonText"
-    />
- </LinearLayout>
-</LinearLayout>
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    
+    android:padding="6dip">
+
+    <ImageView
+        android:id="@+id/icon"
+        
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="6dip"
+        
+        android:src="@drawable/icon" />    
+    
+    <TextView  
+        android:id="@+id/list_date"
+
+        android:layout_width="fill_parent"
+        android:layout_height="26dip" 
+        
+        android:layout_toLeftOf="@id/icon"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:text="Event in two days" />
+
+    <TextView
+        android:id="@+id/list"
+        
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        android:layout_toLeftOf="@id/list_date"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/list_date"
+        android:layout_alignWithParentIfMissing="true"
+                
+        android:gravity="center_vertical"/>
+
+
+	<Button
+		android:id="@+id/button"
+		android:layout_width="fill_parent"
+		android:layout_height="10dp"
+		android:layout_weight="7"
+		android:text="@string/create_new_event" 
+		android:background="@drawable/btn_blue"
+		style="@style/ButtonText" />
+</RelativeLayout>
+    
