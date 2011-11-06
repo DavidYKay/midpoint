@@ -11,28 +11,33 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="15"
+    android:layout_weight="10"
     android:layout_alignParentBottom="true"
+    
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="3dp"
     >
-    <EditText
-      android:id="@+id/my_location"
-      android:layout_marginTop="6dp"
-      android:layout_marginRight="3dp"
-      android:layout_marginBottom="2dp"
-      android:layout_marginLeft="3dp"
-      android:layout_width="0px"
-      android:layout_height="fill_parent"
-      android:layout_weight="10"
-      android:hint="@string/my_location"
-      android:textColorHint="@color/hyperpublic_blue"
-      />
-    <Button
-      android:id="@+id/button_my"
-      android:layout_weight="2"
-      android:layout_width="0px"
-      android:text="@string/settings"
-      android:background="@drawable/btn_black"
-      style="@style/ButtonText"
+	<EditText
+		android:id="@+id/my_location"
+		android:layout_weight="90"
+		android:layout_width="0px"
+		android:layout_height="fill_parent"
+		android:hint="@string/my_location"
+		android:textColorHint="@color/hyperpublic_blue"
+		/>
+	<ImageButton
+		android:id="@+id/button_my"
+		android:layout_weight="10"
+		android:layout_width="19dip"
+		android:layout_height="fill_parent"
+		android:src="@drawable/flag"
+		android:background="@drawable/btn_grey"
+		style="@style/ButtonText"
+		
+		android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
       />
   </LinearLayout>
 
@@ -41,27 +46,30 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="15"
+    android:layout_weight="10"
     android:layout_alignParentBottom="true"
+    
+    android:layout_marginBottom="1dp"
+	android:layout_marginLeft="3dp"
     >
-    <EditText
-      android:id="@+id/their_location"
-      android:layout_marginTop="0dp"
-      android:layout_marginRight="3dp"
-      android:layout_marginBottom="2dp"
-      android:layout_marginLeft="3dp"
-      android:layout_height="fill_parent"
-      android:layout_width="0px"
-      android:layout_weight="10"
-      android:hint="@string/their_location"
-      />
-    <Button
-      android:id="@+id/their_button"
-      android:layout_weight="2"
-      android:layout_width="0px"
-      android:text="@string/settings"
-      android:background="@drawable/btn_black"
-      style="@style/ButtonText"
+	<EditText
+		android:id="@+id/their_location"
+		android:layout_weight="90"
+		android:layout_width="0px"
+		android:layout_height="fill_parent"
+		android:hint="@string/their_location"
+		/>
+	<ImageButton
+		android:id="@+id/their_button"
+		android:layout_weight="10"
+		android:layout_width="19dip"
+		android:layout_height="fill_parent"
+		android:src="@drawable/flag"
+		android:background="@drawable/btn_grey"
+		style="@style/ButtonText"
+		
+		android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
       />
   </LinearLayout>
 
@@ -72,37 +80,39 @@
     android:layout_height="0px"
     android:layout_weight="10"
     android:layout_alignParentBottom="true"
+    
+    android:layout_marginBottom="1dp"
+	android:layout_marginLeft="3dp"
     >
     <EditText
       android:id="@+id/keywords"
-      android:layout_marginTop="0dp"
-      android:layout_marginRight="3dp"
-      android:layout_marginBottom="2dp"
-      android:layout_marginLeft="3dp"
       android:layout_width="0px"
       android:layout_height="fill_parent"
-      android:layout_weight="10"
+      android:layout_weight="90"
       android:hint="@string/hint_keyword"
       />
-    <Button
-      android:id="@+id/button"
-      android:layout_weight="4"
-      android:layout_width="0px"
-      android:text="@string/go"
-      android:background="@drawable/btn_blue"
-      style="@style/ButtonText"
-      />
-
-  </LinearLayout>
-
-  <com.google.android.maps.MapView
-    android:id="@+id/mapview"
-    android:layout_width="fill_parent"
-    android:layout_height="0px"
-    android:layout_weight="60"
-    android:layout_alignParentTop="true"
-    android:enabled="true"
-    android:clickable="true"
-    android:apiKey="@string/maps_api_key"
-    />
+	<Button
+		android:id="@+id/button"
+		android:layout_weight="10"
+		android:layout_width="19dip"
+		android:layout_height="fill_parent"
+		android:text="@string/go"
+		android:background="@drawable/btn_blue"
+		style="@style/ButtonText"
+		
+		android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+	/>
+	</LinearLayout>
+	
+	<com.google.android.maps.MapView
+		android:id="@+id/mapview"
+		android:layout_width="fill_parent"
+		android:layout_height="0px"
+		android:layout_weight="70"
+		android:layout_alignParentTop="true"
+		android:enabled="true"
+		android:clickable="true"
+		android:apiKey="@string/maps_api_key"
+	/>
 </LinearLayout>
