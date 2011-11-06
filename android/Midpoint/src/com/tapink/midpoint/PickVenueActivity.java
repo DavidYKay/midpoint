@@ -14,7 +14,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -43,6 +42,7 @@ import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.map.VenueItem;
 import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
+import com.tapink.midpoint.util.GeneralConstants;
 import com.tapink.midpoint.util.GeoHelper;
 
 public class PickVenueActivity extends MapActivity implements VenueOverlay.Delegate {
@@ -145,10 +145,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       throw new IllegalStateException("Need to have either a location or an address!");
     }
 
-    populateSampleData();
-    populateMapFromListAdapter();
+    if (GeneralConstants.OFFLINE_MODE) {
+      populateSampleData();
+      populateMapFromListAdapter();
+      setupMap();
+    } else {
+      // Fetch live data
 
-    setupMap();
+    }
   }
 
   @Override
