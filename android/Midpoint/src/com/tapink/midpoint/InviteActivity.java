@@ -101,6 +101,10 @@ public class InviteActivity extends Activity {
     mEndTime.hour   = c.get(Calendar.HOUR_OF_DAY) + 1;
     mEndTime.minute = c.get(Calendar.MINUTE);
     
+    updateStartDate();
+    updateEndDate();
+    updateStartTime();
+    updateEndTime();
   }
 
   @Override
