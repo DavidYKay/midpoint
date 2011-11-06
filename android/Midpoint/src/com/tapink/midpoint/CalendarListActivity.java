@@ -73,12 +73,16 @@ public class CalendarListActivity extends Activity {
         Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
 
         // TODO: Pass in the calendar event ID
+        Event event = (Event) mListView.getAdapter().getItem(position);
+
+        //i.putExtra("event_id", event.getDatabaseId());
+
+        i.putExtra("event", event);
 
         startActivity(i);
 
       }
     });
-
 
     mCalendarUri = getCalendarUri();
   }
@@ -126,10 +130,6 @@ public class CalendarListActivity extends Activity {
     //mEventLoader.stopBackgroundThread();
   }
 
-//  private class CalendarAdapter extends ArrayAdapter<String> {
-//
-//  }
-
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,9 +145,7 @@ public class CalendarListActivity extends Activity {
 
     if (requestCode == NEW_CALENDAR_EVENT) {
       Log.v(TAG, "Wahoo! calendar event received.");
-
     }
-
   }
 
   private void readCalendar() {
@@ -178,17 +176,13 @@ public class CalendarListActivity extends Activity {
       new String[] { Long.toString(time), Integer.toString(calendarId) , Integer.toString(attendeeStatus)},  //2 is no
       "dtstart ASC"   //sort order
       );
-    //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
-    //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/calendars"), new String[]{ "_id", "name" }, null, null, null);
 
-    //String add = null;
     cursor.moveToFirst();
 
     ArrayList<Event> events = new ArrayList<Event>();
     String[] CalNames = new String[cursor.getCount()];
     int[] CalIds = new int[cursor.getCount()];
     for (int i = 0; i < CalNames.length; i++) {
-      //processOneRow(cursor);
       Event event = new Event(
         cursor.getLong(0),
         cursor.getString(2),
@@ -200,7 +194,6 @@ public class CalendarListActivity extends Activity {
       events.add(event);
       cursor.moveToNext();
     }
-    //events = processCursor(cursor);
     cursor.close();
 
     Event[] eventArray = new Event[events.size()];
@@ -264,32 +257,25 @@ public class CalendarListActivity extends Activity {
     try {
       calendarProviderClass = Class.forName("android.provider.Calendar");
     } catch (ClassNotFoundException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     Field uriField = null;
     try {
       uriField = calendarProviderClass.getField("CONTENT_URI");
     } catch (SecurityException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (NoSuchFieldException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     Uri calendarUri = null;
     try {
       calendarUri = (Uri) uriField.get(null);
     } catch (IllegalArgumentException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (IllegalAccessException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    //if (calendarUri == null) {
-    //  throw new IllegalStateException("Couldn't find calendar URI!");
-    //}
     assert calendarUri != null;
     Log.v(TAG, "Calendar URI: " + calendarUri);
     return calendarUri;
