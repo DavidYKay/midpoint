@@ -186,50 +186,7 @@ public class CalendarListActivity extends Activity {
     switch (item.getItemId()) {
     case MENU_PICK_CALENDAR:
 
-      final CharSequence[] items = getResources().getStringArray(R.array.map_actions);
-
-      final Cursor cursor = getSystemCalendars();
-
-      DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int item) {
-          cursor.moveToFirst();
-          cursor.moveToPosition(item);
-          String name = cursor.getString(
-              cursor.getColumnIndex("name")
-          );
-          long id = cursor.getLong(
-              cursor.getColumnIndex("_id")
-          );
-          Log.v(TAG,
-                String.format("Clicked: %s, %d",
-                              name,
-                              id));
-
-          // Update our preferences
-
-          final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
-          SharedPreferences.Editor editor = preferences.edit();
-          editor.putInt("calendar_id", item);
-          editor.commit();
-
-          dialog.dismiss();
-        }
-      };
-          
-      final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
-
-      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-      builder.setTitle(R.string.pick_calendar);
-      builder.setSingleChoiceItems(
-          cursor,
-          preferences.getInt("calendar_id", -1),
-          "name",
-          listener
-      );
-
-      //builder.setItems(items, listener);
-      AlertDialog alert = builder.create();
-      alert.show();
+      showCalendarPicker();
 
       return true;
     }
@@ -458,5 +415,52 @@ public class CalendarListActivity extends Activity {
       return view;
     }
   }
+  
+  ////////////////////////////////////////
+  // View Management
+  ////////////////////////////////////////
 
+  private void showCalendarPicker() {
+    final Cursor cursor = getSystemCalendars();
+
+    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int item) {
+        cursor.moveToFirst();
+        cursor.moveToPosition(item);
+        String name = cursor.getString(
+            cursor.getColumnIndex("name")
+            );
+        long id = cursor.getLong(
+            cursor.getColumnIndex("_id")
+            );
+        Log.v(TAG,
+              String.format("Clicked: %s, %d",
+                            name,
+                            id));
+
+        // Update our preferences
+
+        final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("calendar_id", item);
+        editor.commit();
+
+        dialog.dismiss();
+      }
+    };
+
+    final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    builder.setTitle(R.string.pick_calendar);
+    builder.setSingleChoiceItems(
+        cursor,
+        preferences.getInt("calendar_id", -1),
+        "name",
+        listener
+        );
+
+    AlertDialog alert = builder.create();
+    alert.show();
+  }
 }
