@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,7 +36,7 @@ import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.TextHelper;
 
-public class CalendarListActivity extends Activity {
+public class CalendarListActivity extends ListActivity {
 
   private static final String[] MEETINGS = new String[] {
     "Lunch with Fred Wilson",
@@ -48,7 +49,7 @@ public class CalendarListActivity extends Activity {
   protected static final int NEW_CALENDAR_EVENT = 1;
   private static final String TAG = "CalendarListActivity";
 
-  private ListView mListView;
+  //private ListView mListView;
   private ContentResolver mContentResolver;
   private Context mContext = this;
 
@@ -73,24 +74,18 @@ public class CalendarListActivity extends Activity {
       }
     });
 
-    mListView = (ListView) findViewById(R.id.list);
+    //mListView = (ListView) findViewById(R.id.list);
 
-    mListView.setOnItemClickListener(new OnItemClickListener() {
-
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position,
-          long id) {
-
-        Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
-
-        Event event = (Event) mListView.getAdapter().getItem(position);
-
-        i.putExtra("event", event);
-
-        startActivity(i);
-
-      }
-    });
+    //mListView.setOnItemClickListener(new OnItemClickListener() {
+    //  @Override
+    //  public void onItemClick(AdapterView<?> parent, View view, int position,
+    //      long id) {
+    //    Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
+    //    Event event = (Event) mListView.getAdapter().getItem(position);
+    //    i.putExtra("event", event);
+    //    startActivity(i);
+    //  }
+    //});
 
     mCalendarUri  = getCalendarUri();
     mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
@@ -181,6 +176,18 @@ public class CalendarListActivity extends Activity {
     }
   }
 
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {  
+    Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
+
+    //Event event = (Event) mListView.getAdapter().getItem(position);
+    Event event = (Event) getListAdapter().getItem(position);
+
+    i.putExtra("event", event);
+
+    startActivity(i);
+  }
+
   ////////////////////////////////////////
   // Options Menu
   ////////////////////////////////////////
@@ -217,7 +224,7 @@ public class CalendarListActivity extends Activity {
   private Cursor getSystemCalendars() {
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
-    Cursor cursor = managedQuery(mCalendarUri,
+    Cursor cursor = managedQuery(mCalendarsUri,
                                  calendarsProjection,
                                  null,
                                  null,
@@ -297,7 +304,8 @@ public class CalendarListActivity extends Activity {
 
     Event[] eventArray = new Event[events.size()];
     events.toArray(eventArray);
-    mListView.setAdapter(new EventArrayAdapter(
+    //mListView.setAdapter(new EventArrayAdapter(
+    setListAdapter(new EventArrayAdapter(
         eventArray
     ));
   }
@@ -324,9 +332,15 @@ public class CalendarListActivity extends Activity {
   // Data
   ////////////////////////////////////////
 
+  private static final long SECOND = 1000;
+  private static final long MINUTE = 60;
+  private static final long HOUR   = 60;
+  private static final long DAY    = 24;
+
   private Intent launchCalendarIntent() {
-    long eventStartInMillis = System.currentTimeMillis();
-    long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
+    long eventStartInMillis = System.currentTimeMillis() + 5 * MINUTE * SECOND;
+    //long eventStartInMillis = System.currentTimeMillis() + 1 * HOUR * MINUTE * SECOND;
+    long eventEndInMillis = eventStartInMillis + HOUR * MINUTE * SECOND;
 
     Intent intent = new Intent(Intent.ACTION_EDIT);
     intent.setType("vnd.android.cursor.item/event");
@@ -494,12 +508,15 @@ public class CalendarListActivity extends Activity {
     };
 
     final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+        
+    int calendarId = preferences.getInt("calendar_id", -1);
+    int positionId = calendarId - 1;
 
     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
     builder.setTitle(R.string.pick_calendar);
     builder.setSingleChoiceItems(
         cursor,
-        preferences.getInt("calendar_id", -1),
+        positionId,
         "name",
         listener
         );
