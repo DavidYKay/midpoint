@@ -14,10 +14,12 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int button_cancel=0x7f070001;
+        public static final int button_cancel=0x7f070003;
         /**  Kennedy, these are examples. You can kill these. 
          */
-        public static final int red=0x7f070000;
+        public static final int hyperpublic_blue=0x7f070000;
+        public static final int hyperpublic_blue_pressed=0x7f070001;
+        public static final int red=0x7f070002;
     }
     public static final class drawable {
         public static final int arrow=0x7f020000;
