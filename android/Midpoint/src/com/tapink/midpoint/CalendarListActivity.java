@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tapink.midpoint.calendar.Event;
+import com.tapink.midpoint.util.TextHelper;
 
 public class CalendarListActivity extends Activity {
 
@@ -317,13 +318,16 @@ public class CalendarListActivity extends Activity {
       // Kennedy, this is where you supply an XML file to base it on.
       View view = inflater.inflate(R.layout.list_item, null);
 
-      final TextView name        = (TextView) view.findViewById(R.id.name);
-      final TextView description = (TextView) view.findViewById(R.id.description);
+      final TextView name = (TextView) view.findViewById(R.id.name);
+      final TextView date = (TextView) view.findViewById(R.id.date);
 
       Event event = mEvents[position];
 
       name.setText(event.getName());
-      description.setText(event.getDescription());
+      //date.setText(event.getDescription());
+      date.setText(
+          TextHelper.unixTimeToNiceTime(event.getStartTime().getTime())
+      );
 
       return view;
     }

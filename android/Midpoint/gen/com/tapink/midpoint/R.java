@@ -34,7 +34,7 @@ public final class R {
         public static final int button=0x7f09000b;
         public static final int button_cancel=0x7f090005;
         public static final int button_confirm=0x7f090004;
-        public static final int description=0x7f090007;
+        public static final int date=0x7f090007;
         public static final int footer_confirm=0x7f090000;
         public static final int image=0x7f090001;
         public static final int list=0x7f090003;
