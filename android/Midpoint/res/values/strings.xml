@@ -32,7 +32,7 @@
   <string name="their_location_missing_explanation">You should enter two addresses so we can find the midpoint!</string>
   
   <!-- Hints -->
-  <string name="hint_keyword">E.g. Tacos, Max\'s, drinks</string>
+  <string name="hint_keyword">Enter Keywords</string>
 
   <!-- Placeholders -->
   <string name="placeholder_venue">This is an awesome venue!</string>
