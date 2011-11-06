@@ -30,6 +30,19 @@ public class Attendee implements Parcelable {
   }
   
   ////////////////////////////////////////
+  // Object
+  ////////////////////////////////////////
+  
+  public String toString() {
+    return String.format(
+        "(%d) <%s> %s",
+        databaseId,
+        email,
+        name
+        );
+  }
+  
+  ////////////////////////////////////////
   // Parcelable
   ////////////////////////////////////////
 

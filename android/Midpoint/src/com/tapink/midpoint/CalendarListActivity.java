@@ -174,18 +174,20 @@ public class CalendarListActivity extends ListActivity {
         event.getDatabaseId()
         );
 
-    if (c.getCount() > 0) {
-      c.moveToNext();
+    c.moveToFirst();
+    while (c.isAfterLast() == false) {
+    //if (c.getCount() > 0) {
       Attendee attendee = new Attendee(
-          //c.getLong(1),
-          //c.getString(2),
-          //c.getString(3)
           c.getLong(0),
           c.getString(1),
           c.getString(2)
           );
-      i.putExtra("attendee", attendee);
+
+      Log.v(TAG, "Attendee found: " + attendee);
+
+      c.moveToNext();
     }
+    //i.putExtra("attendee", attendee);
 
     i.putExtra("event", event);
 
@@ -228,8 +230,8 @@ public class CalendarListActivity extends ListActivity {
 
     Cursor cursor = managedQuery(mAttendeesUri,
                                  attendeesProjection,
-                                 null,
-                                 null,
+                                 "event_id = ?",
+                                 new String[] {Long.toString(eventId)},
                                  null
                                 );
 
