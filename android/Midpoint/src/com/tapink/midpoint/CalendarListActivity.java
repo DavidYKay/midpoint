@@ -28,6 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -85,7 +87,6 @@ public class CalendarListActivity extends ListActivity {
     Log.v(TAG, "eventsUri: " + mEventUri);
     Log.v(TAG, "calendarsUri: " + mCalendarsUri);
 
-
     Intent intent = getIntent();
     Event event = intent.getParcelableExtra("event");
     Venue venue = intent.getParcelableExtra("venue");
@@ -104,6 +105,35 @@ public class CalendarListActivity extends ListActivity {
     }
     Log.v(TAG, "Event: " + event);
     Log.v(TAG, "Venue: " + venue);
+
+    getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+      @Override
+      public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        //Intent intent = new Intent(Intent.ACTION_EDIT);
+        ////Intent intent = new Intent(Intent.ACTION_VIEW);
+        //
+        //Uri eventUri = mEventUri.buildUpon().appendPath(String.valueOf(id)).build();
+
+        ////intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id))); 
+        //intent.setData(eventUri); 
+
+        ////intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        ////                | Intent.FLAG_ACTIVITY_SINGLE_TOP
+        ////                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+        ////                | Intent.FLAG_ACTIVITY_NO_HISTORY
+        ////                | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        //
+
+        ////intent.setType("vnd.android.cursor.item/event");
+
+        ////intent.putExtra("_id", Long.toString(id));
+        //
+        //startActivity(intent);
+
+
+        return false;
+      }
+    });
 
   }
 
@@ -188,6 +218,7 @@ public class CalendarListActivity extends ListActivity {
 
     startActivity(i);
   }
+  
 
   ////////////////////////////////////////
   // Options Menu
@@ -573,7 +604,7 @@ public class CalendarListActivity extends ListActivity {
 
     @Override
     public long getItemId(int position) {
-      return position;
+      return mEvents[position].getDatabaseId();
     }
 
     @Override
