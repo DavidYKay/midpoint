@@ -53,8 +53,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        //Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
-        //startActivity(i);
+        toggleViews();
       }
     });
 
@@ -184,6 +183,10 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mListView.setAdapter(adapter);
     mAdapter = adapter;
   }
+  
+  ////////////////////////////////////////
+  // JSONVenueAdapter
+  ////////////////////////////////////////
 
   private class JSONVenueAdapter extends BaseAdapter {
 
@@ -237,5 +240,18 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       return test;
     }
   }
+  
+  ////////////////////////////////////////
+  // View Management
+  ////////////////////////////////////////
 
+  private void toggleViews() {
+    if (mMapView.getVisibility() == View.VISIBLE) {
+      mMapView.setVisibility(View.GONE);
+      mListView.setVisibility(View.VISIBLE);
+    } else {
+      mMapView.setVisibility(View.VISIBLE);
+      mListView.setVisibility(View.GONE);
+    }
+  }
 }

@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#f4f4f4" >
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical"
+  android:background="#f4f4f4" >
 
-  <ListView
-    android:id="@+id/list"
-    android:layout_width="fill_parent"
+  <Button
+    android:id="@+id/button"
+    android:text="@string/list"
     android:layout_height="0px"
-    android:layout_weight="30"
-    android:background="#f4f4f4"
-    android:state_selected="false"
+    android:layout_weight="10"
+    android:background="@drawable/btn_blue"
+    style="@style/ButtonText"
     />
+
 
   <com.google.android.maps.MapView
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="60"
+    android:layout_weight="90"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"
     android:apiKey="@string/maps_api_key"
     />
- <LinearLayout
-    android:id="@+id/footer_confirm"
-    android:orientation="horizontal"
+  
+  <ListView
+    android:id="@+id/list"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="10"
-    android:layout_alignParentBottom="true"
-    >
-  <Button
-    android:id="@+id/button"
-    android:text="@string/advance"
-    android:background="@drawable/btn_blue"
-    style="@style/ButtonText"
+    android:layout_weight="90"
+    android:background="#f4f4f4"
+    android:visibility="gone"
     />
 
-</LinearLayout>
 </LinearLayout>

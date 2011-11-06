@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -20,12 +21,17 @@ public class LocationActivity extends MapActivity {
   private MapView mMapView;
   
   private Event mEvent;
+  private EditText mMyLocation;
+  private EditText mTheirLocation;
 
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.location);
+
+    mMyLocation = (EditText) findViewById(R.id.my_location);
+    mTheirLocation = (EditText) findViewById(R.id.their_location);
 
     final Button actionConfirmButton = (Button) findViewById(R.id.button);
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +75,7 @@ public class LocationActivity extends MapActivity {
       mMapView.getController().setCenter(
           loc
       );
+      mMyLocation.setText(loc.toString());
     }
   }
 
