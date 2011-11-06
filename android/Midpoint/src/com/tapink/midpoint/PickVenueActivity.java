@@ -40,6 +40,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private VenueOverlay mVenueOverlay;
   private MyLocationOverlay me;
   private JSONVenueAdapter mAdapter;
+  private Button mButton;
   
   private Event mEvent;
 
@@ -49,8 +50,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     super.onCreate(savedInstanceState);
     setContentView(R.layout.pick_venue);
 
-    final Button actionConfirmButton = (Button) findViewById(R.id.button);
-    actionConfirmButton.setOnClickListener(new View.OnClickListener() {
+    mButton = (Button) findViewById(R.id.button);
+    mButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         toggleViews();
@@ -249,9 +250,11 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     if (mMapView.getVisibility() == View.VISIBLE) {
       mMapView.setVisibility(View.GONE);
       mListView.setVisibility(View.VISIBLE);
+      mButton.setText(R.string.map);
     } else {
       mMapView.setVisibility(View.VISIBLE);
       mListView.setVisibility(View.GONE);
+      mButton.setText(R.string.list);
     }
   }
 }
