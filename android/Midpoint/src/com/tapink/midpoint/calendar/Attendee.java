@@ -8,13 +8,23 @@ public class Attendee implements Parcelable {
   private long databaseId;
   private String name;
   private String email;
+  private String address;
   
   public Attendee(long databaseId, String name, String email) {
+    this(databaseId, name, email, null);
+  }
+  
+  public Attendee(long databaseId, String name, String email, String address) {
     super();
     
     this.databaseId = databaseId;
     this.name = name;
     this.email = email;
+    this.address = address;
+  }
+  
+  public String getAddress() {
+    return address;
   }
 
   public String getEmail() {
@@ -54,6 +64,7 @@ public class Attendee implements Parcelable {
     out.writeLong(databaseId);
     out.writeString(name);
     out.writeString(email);
+    out.writeString(address);
   }
 
   public static final Parcelable.Creator<Attendee> CREATOR
@@ -71,6 +82,7 @@ public class Attendee implements Parcelable {
     this(
      in.readLong(),
      in.readString(),
+     in.readString()
      in.readString()
     );
   }
