@@ -166,16 +166,7 @@ public class CalendarListActivity extends Activity {
     Log.v(TAG, "calendarsUri: " + calendarsUri);
     Cursor cursor = getContentResolver().query(eventUri,
                                                eventProjection,
-      //null,  //selection
-      //null,  //selction args
-      //"dtstart > ?",  //selection
-      //new String[] {"1320000000"},  //selction args
-      //"calendar_id = ?",  //selection
-      //new String[] {"1"},  //selction args
-      "dtstart > ? AND calendar_id = ?",  //selection
-      //new String[] {"130001572557715" , "1"},  //selction args
-      //new String[] {"0" , "1"},  //selction args
-      //new String[] { "1321315200000" , "1"},  //selction args
+      "dtstart > ? AND calendar_id = ? AND eventLocation IS NULL",  //selection
       new String[] { Long.toString(time), "1"},  //selction args
       "dtstart ASC"   //sort order
       );
