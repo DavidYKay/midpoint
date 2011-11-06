@@ -110,31 +110,42 @@ public class CalendarListActivity extends ListActivity {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         //Intent intent = new Intent(Intent.ACTION_EDIT);
-        ////Intent intent = new Intent(Intent.ACTION_VIEW);
-        //
-        //Uri eventUri = mEventUri.buildUpon().appendPath(String.valueOf(id)).build();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        
+        Uri eventUri = mEventUri.buildUpon().appendPath(String.valueOf(id)).build();
 
-        ////intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id))); 
-        //intent.setData(eventUri); 
+        //intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id))); 
+        intent.setData(eventUri); 
 
-        ////intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-        ////                | Intent.FLAG_ACTIVITY_SINGLE_TOP
-        ////                | Intent.FLAG_ACTIVITY_CLEAR_TOP
-        ////                | Intent.FLAG_ACTIVITY_NO_HISTORY
-        ////                | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        //
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        //                | Intent.FLAG_ACTIVITY_SINGLE_TOP
+        //                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+        //                | Intent.FLAG_ACTIVITY_NO_HISTORY
+        //                | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        
 
-        ////intent.setType("vnd.android.cursor.item/event");
+        //intent.setType("vnd.android.cursor.item/event");
 
-        ////intent.putExtra("_id", Long.toString(id));
-        //
-        //startActivity(intent);
+        //intent.putExtra("_id", Long.toString(id));
+        
+        startActivity(intent);
 
 
         return false;
       }
     });
 
+    long startTime = System.currentTimeMillis() + 5 * MINUTE * SECOND;
+    long endTime = startTime + HOUR * MINUTE * SECOND;
+
+    //insertEventAndGuest(
+    //    "Crazy Party",
+    //    "Bring a costume",
+    //    startTime,
+    //    endTime,
+    //    "DK",
+    //    "dk@gargoyle.co"
+    //                    );
   }
 
   @Override
@@ -421,6 +432,67 @@ public class CalendarListActivity extends ListActivity {
     return result;
 
   }
+  private Uri insertEvent(String title, String description, long startTime, long endTime) {
+    final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    return insertEvent(
+        preferences.getInt("calendar_id", 1),
+        title,
+        description,
+        startTime,
+        endTime
+        );
+  }
+  
+  private Uri insertEvent(long calendarId, String title, String description, long startTime, long endTime) {
+    ContentValues eventValues = new ContentValues();
+    //eventValues.put("eventLocation", eventLocation);
+
+    eventValues.put("calendar_id", String.valueOf(calendarId));
+    eventValues.put("description", description);
+    eventValues.put("title", title);
+    eventValues.put("dtstart", startTime);
+    eventValues.put("dtend", endTime);
+    //"eventLocation TEXT," +
+
+    Uri eventUri = mEventUri;
+    Log.v(TAG, "UPDATING eventUri: " + eventUri);
+    Uri newEventUri = mContentResolver.insert(
+        eventUri,
+        eventValues
+        //"_id = ?",
+        //new String[] { Long.toString(eventId) }
+        );
+
+    return newEventUri;
+  }
+
+  private Uri insertEventAndGuest(String title, String description, long startTime, long endTime, String guestName, String email) {
+    Uri eventUri = insertEvent(title, description, startTime, endTime);
+    String idString = eventUri.getLastPathSegment();
+    insertGuest(Long.parseLong(idString), guestName, email);
+    insertGuest(Long.parseLong(idString), "David Kay", "davidykay@gmail.com");
+
+    return eventUri;
+  }
+
+  private Uri insertGuest(long eventId, String guestName, String email) {
+    String idString = String.valueOf(eventId);
+    ContentValues attendeeValues = new ContentValues();
+    attendeeValues.put("event_id", idString);
+    attendeeValues.put("attendeeName", guestName);
+    attendeeValues.put("attendeeEmail", email);
+    //attendeeValues.put("attendeeStatus", "0");
+    //"attendeeStatus INTEGER," +
+    //"attendeeRelationship INTEGER," +
+
+    Uri attendeeUri = mAttendeesUri;
+    Uri newGuest = mContentResolver.insert(
+      attendeeUri,
+      attendeeValues
+    );
+
+    return newGuest;
+  }
 
   private void readCalendar() {
     final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
@@ -436,16 +508,22 @@ public class CalendarListActivity extends ListActivity {
 
     //int calendarId = 1; // Target calendar
 
+    final int NOT_SOCIAL = 0;
+    final int YES        = 1;
+    final int NO         = 2;
+    final int PENDING    = 3;
+
     //int attendeeStatus = getAttendeeAccepted();
-    int attendeeStatus = 1; // Yes?
+    //int attendeeStatus = 0; // Not a social event
+    //int attendeeStatus = 1; // Yes?
     //int attendeeStatus = 2; // No
-    //int attendeeStatus = 3; // Maybe
+    //int attendeeStatus = 3; // Pending Response
 
     Cursor cursor = getContentResolver().query(mEventUri,
                                                eventProjection,
       //"dtstart > ? AND calendar_id = ? AND selfAttendeeStatus > ? AND eventLocation IS NULL",  //selection
-      "dtstart > ? AND calendar_id = ? AND selfAttendeeStatus = ? AND eventLocation IS NULL",  //selection
-      new String[] { Long.toString(time), Integer.toString(calendarId) , Integer.toString(attendeeStatus)},  //2 is no
+      "dtstart > ? AND calendar_id = ? AND (selfAttendeeStatus = ? OR selfAttendeeStatus = ?) AND eventLocation IS NULL",  //selection
+      new String[] { Long.toString(time), Integer.toString(calendarId) , Integer.toString(YES), Integer.toString(PENDING)},  //2 is no
       "dtstart ASC"   //sort order
       );
 
@@ -483,6 +561,7 @@ public class CalendarListActivity extends ListActivity {
     private static final String TAG = "ContentObserver";
     @Override
     public boolean deliverSelfNotifications() {
+      Log.v(TAG, "deliverSelfNotifications");
       return true;
     }
 
@@ -490,6 +569,7 @@ public class CalendarListActivity extends ListActivity {
     public void onChange(boolean selfChange) {
       Log.v(TAG, "onChange");
       //eventsChanged();
+      readCalendar();
     }
   };
 
