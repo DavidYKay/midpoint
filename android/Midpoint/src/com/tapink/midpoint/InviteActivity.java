@@ -48,6 +48,7 @@ public class InviteActivity extends Activity {
   private TimeWrapper mEndTime   = new TimeWrapper();
   private EmailAddressAdapter mAddressAdapter;
   private Rfc822Validator mEmailValidator;
+  private MultiAutoCompleteTextView mAttendeesList;
 
 
   private class DateWrapper {
@@ -69,6 +70,20 @@ public class InviteActivity extends Activity {
 
 
     mAddressAdapter = new EmailAddressAdapter(this);
+    
+    mDoneButton = (Button) findViewById(R.id.save);
+    mDoneButton.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        saveFieldsAndExit();
+      }
+    });
+    
+    mCancelButton = (Button) findViewById(R.id.discard);
+    mCancelButton.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        finish();
+      }
+    });
 
     mStartDateButton = (Button) findViewById(R.id.start_date);
     mStartDateButton.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +111,7 @@ public class InviteActivity extends Activity {
       }
     });
 
+    mAttendeesList = initMultiAutoCompleteTextView(R.id.attendees);
 
     // get the current date
     final Calendar c = Calendar.getInstance();
@@ -237,15 +253,13 @@ public class InviteActivity extends Activity {
     MultiAutoCompleteTextView list = (MultiAutoCompleteTextView) findViewById(res);
     list.setAdapter(mAddressAdapter);
     list.setTokenizer(new Rfc822Tokenizer());
-    list.setValidator(mEmailValidator);
+    //list.setValidator(mEmailValidator);
 
     // NOTE: assumes no other filters are set
     list.setFilters(sRecipientFilters);
 
     return list;
   }
-
-
 
   private static String extractDomain(String email) {
     int separator = email.lastIndexOf('@');
@@ -256,4 +270,35 @@ public class InviteActivity extends Activity {
   }
 
   private static InputFilter[] sRecipientFilters = new InputFilter[] { new Rfc822InputFilter() };
+
+  ////////////////////////////////////////
+  // 
+  ////////////////////////////////////////
+        
+  private void saveFieldsAndExit() {
+    GregorianCalendar startDate = new GregorianCalendar(
+        mStartDate.year,
+        mStartDate.month,
+        mStartDate.day,
+        mStartTime.hour,
+        mStartTime.minute
+        );
+    
+    GregorianCalendar endDate = new GregorianCalendar(
+        mEndDate.year,
+        mEndDate.month,
+        mEndDate.day,
+        mStartTime.hour,
+        mStartTime.minute
+        );
+    
+    endDate.getTimeInMillis()
+    startDate.getTimeInMillis()
+    mDescription.getText().toString()
+    mGuests.getText().toString()
+    mLocation.getText().toString()
+    mTitle.getText().toString()
+    mLocation.getText().toString()
+
+  }
 }

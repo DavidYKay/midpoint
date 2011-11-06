@@ -23,8 +23,10 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    
+
+    <!-- default skin for emails -->
     <activity
+      android:theme="@android:style/Theme"
       android:label="@string/invite"
       android:name=".InviteActivity" >
     </activity>
