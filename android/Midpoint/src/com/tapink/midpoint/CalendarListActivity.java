@@ -2,9 +2,11 @@ package com.tapink.midpoint;
 
 import java.lang.reflect.Field;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -12,12 +14,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.tapink.midpoint.calendar.Event;
+import com.tapink.midpoint.util.TextHelper;
 
 public class CalendarListActivity extends Activity {
 
@@ -32,7 +40,8 @@ public class CalendarListActivity extends Activity {
 
   private ListView mListView;
   private ContentResolver mContentResolver;
-  
+  private Context mContext = this;
+
   private Uri mCalendarUri;
 
   /** Called when the activity is first created. */
@@ -40,7 +49,7 @@ public class CalendarListActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-    
+
     mContentResolver = getContentResolver();
 
     final Button actionConfirmButton = (Button) findViewById(R.id.button);
@@ -53,9 +62,8 @@ public class CalendarListActivity extends Activity {
     });
 
     mListView = (ListView) findViewById(R.id.list);
-    mListView.setAdapter(new ArrayAdapter<String>(this,
-                                                  R.layout.list_item,
-                                                  MEETINGS));
+    //mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, MEETINGS));
+
     mListView.setOnItemClickListener(new OnItemClickListener() {
 
       @Override
@@ -101,10 +109,10 @@ public class CalendarListActivity extends Activity {
         mCalendarUri,
         true,
         mObserver);
-    
+
     readCalendar();
   }
-    
+
   @Override
   protected void onPause() {
     super.onPause();
@@ -146,19 +154,50 @@ public class CalendarListActivity extends Activity {
     Uri baseUri = mCalendarUri;
     Uri eventUri = baseUri.buildUpon().appendPath("events").build();
     Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
+
+    String[] eventProjection = new String[]{ "_id", "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" };
+    String[] calendarsProjection = new String[]{ "_id", "name" };
+
     Log.v(TAG, "eventsUri: " + eventUri);
     Log.v(TAG, "calendarsUri: " + calendarsUri);
-    Cursor cursor = getContentResolver().query(eventUri, new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
+    Cursor cursor = getContentResolver().query(eventUri,
+                                               eventProjection,
+      //null,  //selection
+      //null,  //selction args
+      "dtstart > ?",  //selection
+      //new String[] {"1306904400"},  //selction args
+      new String[] {"1320000000"},  //selction args
+      null   //sort order
+      );
     //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
     //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/calendars"), new String[]{ "_id", "name" }, null, null, null);
 
     String add = null;
     cursor.moveToFirst();
+
+    ArrayList<Event> events = new ArrayList<Event>();
     String[] CalNames = new String[cursor.getCount()];
     int[] CalIds = new int[cursor.getCount()];
     for (int i = 0; i < CalNames.length; i++) {
       CalIds[i] = cursor.getInt(0);
-      CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1) + "\nDescription: " + cursor.getString(2) + "\nStart Date: " + new Date(cursor.getLong(3)) + "\nEnd Date : " + new Date(cursor.getLong(4)) + "\nLocation : " + cursor.getString(5);
+
+      // Modern standard
+      //CalNames[i] = "Event: " + cursor.getInt(0) + " Calendar: " + cursor.getInt(1) + ": \nTitle: " + cursor.getString(2) + "\nDescription: " + cursor.getString(3) + "\nStart Date: " + new Date(cursor.getLong(4)) + "\nEnd Date : " + new Date(cursor.getLong(5)) + "\nLocation : " + cursor.getString(6) + "\n";
+      
+      // Modern UTC
+      CalNames[i] = "Event: " + cursor.getInt(0) + " Calendar: " + cursor.getInt(1) + ": \nTitle: " + cursor.getString(2) + "\nDescription: " + cursor.getString(3) + "\nStart Date: " + cursor.getLong(4) + "\nEnd Date : " + cursor.getLong(5) + "\nLocation : " + cursor.getString(6) + "\n";
+
+      Event event = new Event(
+        cursor.getLong(0),
+        cursor.getString(2),
+        cursor.getString(3),
+        cursor.getString(6),
+        new Date(cursor.getLong(4)),
+        new Date(cursor.getLong(5))
+      );
+       
+      events.add(event);
+      //CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1) + "\nDescription: " + cursor.getString(2) + "\nStart Date: " + new Date(cursor.getLong(3)) + "\nEnd Date : " + new Date(cursor.getLong(4)) + "\nLocation : " + cursor.getString(5);
       //CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1);
       if(add == null)
         add = CalNames[i];
@@ -174,6 +213,12 @@ public class CalendarListActivity extends Activity {
     }
     cursor.close();
 
+
+    Event[] eventArray = new Event[events.size()]; 
+    events.toArray(eventArray);
+    mListView.setAdapter(new EventArrayAdapter(
+        eventArray
+    ));
   }
 
   private Intent launchCalendarIntent() {
@@ -243,4 +288,49 @@ public class CalendarListActivity extends Activity {
     return calendarUri;
   }
   
+  private class EventArrayAdapter extends BaseAdapter {
+
+    private Event[] mEvents;
+
+    public EventArrayAdapter(Event[] events) {
+      mEvents = events;
+    }
+
+    @Override
+    public int getCount() {
+      return mEvents.length;
+    }
+
+    @Override
+    public Object getItem(int index) {
+      return mEvents[index];
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+      // Kennedy, this is where you supply an XML file to base it on.
+      View view = inflater.inflate(R.layout.list_item, null);
+
+      final TextView name = (TextView) view.findViewById(R.id.name);
+      final TextView date = (TextView) view.findViewById(R.id.date);
+
+      Event event = mEvents[position];
+
+      name.setText(event.getName());
+      //date.setText(event.getDescription());
+      date.setText(
+          TextHelper.unixTimeToNiceTime(event.getStartTime().getTime())
+      );
+
+      return view;
+    }
+  }
+
 }
