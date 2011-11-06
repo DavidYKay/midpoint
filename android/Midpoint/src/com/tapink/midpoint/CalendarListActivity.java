@@ -87,23 +87,15 @@ public class CalendarListActivity extends ListActivity {
     });
     final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
     String accountName = preferences.getString("account_name", null);
+    String displayName = preferences.getString("display_name", null);
     if (accountName != null) {
       mUserEmail = accountName;
-      Log.v(TAG, "mUserEmail: " + mUserEmail);
-      if (mUserEmail != null) {
-        // go fetch the display name
-        long contactId = getContactIdForEmail(mUserEmail);
-        Cursor c = getContact(contactId);
-        c.moveToFirst();
-        mUserDisplayName = c.getString(
-            c.getColumnIndex(
-            ContactsContract.Contacts.DISPLAY_NAME
-            )
-        );
-        Log.v(TAG, "mUserDisplayName: " + mUserDisplayName);
-        c.close();
-      }
     }
+    if (displayName != null) {
+      mUserDisplayName = displayName;
+    }
+    Log.v(TAG, "mUserEmail: " + mUserEmail);
+    Log.v(TAG, "mUserDisplayName: " + mUserDisplayName);
 
     mCalendarUri  = getCalendarUri();
     mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
@@ -329,8 +321,6 @@ public class CalendarListActivity extends ListActivity {
         sortOrder);
   }
 
-  
-  
   private long getContactIdForEmail(String email) {
     String[] projection = new String[]{ 
       ContactsContract.Data._ID,
@@ -816,12 +806,25 @@ public class CalendarListActivity extends ListActivity {
                             id));
 
         // Update our preferences
+          // go fetch the display name
+        long contactId = getContactIdForEmail(accountName);
+        Cursor c = getContact(contactId);
+        c.moveToFirst();
+        String displayName = c.getString(
+        c.getColumnIndex(
+            ContactsContract.Contacts.DISPLAY_NAME
+            )
+        );
+        Log.v(TAG, "displayName: " + displayName);
+
+        c.close();
 
 
         final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("calendar_id", (int) id);
         editor.putString("account_name", accountName);
+        editor.putString("display_name", displayName);
         editor.commit();
 
         // TODO: refresh
