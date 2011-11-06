@@ -357,13 +357,15 @@ public class CalendarListActivity extends ListActivity {
 
     long contactId = -1;
 
-    c.moveToFirst();
+    if (c.getCount() > 0) {
+      c.moveToFirst();
 
-    String foundEmail = c.getString(1);
-    assert foundEmail.equals(email);
+      String foundEmail = c.getString(1);
+      assert foundEmail.equals(email);
 
-    contactId = c.getLong(2);
-    assert contactId != -1;
+      contactId = c.getLong(2);
+      assert contactId != -1;
+    }
 
     return contactId;
   }
@@ -822,15 +824,18 @@ public class CalendarListActivity extends ListActivity {
 
         // Update our preferences
           // go fetch the display name
+        String displayName = null;
         long contactId = getContactIdForEmail(accountName);
         Cursor c = getContact(contactId);
-        c.moveToFirst();
-        String displayName = c.getString(
-        c.getColumnIndex(
-            ContactsContract.Contacts.DISPLAY_NAME
-            )
-        );
-        Log.v(TAG, "displayName: " + displayName);
+        if (c.getCount() > 0) {
+          c.moveToFirst();
+          displayName = c.getString(
+              c.getColumnIndex(
+                  ContactsContract.Contacts.DISPLAY_NAME
+                  )
+              );
+          Log.v(TAG, "displayName: " + displayName);
+        }
 
         c.close();
 
