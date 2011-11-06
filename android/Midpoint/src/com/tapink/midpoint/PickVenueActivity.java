@@ -57,7 +57,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   
   // Model
   private Event mEvent;
-  //private Location mLocation;
+  private Location mLastLocation;
 
   /** Called when the activity is first created. */
   @Override
@@ -95,10 +95,11 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mMapView.getOverlays().add(mVenueOverlay);
     
     Intent i = getIntent();
-    mEvent            = i.getParcelableExtra("event");
-    Location midpoint = i.getParcelableExtra("midpoint");
+    mEvent                 = i.getParcelableExtra("event");
+    mLastLocation          = i.getParcelableExtra("my_location");
+    Location midpoint      = i.getParcelableExtra("midpoint");
     Location theirLocation = i.getParcelableExtra("their_location");
-    String address    = i.getStringExtra("address");
+    String address         = i.getStringExtra("address");
     
     Log.v(TAG, "Event: " + mEvent);
     Log.v(TAG, "Midpoint: " + midpoint);
@@ -382,12 +383,22 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 //  // thus we ensure that we go beyond that number
 //  private final int minLongitude = (int)(+181 * 1E6);
 //  private final int maxLongitude = (int)(-181 * 1E6);
-  
+
+
+  private GeoPoint getMyLocation() {
+    GeoPoint current = me.getMyLocation();
+    if (current != null) {
+      return current;
+    } else {
+      return GeoHelper.locationToGeoPoint(mLastLocation);
+    }
+  }
+
   private void setupMap() {
     MapController controller = mMapView.getController();
     ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
     
-    GeoPoint current = me.getMyLocation();
+    GeoPoint current = getMyLocation();
     if (current != null) {
       points.add(current);
     }
