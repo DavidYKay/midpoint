@@ -28,11 +28,14 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.OverlayItem;
 import com.tapink.midpoint.calendar.Event;
+import com.tapink.midpoint.map.MidpointOverlay;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.map.VenueItem;
 import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
+import com.tapink.midpoint.util.GeoHelper;
 
 public class PickVenueActivity extends MapActivity implements VenueOverlay.Delegate {
 
@@ -40,9 +43,12 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
   private Context mContext = this;
   private ListView mListView;
+
   private MapView mMapView;
   private VenueOverlay mVenueOverlay;
+  private MidpointOverlay mMidpointOverlay;
   private MyLocationOverlay me;
+
   private VenueAdapter mAdapter;
   private Button mButton;
   
@@ -84,6 +90,10 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mVenueOverlay = new VenueOverlay(pin, mContext);
     mVenueOverlay.setDelegate(this);
     mMapView.getOverlays().add(mVenueOverlay);
+    
+    Drawable midpointMarker = this.getResources().getDrawable(R.drawable.midpoint_marker);
+    mMidpointOverlay = new MidpointOverlay(midpointMarker, mContext);
+    mMapView.getOverlays().add(mMidpointOverlay);
 
     Intent i = getIntent();
     mEvent         = i.getParcelableExtra("event");
@@ -97,7 +107,13 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     if (midpoint != null) {
       //mLocation = loc;
       // Make a query using the location
-
+      mMidpointOverlay.addItem(
+          new OverlayItem(
+              GeoHelper.locationToGeoPoint(midpoint),
+              "Midpoint",
+              "Halfway point"
+              )
+          );
     } else if (address != null) {
       // Make a query using the address
 

@@ -12,6 +12,13 @@ public class GeoHelper {
     return(new GeoPoint((int)(lat*1000000.0),
                         (int)(lon*1000000.0)));
   }
+  
+  public static GeoPoint locationToGeoPoint(Location location) {
+    return GeoHelper.getPoint(
+        location.getLatitude(),
+        location.getLongitude()
+        );
+  }
 
   public static Location geoPointToLocation(GeoPoint geoPoint) {
     double latitude = geoPoint.getLatitudeE6() / 1000000F;

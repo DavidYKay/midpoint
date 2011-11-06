@@ -29,7 +29,8 @@ public final class R {
         public static final int btn_yellow=0x7f020006;
         public static final int ic_launcher=0x7f020007;
         public static final int marker=0x7f020008;
-        public static final int placeholder_venue=0x7f020009;
+        public static final int midpoint_marker=0x7f020009;
+        public static final int placeholder_venue=0x7f02000a;
     }
     public static final class id {
         public static final int button=0x7f090006;
