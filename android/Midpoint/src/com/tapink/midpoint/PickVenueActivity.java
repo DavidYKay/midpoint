@@ -1,10 +1,21 @@
 package com.tapink.midpoint;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -119,7 +130,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
           new OverlayItem(
               GeoHelper.locationToGeoPoint(theirLocation),
               "Their Location",
-              "Brett is here."
+              "Your friend is here."
               )
           );
     }
@@ -147,11 +158,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
     if (GeneralConstants.OFFLINE_MODE) {
       populateSampleData();
-      populateMapFromListAdapter();
-      setupMap();
+      //populateMapFromListAdapter();
+      //setupMap();
     } else {
       // Fetch live data
-
+      populateRealData(
+          midpoint,
+          "cafe"
+          );
     }
   }
 
@@ -245,44 +259,47 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       );
     }
   }
-
+  
+  
   private void populateSampleData() {
     DummyDataHelper helper = new DummyDataHelper(mContext);
     JSONArray venues = helper.getSampleVenues();
+    loadData(venues);
+  }
 
-    //ArrayList<String> list = new ArrayList<String>();
-    //ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+  private void loadData(JSONArray venues) {
     ArrayList<Venue> list = new ArrayList<Venue>();
     if (venues != null) {
       for (int i=0;i<venues.length();i++){
-        //list.add(venues.get(i).toString());
         try {
-          //list.add((JSONObject) venues.get(i));
           Venue venue = new Venue((JSONObject) venues.get(i));
           list.add(venue);
         } catch (JSONException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
     }
 
-    //VenueAdapter adapter = new VenueAdapter(venues);
     Venue[] venueArray = new Venue[list.size()];
     list.toArray(venueArray);
     VenueAdapter adapter = new VenueAdapter(venueArray);
     mListView.setAdapter(adapter);
     mAdapter = adapter;
+
+    populateMapFromListAdapter();
+    setupMap();
   }
 
-  private void populateRealData(GeoPoint point, String query) {
+  //private void populateRealData(GeoPoint point, String query) {
+  private void populateRealData(Location loc, String query) {
+    // TODO: Use real params
+
     String queryString = "https://api.hyperpublic.com/api/v1/places?client_id=8UufhI6bCKQXKMBn7AUWO67Yq6C8RkfD0BGouTke&client_secret=zdoROY5XRN0clIWsEJyKzHedSK4irYee8jpnOXaP&location=240%20E%2086th%20st,%20new%20york,%20ny&q=cafe";
 
     HyperPublicFetchTask task = new HyperPublicFetchTask();
     task.execute(
       queryString
     );
-
   }
 
   ////////////////////////////////////////
@@ -309,7 +326,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
     protected void onPostExecute(String jsonString) {
       Log.v(TAG, "onPostExecute: " + jsonString);
-      
+      JSONArray venues = null;
+      try {
+        venues = new JSONArray(jsonString);
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      loadData(venues);
     }
 
   }
@@ -323,13 +347,44 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       e.printStackTrace();
       throw new IllegalArgumentException("Must be a properly formed URL. Received: " + strUrl);
     }
-    URLConnection connection;
+
+    URLConnection conn;
+    //HttpsURLConnection connection;
+
+    // Code block for determining HTTP or https
+    if (url.getProtocol().toLowerCase().equals("https")) {
+        trustAllHosts();
+        HttpsURLConnection https;
+        try {
+          https = (HttpsURLConnection) url.openConnection();
+        } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+        }
+        https.setHostnameVerifier(DO_NOT_VERIFY);
+        conn = https;
+    } else {
+        try {
+          conn = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+        }
+    }
+
     try {
-      connection = url.openConnection();
-      connection.setUseCaches(true);
-      Object response = connection.getContent();
+      Object response = conn.getContent();
       if (response instanceof String) {
         jsonString = (String)response;
+      } else if (response instanceof GZIPInputStream) {
+        Log.e(TAG, "GZIPInputStream received: " + response);
+        GZIPInputStream zis = (GZIPInputStream) response;
+        try {
+          // Reading from 'zis' gets you the uncompressed bytes...
+          jsonString = processStream(zis);
+        } finally {
+          zis.close();
+        }
       } else {
         Log.e(TAG, "Object received: " + response);
         //InputStream in = connection.getInputStream();
@@ -343,6 +398,22 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     return jsonString;
   }
 
+  private String processStream(GZIPInputStream zis) {
+    InputStreamReader reader = new InputStreamReader(zis);
+    BufferedReader in = new BufferedReader(reader);
+
+    String readed;
+    try {
+      while ((readed = in.readLine()) != null) {
+        System.out.println(readed);
+        return readed;
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return null;
+  }
 
   ////////////////////////////////////////
   // JSONVenueAdapter
@@ -580,4 +651,52 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       startActivity(i);
     }
   }
+
+
+    // always verify the host - dont check for certificate
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+      public boolean verify(String hostname, SSLSession session) {
+        return true;
+      }
+    };
+
+
+    /**
+     * Trust every server - dont check for any certificate
+     */
+    private static void trustAllHosts() {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+          return new java.security.cert.X509Certificate[] {};
+        }
+
+        @Override
+        public void checkClientTrusted(
+            java.security.cert.X509Certificate[] chain, String authType)
+            throws java.security.cert.CertificateException {
+          // TODO Auto-generated method stub
+          
+        }
+
+        @Override
+        public void checkServerTrusted(
+            java.security.cert.X509Certificate[] chain, String authType)
+            throws java.security.cert.CertificateException {
+          // TODO Auto-generated method stub
+          
+        }
+      } };
+
+      // Install the all-trusting trust manager
+      try {
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection
+            .setDefaultSSLSocketFactory(sc.getSocketFactory());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
 }

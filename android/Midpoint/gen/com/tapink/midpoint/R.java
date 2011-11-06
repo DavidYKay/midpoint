@@ -83,6 +83,10 @@ public final class R {
         /**  Hints 
          */
         public static final int hint_keyword=0x7f05001b;
+        /**  API Keys 
+         */
+        public static final int hyperpublic_client_id=0x7f05001d;
+        public static final int hyperpublic_client_secret=0x7f05001e;
         public static final int kennedy_dev_key=0x7f050002;
         public static final int list=0x7f05000b;
         public static final int location=0x7f05000c;
