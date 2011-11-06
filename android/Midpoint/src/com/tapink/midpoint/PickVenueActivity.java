@@ -140,6 +140,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
 
     populateSampleData();
     populateMapFromListAdapter();
+
+    setupMap();
   }
 
   @Override
@@ -388,6 +390,13 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     GeoPoint current = me.getMyLocation();
     if (current != null) {
       points.add(current);
+    }
+    
+    for (int i = 0; i < mMidpointOverlay.size(); i++) {
+      GeoPoint point = mMidpointOverlay.getItem(i).getPoint();
+      if (point != null) {
+        points.add(point);
+      }
     }
 
     for (int i = 0; i < mVenueOverlay.size(); i++) {
