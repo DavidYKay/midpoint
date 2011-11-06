@@ -26,14 +26,15 @@ public final class R {
         public static final int btn_black=0x7f020001;
         public static final int btn_blue=0x7f020002;
         public static final int btn_green=0x7f020003;
-        public static final int btn_purple=0x7f020004;
-        public static final int btn_red=0x7f020005;
-        public static final int btn_yellow=0x7f020006;
-        public static final int ic_launcher=0x7f020007;
-        public static final int marker=0x7f020008;
-        public static final int marker_grey=0x7f020009;
-        public static final int marker_inverse=0x7f02000a;
-        public static final int placeholder_venue=0x7f02000b;
+        public static final int btn_grey=0x7f020004;
+        public static final int btn_purple=0x7f020005;
+        public static final int btn_red=0x7f020006;
+        public static final int flag=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int marker=0x7f020009;
+        public static final int marker_grey=0x7f02000a;
+        public static final int marker_inverse=0x7f02000b;
+        public static final int placeholder_venue=0x7f02000c;
     }
     public static final class id {
         public static final int button=0x7f090006;
