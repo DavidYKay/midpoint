@@ -17,6 +17,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +57,7 @@ import com.tapink.midpoint.map.VenueOverlay;
 import com.tapink.midpoint.util.DummyDataHelper;
 import com.tapink.midpoint.util.GeneralConstants;
 import com.tapink.midpoint.util.GeoHelper;
+import com.tapink.midpoint.util.TextHelper;
 
 public class PickVenueActivity extends MapActivity implements VenueOverlay.Delegate {
 
@@ -293,6 +296,41 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   //private void populateRealData(GeoPoint point, String query) {
   private void populateRealData(Location loc, String query) {
     // TODO: Use real params
+
+    ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+    if (!TextHelper.isEmptyString(query)) {
+      params.add(new BasicNameValuePair(
+          "q",
+          query));
+    }
+    params.add(new BasicNameValuePair(
+        "lat",
+        Double.toString(
+            loc.getLatitude()
+            )));
+    params.add(new BasicNameValuePair(
+        "lon",
+        Double.toString(
+            loc.getLongitude()
+            )));
+    params.add(new BasicNameValuePair(
+        "client_secret", 
+        getResources().getText(
+            R.string.hyperpublic_client_secret
+            ).toString()
+        ));
+    params.add(new BasicNameValuePair(
+        "client_id", 
+        getResources().getText(
+            R.string.hyperpublic_client_id
+            ).toString()
+        ));
+    String parameterString = URLEncodedUtils.format(params, "utf-8");
+    String baseUrl = "https://api.hyperpublic.com/api/v1/places";
+    String.format("%s/%s",
+        baseUrl,
+        parameterString
+    );
 
     String queryString = "https://api.hyperpublic.com/api/v1/places?client_id=8UufhI6bCKQXKMBn7AUWO67Yq6C8RkfD0BGouTke&client_secret=zdoROY5XRN0clIWsEJyKzHedSK4irYee8jpnOXaP&location=240%20E%2086th%20st,%20new%20york,%20ny&q=cafe";
 
