@@ -20,10 +20,18 @@
       android:layout_marginRight="3dp"
       android:layout_marginBottom="2dp"
       android:layout_marginLeft="3dp"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
+      android:layout_width="0px"
+      android:layout_height="fill_parent"
       android:layout_weight="10"
       android:hint="@string/my_location"
+      />
+    <Button
+      android:id="@+id/button_my"
+      android:layout_weight="2"
+      android:layout_width="0px"
+      android:text="@string/advance"
+      android:background="@drawable/btn_blue"
+      style="@style/ButtonText"
       />
   </LinearLayout>
 
@@ -41,10 +49,18 @@
       android:layout_marginRight="3dp"
       android:layout_marginBottom="2dp"
       android:layout_marginLeft="3dp"
-      android:layout_height="wrap_content"
-      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:layout_width="0px"
       android:layout_weight="10"
       android:hint="@string/their_location"
+      />
+    <Button
+      android:id="@+id/their_button"
+      android:layout_weight="2"
+      android:layout_width="0px"
+      android:text="@string/advance"
+      android:background="@drawable/btn_blue"
+      style="@style/ButtonText"
       />
   </LinearLayout>
 
@@ -58,14 +74,22 @@
     >
     <EditText
       android:id="@+id/keywords"
-      android:layout_width="fill_parent"
       android:layout_marginTop="0dp"
       android:layout_marginRight="3dp"
       android:layout_marginBottom="2dp"
       android:layout_marginLeft="3dp"
-      android:layout_height="wrap_content"
+      android:layout_width="0px"
+      android:layout_height="fill_parent"
       android:layout_weight="10"
       android:hint="@string/hint_keyword"
+      />
+    <Button
+      android:id="@+id/button"
+      android:layout_weight="2"
+      android:layout_width="0px"
+      android:text="@string/advance"
+      android:background="@drawable/btn_blue"
+      style="@style/ButtonText"
       />
 
   </LinearLayout>
@@ -80,20 +104,4 @@
     android:clickable="true"
     android:apiKey="@string/maps_api_key"
     />
-
-  <LinearLayout
-    android:id="@+id/footer_confirm"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="0px"
-    android:layout_weight="10"
-    android:layout_alignParentBottom="true"
-    >
-    <Button
-      android:id="@+id/button"
-      android:text="@string/advance" 
-      android:background="@drawable/btn_blue"
-      style="@style/ButtonText"
-      />
-  </LinearLayout>
 </LinearLayout>
