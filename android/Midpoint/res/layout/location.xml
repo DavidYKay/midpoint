@@ -35,23 +35,26 @@
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="73"
+    android:layout_weight="70"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"
     android:apiKey="@string/maps_api_key"
     />
 
-
-  <Button
-    android:id="@+id/button"
+ <LinearLayout
+    android:id="@+id/footer_confirm"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="7"
+    android:layout_weight="10"
+    android:layout_alignParentBottom="true"
+    >
+  <Button
+    android:id="@+id/button"
     android:text="@string/advance" 
-    
     android:background="@drawable/btn_blue"
     style="@style/ButtonText"
     />
-
+</LinearLayout>
 </LinearLayout>

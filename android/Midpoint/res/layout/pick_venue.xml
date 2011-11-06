@@ -10,31 +10,34 @@
     android:layout_width="fill_parent"
     android:layout_height="0px"
     android:layout_weight="30"
-    android:divider="#ccc"
-    android:dividerHeight="2px"
+    android:background="#f4f4f4"
+    android:state_selected="false"
     />
 
   <com.google.android.maps.MapView
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="53"
+    android:layout_weight="60"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"
     android:apiKey="@string/maps_api_key"
     />
-
-  <Button
-    android:id="@+id/button"
+ <LinearLayout
+    android:id="@+id/footer_confirm"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="7"
+    android:layout_weight="10"
+    android:layout_alignParentBottom="true"
+    >
+  <Button
+    android:id="@+id/button"
     android:text="@string/advance"
-
     android:background="@drawable/btn_blue"
     style="@style/ButtonText"
     />
 
-
+</LinearLayout>
 </LinearLayout>
