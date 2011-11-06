@@ -6,20 +6,21 @@
 
   <string name="advance">Advance</string>
   
-  <string name="map">Map</string>
-  <string name="list">List</string>
+  <string name="calendar">Calendar</string>
   <string name="cancel">Cancel</string>
   <string name="confirm">Confirm</string>
-  <string name="calendar">Calendar</string>
-  <string name="location">Location</string>
-  <string name="pick_venue">Pick a Venue</string>
   <string name="confirm_venue">Confirm Venue</string>
-  <string name="view_venue">View Venue</string>
-  <string name="push_me">Push Me!</string>
-  <string name="my_location">My Location</string>
-  <string name="their_location">Their Location</string>
   <string name="create_new_event">Create New Event</string>
+  <string name="list">List</string>
+  <string name="location">Location</string>
+  <string name="map">Map</string>
+  <string name="my_location">My Location</string>
+  <string name="no_events">No events found. Please add a new one.</string>
   <string name="pick_calendar">Pick a Calendar</string>
+  <string name="pick_venue">Pick a Venue</string>
+  <string name="push_me">Push Me!</string>
+  <string name="their_location">Their Location</string>
+  <string name="view_venue">View Venue</string>
   
   <string name="settings">Settings</string>
   

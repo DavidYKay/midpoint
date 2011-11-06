@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -34,7 +35,7 @@ import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.TextHelper;
 
-public class CalendarListActivity extends Activity {
+public class CalendarListActivity extends ListActivity {
 
   private static final String[] MEETINGS = new String[] {
     "Lunch with Fred Wilson",
@@ -47,7 +48,7 @@ public class CalendarListActivity extends Activity {
   protected static final int NEW_CALENDAR_EVENT = 1;
   private static final String TAG = "CalendarListActivity";
 
-  private ListView mListView;
+  //private ListView mListView;
   private ContentResolver mContentResolver;
   private Context mContext = this;
 
@@ -72,24 +73,18 @@ public class CalendarListActivity extends Activity {
       }
     });
 
-    mListView = (ListView) findViewById(R.id.list);
+    //mListView = (ListView) findViewById(R.id.list);
 
-    mListView.setOnItemClickListener(new OnItemClickListener() {
-
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position,
-          long id) {
-
-        Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
-
-        Event event = (Event) mListView.getAdapter().getItem(position);
-
-        i.putExtra("event", event);
-
-        startActivity(i);
-
-      }
-    });
+    //mListView.setOnItemClickListener(new OnItemClickListener() {
+    //  @Override
+    //  public void onItemClick(AdapterView<?> parent, View view, int position,
+    //      long id) {
+    //    Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
+    //    Event event = (Event) mListView.getAdapter().getItem(position);
+    //    i.putExtra("event", event);
+    //    startActivity(i);
+    //  }
+    //});
 
     mCalendarUri  = getCalendarUri();
     mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
@@ -178,6 +173,18 @@ public class CalendarListActivity extends Activity {
     if (requestCode == NEW_CALENDAR_EVENT) {
       Log.v(TAG, "Wahoo! calendar event received.");
     }
+  }
+
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {  
+    Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
+
+    //Event event = (Event) mListView.getAdapter().getItem(position);
+    Event event = (Event) getListAdapter().getItem(position);
+
+    i.putExtra("event", event);
+
+    startActivity(i);
   }
 
   ////////////////////////////////////////
@@ -296,7 +303,8 @@ public class CalendarListActivity extends Activity {
 
     Event[] eventArray = new Event[events.size()];
     events.toArray(eventArray);
-    mListView.setAdapter(new EventArrayAdapter(
+    //mListView.setAdapter(new EventArrayAdapter(
+    setListAdapter(new EventArrayAdapter(
         eventArray
     ));
   }
