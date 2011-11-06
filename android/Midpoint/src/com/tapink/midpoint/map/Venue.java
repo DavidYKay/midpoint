@@ -11,15 +11,15 @@ public class Venue implements Parcelable {
   private static final String TAG = "Venue";
 
   private JSONObject mJson;
-  
+
   ////////////////////////////////////////
   // Constructors
   ////////////////////////////////////////
-  
+
   public Venue(String jsonString) throws JSONException {
     this(new JSONObject(jsonString));
   }
-  
+
   public Venue(JSONObject json) {
     super();
     if (json == null) {
@@ -27,10 +27,47 @@ public class Venue implements Parcelable {
     }
     this.mJson = json;
   }
-  
+
   ////////////////////////////////////////
   // Convenience methods
   ////////////////////////////////////////
+
+  public String getAddress() {
+    String name = null;
+    try {
+      JSONArray locations = mJson.getJSONArray("locations");
+      JSONObject location = locations.getJSONObject(0);
+
+      name = location.getString("name");
+      if (name == null) {
+        String address = location.getString("address_line1");
+        String postal = location.getString("postal_code");
+        if (address != null) {
+          if (postal != null) {
+            name = String.format(
+                "%s, %s",
+                address,
+                postal
+                );
+          } else {
+            name = address;
+          }
+        }
+        if (name == null) {
+          double lat = location.getDouble("lat");
+          double lon = location.getDouble("lon");
+          name = String.format(
+              "%f, %f",
+              lat,
+              lon
+              );
+        }
+      }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return name;
+  }
 
   public String getName() {
     try {
@@ -41,7 +78,7 @@ public class Venue implements Parcelable {
       return null;
     }
   }
-  
+
   public String getLargeImageUrl() {
     JSONArray imageArray;
     try {
@@ -83,15 +120,15 @@ public class Venue implements Parcelable {
     }
     return urlString;
   }
-  
+
   ////////////////////////////////////////
   // Accessors
   ////////////////////////////////////////
-  
+
   public JSONObject getJson() {
     return mJson;
   }
-  
+
   ////////////////////////////////////////
   // Object
   ////////////////////////////////////////

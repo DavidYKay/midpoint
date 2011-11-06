@@ -18,9 +18,15 @@ import com.tapink.midpoint.util.GeoHelper;
 public class LocationActivity extends MapActivity {
 
   private static final String TAG = "LocationActivity";
+
+  // Model
+  private Location mLastKnownLocation;
+  //private GeoPoint mLastKnownLocation;
+
+  // Mapping
   private MyLocationOverlay me;
   private MapView mMapView;
-  
+
   private Event mEvent;
   private EditText mMyLocation;
   private EditText mTheirLocation;
@@ -47,16 +53,22 @@ public class LocationActivity extends MapActivity {
     });
 
     mMapView = (MapView) findViewById(R.id.mapview);
-    me = new MyLocationOverlay(this, mMapView);
-    mMapView.getOverlays().add(me);
+    mMapView.setBuiltInZoomControls(true);
 
+    me = new MyLocationOverlay(this, mMapView) {
+      public void onLocationChanged(android.location.Location location) {
+          super.onLocationChanged(location);
+          updateLocation(location);
+        }
+    };
+    mMapView.getOverlays().add(me);
 
     Intent i = getIntent();
     mEvent = i.getParcelableExtra("event");
     Log.v(TAG, "Event: " + mEvent);
 
   }
-  
+
   @Override
   public void onResume() {
     super.onResume();
@@ -67,19 +79,13 @@ public class LocationActivity extends MapActivity {
     Location pos = me.getLastFix();
     if (pos != null) {
       Log.v(TAG, "Pos found: " + pos);
-      //mMapView.getController().setCenter(
-      //    pos
-      //);
     }
     GeoPoint loc = me.getMyLocation();
     if (loc != null) {
       mMapView.getController().setCenter(
           loc
       );
-      mMyLocation.setText(
-          GeoHelper.locationToHumanReadable(
-              loc
-              ));
+      updateLocation(loc);
     }
   }
 
@@ -100,5 +106,38 @@ public class LocationActivity extends MapActivity {
     return false;
   }
 
+
+  ////////////////////////////////////////
+  // Location Management
+  ////////////////////////////////////////
+
+ private void updateLocation(GeoPoint loc) {
+   updateLocation(
+     GeoHelper.geoPointToLocation(loc)
+   );
+ }
+
+ private void updateLocation(Location loc) {
+   mLastKnownLocation = loc;
+    if (mMyLocation.getText() == null) {
+      updateLocationText(loc);
+    }
+ }
+
+  private void updateLocationText(GeoPoint loc) {
+    updateLocationText(
+        GeoHelper.geoPointToLocation(loc)
+        );
+  }
+  private void updateLocationText(Location loc) {
+    mMyLocation.setText(
+        GeoHelper.locationToHumanReadable(
+            loc
+            ));
+  }
+
+  ////////////////////////////////////////
+  // UI Management
+  ////////////////////////////////////////
 
 }

@@ -20,6 +20,11 @@
   <string name="their_location">Their Location</string>
   <string name="create_new_event">Create New Event</string>
   <string name="pick_calendar">Pick a Calendar</string>
+  
+  <string name="settings">Settings</string>
+  
+  <!-- Hints -->
+  <string name="hint_keyword">E.g. Tacos, Max\'s, drinks</string>
 
   <!-- Placeholders -->
   <string name="placeholder_venue">This is an awesome venue!</string>

@@ -73,6 +73,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     });
 
     mMapView = (MapView) findViewById(R.id.mapview);
+    mMapView.setBuiltInZoomControls(true);
+
     me = new MyLocationOverlay(this, mMapView);
     mMapView.getOverlays().add(me);
 
