@@ -11,7 +11,7 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="10"
+    android:layout_weight="15"
     android:layout_alignParentBottom="true"
     >
     <EditText
@@ -24,6 +24,7 @@
       android:layout_height="fill_parent"
       android:layout_weight="10"
       android:hint="@string/my_location"
+      android:textColorHint="@color/hyperpublic_blue"
       />
     <Button
       android:id="@+id/button_my"
@@ -40,7 +41,7 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="10"
+    android:layout_weight="15"
     android:layout_alignParentBottom="true"
     >
     <EditText
@@ -98,7 +99,7 @@
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="0px"
-    android:layout_weight="70"
+    android:layout_weight="60"
     android:layout_alignParentTop="true"
     android:enabled="true"
     android:clickable="true"
