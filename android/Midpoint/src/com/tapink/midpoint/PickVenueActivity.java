@@ -328,7 +328,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     Intent i = new Intent(PickVenueActivity.this, ConfirmVenueActivity.class);
     
     JSONObject json = venue.getJson();
-    if (json != null) {
+    if (json == null) {
       // Shit hit the fan!
       Log.e(TAG, "Illegal venue!");
       throw new IllegalStateException("Venue didn't have any underlying JSON object!");
