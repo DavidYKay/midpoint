@@ -185,10 +185,12 @@ public class CalendarListActivity extends Activity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
     case MENU_PICK_CALENDAR:
+
       final CharSequence[] items = getResources().getStringArray(R.array.map_actions);
-      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-      builder.setTitle(R.string.pick_calendar);
-      builder.setItems(items, new DialogInterface.OnClickListener() {
+
+      final Cursor cursor = getSystemCalendars();
+
+      DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int item) {
           switch (item) {
           case 0:
@@ -197,7 +199,18 @@ public class CalendarListActivity extends Activity {
             break;
           }
         }
-      });
+      };
+
+      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+      builder.setTitle(R.string.pick_calendar);
+      builder.setSingleChoiceItems(
+          cursor,
+          -1,
+          "name",
+          listener
+      );
+
+      //builder.setItems(items, listener);
       AlertDialog alert = builder.create();
       alert.show();
 
@@ -207,12 +220,28 @@ public class CalendarListActivity extends Activity {
   }
 
 
+
   ////////////////////////////////////////
-  // Data
+  // Calendar Queries
   ////////////////////////////////////////
 
   private void readCalendar() {
     readCalendar(System.currentTimeMillis());
+  }
+  
+  private Cursor getSystemCalendars() {
+    Uri baseUri = mCalendarUri;
+    Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
+    String[] calendarsProjection = new String[]{ "_id", "name" };
+
+    Cursor cursor = managedQuery(calendarsUri,
+                                               calendarsProjection,
+                                               null,
+                                               null,
+                                               null
+                                               );
+
+    return cursor;
   }
 
   private void readCalendar(long time) {
@@ -265,39 +294,7 @@ public class CalendarListActivity extends Activity {
         eventArray
     ));
   }
-
-  private ArrayList<Event> processCursor(Cursor cursor) {
-    ArrayList<Event> events = new ArrayList<Event>();
-    cursor.moveToNext();
-    cursor.moveToNext();
-    //for (int i = 0; i < CalNames.length; i++) {
-      Event event = new Event(
-        cursor.getLong(0),
-        cursor.getString(2),
-        cursor.getString(3),
-        cursor.getString(6),
-        new Date(cursor.getLong(4)),
-        new Date(cursor.getLong(5))
-      );
-      events.add(event);
-    //}
-
-    return events;
-  }
-
-  private Intent launchCalendarIntent() {
-    long eventStartInMillis = System.currentTimeMillis();
-    long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
-
-    Intent intent = new Intent(Intent.ACTION_EDIT);
-    intent.setType("vnd.android.cursor.item/event");
-    intent.putExtra("title", "Some title");
-    intent.putExtra("description", "Some description");
-    intent.putExtra("beginTime", eventStartInMillis);
-    intent.putExtra("endTime", eventEndInMillis);
-    return intent;
-  }
-
+  
   // Create an observer so that we can update the views whenever a
   // Calendar event changes.
   private ContentObserver mObserver = new ContentObserver(new Handler())
@@ -314,6 +311,28 @@ public class CalendarListActivity extends Activity {
       //eventsChanged();
     }
   };
+
+  
+  ////////////////////////////////////////
+  // Data
+  ////////////////////////////////////////
+
+  private Intent launchCalendarIntent() {
+    long eventStartInMillis = System.currentTimeMillis();
+    long eventEndInMillis = eventStartInMillis + 60 * 60 * 1000;
+
+    Intent intent = new Intent(Intent.ACTION_EDIT);
+    intent.setType("vnd.android.cursor.item/event");
+    intent.putExtra("title", "Some title");
+    intent.putExtra("description", "Some description");
+    intent.putExtra("beginTime", eventStartInMillis);
+    intent.putExtra("endTime", eventEndInMillis);
+    return intent;
+  }
+
+  ////////////////////////////////////////
+  // Reflection
+  ////////////////////////////////////////
 
   private Uri getCalendarUri() {
     Class<?> calendarProviderClass = null;
@@ -373,6 +392,10 @@ public class CalendarListActivity extends Activity {
     Log.v(TAG, "Attendee status: " + attendeeStatus);
     return attendeeStatus;
   }
+
+  ////////////////////////////////////////
+  // ArrayAdapter
+  ////////////////////////////////////////
 
   private class EventArrayAdapter extends BaseAdapter {
 
