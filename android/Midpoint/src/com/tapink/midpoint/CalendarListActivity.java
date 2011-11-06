@@ -10,6 +10,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -100,7 +101,6 @@ public class CalendarListActivity extends Activity {
     }
     Log.v(TAG, "Event: " + event);
     Log.v(TAG, "Venue: " + venue);
-    
 
     mCalendarUri = getCalendarUri();
   }
@@ -165,7 +165,7 @@ public class CalendarListActivity extends Activity {
       Log.v(TAG, "Wahoo! calendar event received.");
     }
   }
-  
+
   ////////////////////////////////////////
   // Options Menu
   ////////////////////////////////////////
@@ -200,20 +200,29 @@ public class CalendarListActivity extends Activity {
           long id = cursor.getLong(
               cursor.getColumnIndex("_id")
           );
-          Log.v(TAG, 
-                String.format("Clicked: %s, %d", 
+          Log.v(TAG,
+                String.format("Clicked: %s, %d",
                               name,
                               id));
-          
+
+          // Update our preferences
+
+          final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+          SharedPreferences.Editor editor = preferences.edit();
+          editor.putInt("calendar_id", item);
+          editor.commit();
+
           dialog.dismiss();
         }
       };
+          
+      final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
 
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
       builder.setTitle(R.string.pick_calendar);
       builder.setSingleChoiceItems(
           cursor,
-          -1,
+          preferences.getInt("calendar_id", -1),
           "name",
           listener
       );
@@ -236,7 +245,7 @@ public class CalendarListActivity extends Activity {
   private void readCalendar() {
     readCalendar(System.currentTimeMillis());
   }
-  
+
   private Cursor getSystemCalendars() {
     Uri baseUri = mCalendarUri;
     Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
@@ -302,7 +311,7 @@ public class CalendarListActivity extends Activity {
         eventArray
     ));
   }
-  
+
   // Create an observer so that we can update the views whenever a
   // Calendar event changes.
   private ContentObserver mObserver = new ContentObserver(new Handler())
@@ -320,7 +329,7 @@ public class CalendarListActivity extends Activity {
     }
   };
 
-  
+
   ////////////////////////////////////////
   // Data
   ////////////////////////////////////////
