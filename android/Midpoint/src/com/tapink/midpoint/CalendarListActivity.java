@@ -192,12 +192,20 @@ public class CalendarListActivity extends Activity {
 
       DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int item) {
-          switch (item) {
-          case 0:
-            break;
-          case 1:
-            break;
-          }
+          cursor.moveToFirst();
+          cursor.moveToPosition(item);
+          String name = cursor.getString(
+              cursor.getColumnIndex("name")
+          );
+          long id = cursor.getLong(
+              cursor.getColumnIndex("_id")
+          );
+          Log.v(TAG, 
+                String.format("Clicked: %s, %d", 
+                              name,
+                              id));
+          
+          dialog.dismiss();
         }
       };
 
