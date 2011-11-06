@@ -29,8 +29,8 @@
       android:id="@+id/button_my"
       android:layout_weight="2"
       android:layout_width="0px"
-      android:text="@string/advance"
-      android:background="@drawable/btn_blue"
+      android:text="@string/settings"
+      android:background="@drawable/btn_black"
       style="@style/ButtonText"
       />
   </LinearLayout>
@@ -58,8 +58,8 @@
       android:id="@+id/their_button"
       android:layout_weight="2"
       android:layout_width="0px"
-      android:text="@string/advance"
-      android:background="@drawable/btn_blue"
+      android:text="@string/settings"
+      android:background="@drawable/btn_black"
       style="@style/ButtonText"
       />
   </LinearLayout>

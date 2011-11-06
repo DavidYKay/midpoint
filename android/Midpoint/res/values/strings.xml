@@ -21,6 +21,8 @@
   <string name="create_new_event">Create New Event</string>
   <string name="pick_calendar">Pick a Calendar</string>
   
+  <string name="settings">Settings</string>
+  
   <!-- Hints -->
   <string name="hint_keyword">E.g. Tacos, Max\'s, drinks</string>
 
