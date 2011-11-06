@@ -85,6 +85,12 @@ public class CalendarListActivity extends ListActivity {
         startActivityForResult(i, NEW_CALENDAR_EVENT);
       }
     });
+    final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    String accountName = preferences.getString("account_name", null);
+    if (accountName != null) {
+      mUserEmail = accountName;
+      Log.v(TAG, "mUserEmail: " + mUserEmail);
+    }
 
     mCalendarUri  = getCalendarUri();
     mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
@@ -427,7 +433,7 @@ public class CalendarListActivity extends ListActivity {
   ////////////////////////////////////////
 
   private Cursor getSystemCalendars() {
-    String[] calendarsProjection = new String[]{ "_id", "name" };
+    String[] calendarsProjection = new String[]{ "_id", "name", "ownerAccount" };
 
     Cursor cursor = managedQuery(mCalendarsUri,
                                  calendarsProjection,
@@ -765,9 +771,13 @@ public class CalendarListActivity extends ListActivity {
         long id = cursor.getLong(
             cursor.getColumnIndex("_id")
             );
+        String accountName  = cursor.getString(
+            cursor.getColumnIndex("ownerAccount")
+            );
         Log.v(TAG,
-              String.format("Clicked: %s, %d",
+              String.format("Clicked: %s, %s, %d",
                             name,
+                            accountName,
                             id));
 
         // Update our preferences
@@ -776,6 +786,7 @@ public class CalendarListActivity extends ListActivity {
         final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("calendar_id", (int) id);
+        editor.putString("account_name", accountName);
         editor.commit();
 
         // TODO: refresh
