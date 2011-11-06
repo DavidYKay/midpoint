@@ -75,7 +75,8 @@ public class CalendarListActivity extends ListActivity {
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = launchCalendarIntent();
+        //Intent i = launchCalendarIntent();
+        Intent i = inviteIntent();
         startActivityForResult(i, NEW_CALENDAR_EVENT);
       }
     });
@@ -595,6 +596,12 @@ public class CalendarListActivity extends ListActivity {
     intent.putExtra("beginTime", eventStartInMillis);
     intent.putExtra("endTime", eventEndInMillis);
     return intent;
+  }
+  
+  private Intent inviteIntent() {
+    Intent i = new Intent(CalendarListActivity.this, InviteActivity.class);
+
+    return i;
   }
 
   ////////////////////////////////////////
