@@ -37,7 +37,6 @@
 		android:shadowDy="1"
 		android:shadowRadius="0.2"
       />
-      
   </LinearLayout>
 
   <ListView
