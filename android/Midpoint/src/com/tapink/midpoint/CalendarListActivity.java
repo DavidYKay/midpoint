@@ -5,8 +5,10 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -15,6 +17,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,6 +40,8 @@ public class CalendarListActivity extends Activity {
     "Holiday Party",
     "Meeting with Alice",
   };
+  protected static final int MENU_PICK_CALENDAR = 1;
+
   protected static final int NEW_CALENDAR_EVENT = 1;
   private static final String TAG = "CalendarListActivity";
 
@@ -159,6 +165,51 @@ public class CalendarListActivity extends Activity {
       Log.v(TAG, "Wahoo! calendar event received.");
     }
   }
+  
+  ////////////////////////////////////////
+  // Options Menu
+  ////////////////////////////////////////
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    super.onCreateOptionsMenu(menu);
+
+    menu.add(0, MENU_PICK_CALENDAR, 0, R.string.pick_calendar)
+    .setShortcut('3', 'i')
+    .setIcon(android.R.drawable.ic_menu_add);
+
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+    case MENU_PICK_CALENDAR:
+      final CharSequence[] items = getResources().getStringArray(R.array.map_actions);
+      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+      builder.setTitle(R.string.pick_calendar);
+      builder.setItems(items, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int item) {
+          switch (item) {
+          case 0:
+            break;
+          case 1:
+            break;
+          }
+        }
+      });
+      AlertDialog alert = builder.create();
+      alert.show();
+
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+
+  ////////////////////////////////////////
+  // Data
+  ////////////////////////////////////////
 
   private void readCalendar() {
     readCalendar(System.currentTimeMillis());

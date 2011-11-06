@@ -72,10 +72,11 @@ public final class R {
         public static final int map=0x7f050006;
         public static final int maps_api_key=0x7f050000;
         public static final int my_location=0x7f050010;
+        public static final int pick_calendar=0x7f050013;
         public static final int pick_venue=0x7f05000c;
         /**  Placeholders 
          */
-        public static final int placeholder_venue=0x7f050013;
+        public static final int placeholder_venue=0x7f050014;
         public static final int push_me=0x7f05000f;
         public static final int their_location=0x7f050011;
         public static final int view_venue=0x7f05000e;
