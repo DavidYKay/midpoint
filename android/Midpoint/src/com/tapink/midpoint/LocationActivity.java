@@ -53,6 +53,8 @@ public class LocationActivity extends MapActivity {
     });
 
     mMapView = (MapView) findViewById(R.id.mapview);
+    mMapView.setBuiltInZoomControls(true);
+
     me = new MyLocationOverlay(this, mMapView) {
       public void onLocationChanged(android.location.Location location) {
           super.onLocationChanged(location);
