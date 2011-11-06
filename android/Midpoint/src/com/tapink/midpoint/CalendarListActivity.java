@@ -151,6 +151,10 @@ public class CalendarListActivity extends Activity {
   }
 
   private void readCalendar() {
+    readCalendar(System.currentTimeMillis());
+  }
+
+  private void readCalendar(long time) {
     Uri baseUri = mCalendarUri;
     Uri eventUri = baseUri.buildUpon().appendPath("events").build();
     Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
@@ -164,29 +168,28 @@ public class CalendarListActivity extends Activity {
                                                eventProjection,
       //null,  //selection
       //null,  //selction args
-      "dtstart > ?",  //selection
-      //new String[] {"1306904400"},  //selction args
-      new String[] {"1320000000"},  //selction args
-      null   //sort order
+      //"dtstart > ?",  //selection
+      //new String[] {"1320000000"},  //selction args
+      //"calendar_id = ?",  //selection
+      //new String[] {"1"},  //selction args
+      "dtstart > ? AND calendar_id = ?",  //selection
+      //new String[] {"130001572557715" , "1"},  //selction args
+      //new String[] {"0" , "1"},  //selction args
+      //new String[] { "1321315200000" , "1"},  //selction args
+      new String[] { Long.toString(time), "1"},  //selction args
+      "dtstart ASC"   //sort order
       );
     //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
     //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/calendars"), new String[]{ "_id", "name" }, null, null, null);
 
-    String add = null;
+    //String add = null;
     cursor.moveToFirst();
 
     ArrayList<Event> events = new ArrayList<Event>();
     String[] CalNames = new String[cursor.getCount()];
     int[] CalIds = new int[cursor.getCount()];
     for (int i = 0; i < CalNames.length; i++) {
-      CalIds[i] = cursor.getInt(0);
-
-      // Modern standard
-      //CalNames[i] = "Event: " + cursor.getInt(0) + " Calendar: " + cursor.getInt(1) + ": \nTitle: " + cursor.getString(2) + "\nDescription: " + cursor.getString(3) + "\nStart Date: " + new Date(cursor.getLong(4)) + "\nEnd Date : " + new Date(cursor.getLong(5)) + "\nLocation : " + cursor.getString(6) + "\n";
-      
-      // Modern UTC
-      CalNames[i] = "Event: " + cursor.getInt(0) + " Calendar: " + cursor.getInt(1) + ": \nTitle: " + cursor.getString(2) + "\nDescription: " + cursor.getString(3) + "\nStart Date: " + cursor.getLong(4) + "\nEnd Date : " + cursor.getLong(5) + "\nLocation : " + cursor.getString(6) + "\n";
-
+      //processOneRow(cursor);
       Event event = new Event(
         cursor.getLong(0),
         cursor.getString(2),
@@ -195,30 +198,36 @@ public class CalendarListActivity extends Activity {
         new Date(cursor.getLong(4)),
         new Date(cursor.getLong(5))
       );
-       
       events.add(event);
-      //CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1) + "\nDescription: " + cursor.getString(2) + "\nStart Date: " + new Date(cursor.getLong(3)) + "\nEnd Date : " + new Date(cursor.getLong(4)) + "\nLocation : " + cursor.getString(5);
-      //CalNames[i] = "Event" + cursor.getInt(0) + ": \nTitle: " + cursor.getString(1);
-      if(add == null)
-        add = CalNames[i];
-      else{
-        add += CalNames[i];
-      }
-      Log.v(TAG, "Calendar events: " + add);
-      Log.v(TAG, "-----");
-
-      //((TextView)findViewById(R.id.calendars)).setText(add);
-
       cursor.moveToNext();
     }
+    //events = processCursor(cursor);
     cursor.close();
-
 
     Event[] eventArray = new Event[events.size()]; 
     events.toArray(eventArray);
     mListView.setAdapter(new EventArrayAdapter(
         eventArray
     ));
+  }
+
+  private ArrayList<Event> processCursor(Cursor cursor) {
+    ArrayList<Event> events = new ArrayList<Event>();
+    cursor.moveToNext();
+    cursor.moveToNext();
+    //for (int i = 0; i < CalNames.length; i++) {
+      Event event = new Event(
+        cursor.getLong(0),
+        cursor.getString(2),
+        cursor.getString(3),
+        cursor.getString(6),
+        new Date(cursor.getLong(4)),
+        new Date(cursor.getLong(5))
+      );
+      events.add(event);
+    //}
+
+    return events;
   }
 
   private Intent launchCalendarIntent() {
@@ -233,7 +242,6 @@ public class CalendarListActivity extends Activity {
     intent.putExtra("endTime", eventEndInMillis);
     return intent;
   }
-
 
   // Create an observer so that we can update the views whenever a
   // Calendar event changes.
