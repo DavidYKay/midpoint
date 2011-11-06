@@ -48,7 +48,7 @@ public class CalendarListActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
+    setContentView(R.layout.event_list);
 
     mContentResolver = getContentResolver();
 
@@ -316,7 +316,7 @@ public class CalendarListActivity extends Activity {
       LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       // Kennedy, this is where you supply an XML file to base it on.
-      View view = inflater.inflate(R.layout.list_item, null);
+      View view = inflater.inflate(R.layout.event_list_item, null);
 
       final TextView name = (TextView) view.findViewById(R.id.name);
       final TextView date = (TextView) view.findViewById(R.id.date);
