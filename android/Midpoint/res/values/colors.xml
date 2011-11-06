@@ -2,6 +2,8 @@
 <resources>
 
   <!-- Kennedy, these are examples. You can kill these. -->
+  <color name="hyperpublic_blue">#00AEEF</color>
+  <color name="hyperpublic_blue_pressed">#2EC7FF</color>
 
   <color name="red">#ff0000ff</color>
   

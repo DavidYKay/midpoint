@@ -42,6 +42,20 @@ public class Event implements Parcelable {
   }
   
   ////////////////////////////////////////
+  // Object
+  ////////////////////////////////////////
+  
+  public String toString() {
+    return String.format(
+        "(%d) %s AT %s: %s",
+        databaseId,
+        name,
+        locationName,
+        description
+        );
+  }
+  
+  ////////////////////////////////////////
   // Parcelable
   ////////////////////////////////////////
 

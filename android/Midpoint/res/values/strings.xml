@@ -13,6 +13,7 @@
   <string name="create_new_event">Create New Event</string>
   <string name="list">List</string>
   <string name="location">Location</string>
+  <string name="go">Go</string>
   <string name="map">Map</string>
   <string name="my_location">My Location</string>
   <string name="no_events">No events found. Please add a new one.</string>

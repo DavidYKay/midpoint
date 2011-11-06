@@ -1,7 +1,15 @@
 package com.tapink.midpoint;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +20,10 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.tapink.midpoint.calendar.Attendee;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.util.GeoHelper;
+import com.tapink.midpoint.util.TextHelper;
 
 public class LocationActivity extends MapActivity {
 
@@ -28,8 +38,12 @@ public class LocationActivity extends MapActivity {
   private MapView mMapView;
 
   private Event mEvent;
+  private Attendee mAttendee;
+
   private EditText mMyLocation;
   private EditText mTheirLocation;
+
+  private Context mContext = this;
 
   /** Called when the activity is first created. */
   @Override
@@ -44,11 +58,8 @@ public class LocationActivity extends MapActivity {
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(LocationActivity.this, PickVenueActivity.class);
-
-        i.putExtra("event", mEvent);
-
-        startActivity(i);
+        findMidPointAndFinish();
+        //navigateToVenuePicker();
       }
     });
 
@@ -67,6 +78,15 @@ public class LocationActivity extends MapActivity {
     mEvent = i.getParcelableExtra("event");
     Log.v(TAG, "Event: " + mEvent);
 
+    //Attendee attendee = i.getParcelableExtra("attendee");
+    mAttendee = i.getParcelableExtra("attendee");
+    Log.v(TAG, "attendee: " + mAttendee);
+    if (mAttendee != null) {
+      // Set address as default
+      mTheirLocation.setText(
+          mAttendee.getAddress()
+      );
+    }
   }
 
   @Override
@@ -106,7 +126,6 @@ public class LocationActivity extends MapActivity {
     return false;
   }
 
-
   ////////////////////////////////////////
   // Location Management
   ////////////////////////////////////////
@@ -129,6 +148,7 @@ public class LocationActivity extends MapActivity {
         GeoHelper.geoPointToLocation(loc)
         );
   }
+
   private void updateLocationText(Location loc) {
     mMyLocation.setText(
         GeoHelper.locationToHumanReadable(
@@ -137,7 +157,136 @@ public class LocationActivity extends MapActivity {
   }
 
   ////////////////////////////////////////
-  // UI Management
+  // Foreign APIs
   ////////////////////////////////////////
+
+  private Address geocodeAddress(String address) {
+    final Locale locale = Locale.getDefault();
+
+    final Geocoder geocoder = new Geocoder(mContext, locale);
+
+    final int maxResults = 5;
+    List<Address> addresses = null;
+    try {
+      addresses = geocoder.getFromLocationName(address, maxResults);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+    //return addresses;
+    return addresses.get(0);
+  }
+
+  class GeocodeTask extends AsyncTask<String, Integer, Address[]> {
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+    }
+
+    @Override
+    protected Address[] doInBackground(String... locationNames) {
+      //Log.v(TAG, "doInBackground: " + addresses);
+      Log.v(TAG, "doInBackground: " + locationNames[0]);
+      
+      int count = locationNames.length;
+      Address[] addresses = new Address[count];
+      //ArrayList<Address> addresses = new ArrayList<Address>(); 
+      //for (String location : locationNames) {
+      for (int i = 0; i < count; i++) {
+        String location = locationNames[i];
+        Address address = geocodeAddress(location);
+        addresses[i] = address;
+      }
+      return addresses;
+    }
+
+    //protected void onProgressUpdate(Integer... progress) {
+    //  setProgressPercent(progress[0]);
+    //}
+
+    protected void onPostExecute(Address[] addresses) {
+      Log.v(TAG, "onPostExecute: " + addresses);
+
+      double avgLat = 0.0;
+      double avgLon = 0.0;
+
+      for (Address address : addresses) {
+        avgLat += address.getLatitude();
+        avgLon += address.getLongitude();
+      }
+      int count = addresses.length;
+      avgLat /= count;
+      avgLon /= count;
+
+      Location midpoint = new Location(GeoHelper.LOCATION_PROVIDER);
+      midpoint.setLongitude(avgLon);
+      midpoint.setLatitude(avgLat);
+
+      Location userLoc = GeoHelper.addressToLocation(addresses[0]);
+      Location theirLoc = null;
+      if (addresses.length > 1) {
+        theirLoc = GeoHelper.addressToLocation(addresses[1]);
+      }
+
+      navigateToVenuePicker(
+          userLoc,
+          midpoint,
+          theirLoc
+      );
+
+      //navigateToVenuePicker();
+    }
+  }
+  
+  ////////////////////////////////////////
+  // Navigation
+  ////////////////////////////////////////
+  
+  private void findMidPointAndFinish() {
+    // If the user didn't enter anything:
+    String userInput = mMyLocation.getText().toString();
+
+    String userLocation = null;
+    Location location   = null;
+
+    if (!TextHelper.isEmptyString(userInput)) {
+      userLocation = userInput;
+    } else {
+      location = mLastKnownLocation;
+      userLocation = GeoHelper.locationToHumanReadable(location);
+      //public static String locationToHumanReadable(GeoPoint geo) {
+      //i.putExtra("location", location);
+    }
+
+    String theirLocation = null;
+    String theirInput = mTheirLocation.getText().toString();
+    if (!TextHelper.isEmptyString(theirInput)) {
+      theirLocation = theirInput;
+    } else {
+      //theirlocation = mLastKnownLocation;
+      //userLocation = 
+          //public static String locationToHumanReadable(GeoPoint geo) {
+          //i.putExtra("location", location);
+    }
+    
+    GeocodeTask task = new GeocodeTask();
+    task.execute(userLocation, theirLocation);
+  }
+
+  //private void navigateToVenuePicker(Location midpoint, Location theirLocation, Location myLocation) {
+  private void navigateToVenuePicker(Location myLocation, Location midpoint, Location theirLocation ) {
+    Intent i = new Intent(LocationActivity.this, PickVenueActivity.class);
+
+    if (theirLocation != null) {
+      i.putExtra("their_location", theirLocation);
+    }
+
+    i.putExtra("my_location", myLocation);
+    i.putExtra("midpoint", midpoint);
+    i.putExtra("event", mEvent);
+
+    startActivity(i);
+  }
 
 }

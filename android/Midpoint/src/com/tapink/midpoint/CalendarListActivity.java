@@ -3,7 +3,10 @@ package com.tapink.midpoint;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -18,20 +21,20 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tapink.midpoint.calendar.Attendee;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.TextHelper;
@@ -56,6 +59,7 @@ public class CalendarListActivity extends ListActivity {
   private Uri mCalendarUri;
   private Uri mEventUri;
   private Uri mCalendarsUri;
+  private Uri mAttendeesUri;
 
   /** Called when the activity is first created. */
   @Override
@@ -74,22 +78,10 @@ public class CalendarListActivity extends ListActivity {
       }
     });
 
-    //mListView = (ListView) findViewById(R.id.list);
-
-    //mListView.setOnItemClickListener(new OnItemClickListener() {
-    //  @Override
-    //  public void onItemClick(AdapterView<?> parent, View view, int position,
-    //      long id) {
-    //    Intent i = new Intent(CalendarListActivity.this, LocationActivity.class);
-    //    Event event = (Event) mListView.getAdapter().getItem(position);
-    //    i.putExtra("event", event);
-    //    startActivity(i);
-    //  }
-    //});
-
     mCalendarUri  = getCalendarUri();
     mEventUri     = mCalendarUri.buildUpon().appendPath("events").build();
     mCalendarsUri = mCalendarUri.buildUpon().appendPath("calendars").build();
+    mAttendeesUri = mCalendarUri.buildUpon().appendPath("attendees").build();
     Log.v(TAG, "eventsUri: " + mEventUri);
     Log.v(TAG, "calendarsUri: " + mCalendarsUri);
 
@@ -183,6 +175,15 @@ public class CalendarListActivity extends ListActivity {
     //Event event = (Event) mListView.getAdapter().getItem(position);
     Event event = (Event) getListAdapter().getItem(position);
 
+    //Cursor c = getAttendeesForEvent(
+    Attendee[] attendees = getAttendeesForEvent(
+        event.getDatabaseId()
+    );
+
+    if (attendees.length > 0) {
+      i.putExtra("attendee", attendees[0]);
+    }
+
     i.putExtra("event", event);
 
     startActivity(i);
@@ -214,7 +215,141 @@ public class CalendarListActivity extends ListActivity {
     }
     return super.onOptionsItemSelected(item);
   }
+  
+  ////////////////////////////////////////
+  // Contact Queries
+  ////////////////////////////////////////
+  
+  private long getContactIdForEmail(String email) {
+    String[] projection = new String[]{ 
+      ContactsContract.Data._ID,
+      ContactsContract.CommonDataKinds.Email.DATA1,
+      ContactsContract.Data.CONTACT_ID,
+    };
 
+    Uri lookupUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+    //Uri lookupUri = ContactsContract.Contacts.CONTENT_URI;
+    Cursor c = managedQuery(
+        lookupUri,
+        projection,
+        //ContactsContract.Data.CONTACT_ID + " = ?",
+        //new String[] {Long.toString(contactId)},
+        ContactsContract.CommonDataKinds.Email.DATA1 + " = ?",
+        new String[] {email},
+        null
+        );
+
+    long contactId = -1;
+
+    c.moveToFirst();
+
+    String foundEmail = c.getString(1);
+    assert foundEmail.equals(email);
+
+    contactId = c.getLong(2);
+    assert contactId != -1;
+
+    return contactId;
+  }
+
+  private String getAddressForContactId(long contactId) {
+    String[] attendeesProjection = new String[]{ 
+      ContactsContract.Data.CONTACT_ID, 
+      ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
+    };
+    
+    Uri uri = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI;
+    Cursor c = managedQuery(
+        uri,
+        attendeesProjection,
+        ContactsContract.Data.CONTACT_ID + " = ?",
+        new String[] {Long.toString(contactId)},
+        null
+        );
+
+    String address = null;
+    if (c.getCount() > 0 ) {
+      c.moveToFirst();
+      assert c.getLong(0) == contactId;
+      address = c.getString(1);
+    }
+
+    return address;
+  }
+
+  private HashSet<String> mUserEmails = null;
+  private HashSet<String> populateEmailSet() {
+    HashSet<String> set = new HashSet<String>();
+    Account[] accounts = AccountManager.get(this).getAccounts();
+    for (Account account : accounts) {
+      // Check possibleEmail against an email regex or treat
+      // account.name as an email address only for certain account.type values.
+      String possibleEmail = account.name;
+      if (TextHelper.checkEmail(possibleEmail)) {
+        set.add(possibleEmail);
+      }
+    }
+
+    return set;
+  }
+
+  private boolean isUserEmail(String email) {
+    if (mUserEmails == null) {
+      mUserEmails = populateEmailSet();
+    }
+
+    return mUserEmails.contains(email);
+  }
+
+  ////////////////////////////////////////
+  // Attendee Queries
+  ////////////////////////////////////////
+
+  private Attendee[] getAttendeesForEvent(long eventId) {
+    String[] attendeesProjection = new String[]{ "_id", "attendeeName", "attendeeEmail" };
+
+    Cursor c = managedQuery(mAttendeesUri,
+                                 attendeesProjection,
+                                 "event_id = ?",
+                                 new String[] {Long.toString(eventId)},
+                                 null
+                                );
+
+    ArrayList<Attendee> attendees = new ArrayList<Attendee>();
+
+    c.moveToFirst();
+    while (c.isAfterLast() == false) {
+      Attendee attendee = new Attendee(
+          c.getLong(0),
+          c.getString(1),
+          c.getString(2)
+          );
+
+      if (!isUserEmail(attendee.getEmail())) {
+        Log.v(TAG, "Attendee found: " + attendee);
+        // Go fetch the attendee's address
+
+        long contactId = getContactIdForEmail(attendee.getEmail());
+        String address = getAddressForContactId(
+            contactId
+            );
+        if (!TextHelper.isEmptyString(address)) {
+          attendee.setAddress(address);
+        }
+
+        attendees.add(attendee);
+      } else {
+        Log.v(TAG, "User attendee found: " + attendee);
+      }
+
+      c.moveToNext();
+    }
+
+    Attendee[] array = new Attendee[attendees.size()];
+    attendees.toArray(array);
+
+    return array;
+  }
 
 
   ////////////////////////////////////////
