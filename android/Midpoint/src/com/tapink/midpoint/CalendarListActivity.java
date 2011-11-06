@@ -162,12 +162,20 @@ public class CalendarListActivity extends Activity {
     String[] eventProjection = new String[]{ "_id", "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" };
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
+    int calendarId = 1; // Personal calendar
+
+    //int attendeeStatus = getAttendeeAccepted();
+    int attendeeStatus = 1; // Yes?
+    //int attendeeStatus = 2; // No
+    //int attendeeStatus = 3; // Maybe
+
     Log.v(TAG, "eventsUri: " + eventUri);
     Log.v(TAG, "calendarsUri: " + calendarsUri);
     Cursor cursor = getContentResolver().query(eventUri,
                                                eventProjection,
-      "dtstart > ? AND calendar_id = ? AND eventLocation IS NULL",  //selection
-      new String[] { Long.toString(time), "1"},  //selction args
+      //"dtstart > ? AND calendar_id = ? AND selfAttendeeStatus > ? AND eventLocation IS NULL",  //selection
+      "dtstart > ? AND calendar_id = ? AND selfAttendeeStatus = ? AND eventLocation IS NULL",  //selection
+      new String[] { Long.toString(time), Integer.toString(calendarId) , Integer.toString(attendeeStatus)},  //2 is no
       "dtstart ASC"   //sort order
       );
     //Cursor cursor = getContentResolver().query(Uri.parse("content://calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
@@ -195,7 +203,7 @@ public class CalendarListActivity extends Activity {
     //events = processCursor(cursor);
     cursor.close();
 
-    Event[] eventArray = new Event[events.size()]; 
+    Event[] eventArray = new Event[events.size()];
     events.toArray(eventArray);
     mListView.setAdapter(new EventArrayAdapter(
         eventArray
@@ -286,7 +294,37 @@ public class CalendarListActivity extends Activity {
     Log.v(TAG, "Calendar URI: " + calendarUri);
     return calendarUri;
   }
-  
+
+  private int getAttendeeAccepted() {
+    Class<?> calendarProviderClass = null;
+    try {
+      //calendarProviderClass = Class.forName("android.provider.Calendar");
+      calendarProviderClass = Class.forName("android.provider.Calendar.Attendees");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    Field uriField = null;
+    try {
+      uriField = calendarProviderClass.getField("ATTENDEE_STATUS_ACCEPTED");
+    } catch (SecurityException e) {
+      e.printStackTrace();
+    } catch (NoSuchFieldException e) {
+      e.printStackTrace();
+    }
+    int attendeeStatus = -1;
+    try {
+      attendeeStatus = (Integer) uriField.get(null);
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
+
+    assert attendeeStatus != -1;
+    Log.v(TAG, "Attendee status: " + attendeeStatus);
+    return attendeeStatus;
+  }
+
   private class EventArrayAdapter extends BaseAdapter {
 
     private Event[] mEvents;
