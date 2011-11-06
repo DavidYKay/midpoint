@@ -214,10 +214,38 @@ public class InviteActivity extends Activity {
 
         public void onDateSet(DatePicker view, int year, 
                               int monthOfYear, int dayOfMonth) {
+          
+
+
+          int yearDelta  =  mStartDate.year  - year        ;
+          int monthDelta =  mStartDate.month - monthOfYear ;
+          int dayDelta   =  mStartDate.day   - dayOfMonth  ;
+
+          //int yearDelta  = year        - mStartDate.year  ; 
+          //int monthDelta = monthOfYear - mStartDate.month ; 
+          //int dayDelta   = dayOfMonth  - mStartDate.day   ; 
+
           mStartDate.year  = year;
           mStartDate.month = monthOfYear;
           mStartDate.day   = dayOfMonth;
+          
+          mEndDate.year  -= yearDelta;
+          mEndDate.month -= monthDelta;
+          mEndDate.day   -= dayDelta;
+
           updateStartDate();
+          updateEndDate();
+        }
+      };
+  private DatePickerDialog.OnDateSetListener mEndDateSetListener =
+      new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, 
+                              int monthOfYear, int dayOfMonth) {
+          mEndDate.year  = year;
+          mEndDate.month = monthOfYear;
+          mEndDate.day   = dayOfMonth;
+          updateEndDate();
         }
       };
 
@@ -230,17 +258,6 @@ public class InviteActivity extends Activity {
         }
       };
 
-  private DatePickerDialog.OnDateSetListener mEndDateSetListener =
-      new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, 
-                              int monthOfYear, int dayOfMonth) {
-          mEndDate.year  = year;
-          mEndDate.month = monthOfYear;
-          mEndDate.day   = dayOfMonth;
-          updateEndDate();
-        }
-      };
 
   private TimePickerDialog.OnTimeSetListener mEndTimeSetListener =
       new TimePickerDialog.OnTimeSetListener() {
@@ -274,9 +291,15 @@ public class InviteActivity extends Activity {
   }
 
   private static InputFilter[] sRecipientFilters = new InputFilter[] { new Rfc822InputFilter() };
+  
+  ////////////////////////////////////////
+  // Ensure gap
+  ////////////////////////////////////////
+
+  //private ensureGap(
 
   ////////////////////////////////////////
-  // 
+  // Navigation
   ////////////////////////////////////////
         
   private void saveFieldsAndExit() {
