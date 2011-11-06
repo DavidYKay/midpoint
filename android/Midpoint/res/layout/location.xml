@@ -35,9 +35,6 @@
 		android:src="@drawable/flag"
 		android:background="@drawable/btn_grey"
 		style="@style/ButtonText"
-		
-		android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
       />
   </LinearLayout>
 
@@ -67,9 +64,6 @@
 		android:src="@drawable/flag"
 		android:background="@drawable/btn_grey"
 		style="@style/ButtonText"
-		
-		android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
       />
   </LinearLayout>
 
@@ -88,20 +82,17 @@
       android:id="@+id/keywords"
       android:layout_width="0px"
       android:layout_height="fill_parent"
-      android:layout_weight="90"
+      android:layout_weight="80"
       android:hint="@string/hint_keyword"
       />
 	<Button
 		android:id="@+id/button"
-		android:layout_weight="10"
+		android:layout_weight="20"
 		android:layout_width="19dip"
 		android:layout_height="fill_parent"
 		android:text="@string/go"
 		android:background="@drawable/btn_blue"
 		style="@style/ButtonText"
-		
-		android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
 	/>
 	</LinearLayout>
 	
