@@ -14,6 +14,8 @@ public class Event implements Parcelable {
   private Date startTime;
   private Date endTime;
   
+  private Attendee[] attendees;
+  
   public Event(long databaseId, String name, String description,
       String locationName, Date startTime, Date endTime) {
     super();
@@ -39,6 +41,14 @@ public class Event implements Parcelable {
 
   public Date getStartTime() {
     return startTime;
+  }
+  
+  public Attendee[] getAttendees() {
+    return attendees;
+  }
+  
+  public void setAttendees(Attendee[] attendees) {
+    this.attendees = attendees;
   }
   
   ////////////////////////////////////////

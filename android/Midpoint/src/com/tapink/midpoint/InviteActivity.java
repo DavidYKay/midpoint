@@ -118,7 +118,9 @@ public class InviteActivity extends Activity {
     mAttendeesList = initMultiAutoCompleteTextView(R.id.attendees);
 
     // get the current date
+    //final Calendar c = Calendar.getInstance();
     final Calendar c = Calendar.getInstance();
+    c.add(Calendar.MINUTE, 30);
 
     mStartDate.year  = c.get(Calendar.YEAR);
     mStartDate.month = c.get(Calendar.MONTH);
