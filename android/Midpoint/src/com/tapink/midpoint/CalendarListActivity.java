@@ -266,11 +266,13 @@ public class CalendarListActivity extends ListActivity {
         null
         );
 
-    assert c.getCount() > 0;
-    c.moveToFirst();
-    assert c.getLong(0) == contactId;
+    String address = null;
+    if (c.getCount() > 0 ) {
+      c.moveToFirst();
+      assert c.getLong(0) == contactId;
+      address = c.getString(1);
+    }
 
-    String address = c.getString(1);
     return address;
   }
 
