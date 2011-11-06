@@ -216,7 +216,7 @@ public class CalendarListActivity extends Activity {
   private Cursor getSystemCalendars() {
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
-    Cursor cursor = managedQuery(mCalendarUri,
+    Cursor cursor = managedQuery(mCalendarsUri,
                                  calendarsProjection,
                                  null,
                                  null,
@@ -490,12 +490,15 @@ public class CalendarListActivity extends Activity {
     };
 
     final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+        
+    int calendarId = preferences.getInt("calendar_id", -1);
+    int positionId = calendarId - 1;
 
     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
     builder.setTitle(R.string.pick_calendar);
     builder.setSingleChoiceItems(
         cursor,
-        preferences.getInt("calendar_id", -1),
+        positionId,
         "name",
         listener
         );
