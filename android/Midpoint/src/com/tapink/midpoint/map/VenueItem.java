@@ -11,7 +11,7 @@ import com.tapink.midpoint.util.GeoHelper;
 public class VenueItem extends OverlayItem {
 
   public static class Factory {
-
+    
     public static VenueItem VenueItemFromJSONObject(JSONObject json) {
       String name    = "Venue";
       String snippet = "Snippet";

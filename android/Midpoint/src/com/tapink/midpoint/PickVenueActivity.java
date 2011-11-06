@@ -1,5 +1,7 @@
 package com.tapink.midpoint;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +43,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private MapView mMapView;
   private VenueOverlay mVenueOverlay;
   private MyLocationOverlay me;
-  private JSONVenueAdapter mAdapter;
+  private VenueAdapter mAdapter;
   private Button mButton;
   
   private Event mEvent;
@@ -173,7 +175,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     int count = mAdapter.getCount();
 
     for (int i = 0; i < count; i++) {
-      JSONObject json = (JSONObject) mAdapter.getItem(i);
+      //JSONObject json = (JSONObject) mAdapter.getItem(i);
+      JSONObject json = ((Venue) mAdapter.getItem(i)).getJson();
       mVenueOverlay.addItem(
           VenueItem.Factory.VenueItemFromJSONObject(json)
       );
@@ -183,7 +186,28 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private void populateSampleData() {
     DummyDataHelper helper = new DummyDataHelper(mContext);
     JSONArray venues = helper.getSampleVenues();
-    JSONVenueAdapter adapter = new JSONVenueAdapter(venues);
+
+    //ArrayList<String> list = new ArrayList<String>();     
+    //ArrayList<JSONObject> list = new ArrayList<JSONObject>();     
+    ArrayList<Venue> list = new ArrayList<Venue>();     
+    if (venues != null) { 
+      for (int i=0;i<venues.length();i++){ 
+        //list.add(venues.get(i).toString());
+        try {
+          //list.add((JSONObject) venues.get(i));
+          Venue venue = new Venue((JSONObject) venues.get(i));
+          list.add(venue);
+        } catch (JSONException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      } 
+    } 
+
+    //VenueAdapter adapter = new VenueAdapter(venues);
+    Venue[] venueArray = new Venue[list.size()];
+    list.toArray(venueArray);
+    VenueAdapter adapter = new VenueAdapter(venueArray);
     mListView.setAdapter(adapter);
     mAdapter = adapter;
   }
