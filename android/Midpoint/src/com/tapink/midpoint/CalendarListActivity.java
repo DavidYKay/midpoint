@@ -199,10 +199,6 @@ public class CalendarListActivity extends Activity {
   // Calendar Queries
   ////////////////////////////////////////
 
-  private void readCalendar() {
-    readCalendar(System.currentTimeMillis());
-  }
-
   private Cursor getSystemCalendars() {
     Uri baseUri = mCalendarUri;
     Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
@@ -218,7 +214,15 @@ public class CalendarListActivity extends Activity {
     return cursor;
   }
 
-  private void readCalendar(long time) {
+  private void readCalendar() {
+    final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
+    readCalendar(
+        System.currentTimeMillis(),
+        preferences.getInt("calendar_id", 1)
+        );
+  }
+
+  private void readCalendar(long time, int calendarId) {
     Uri baseUri = mCalendarUri;
     Uri eventUri = baseUri.buildUpon().appendPath("events").build();
     Uri calendarsUri = baseUri.buildUpon().appendPath("calendars").build();
@@ -226,7 +230,7 @@ public class CalendarListActivity extends Activity {
     String[] eventProjection = new String[]{ "_id", "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" };
     String[] calendarsProjection = new String[]{ "_id", "name" };
 
-    int calendarId = 1; // Personal calendar
+    //int calendarId = 1; // Target calendar
 
     //int attendeeStatus = getAttendeeAccepted();
     int attendeeStatus = 1; // Yes?
@@ -440,10 +444,18 @@ public class CalendarListActivity extends Activity {
 
         // Update our preferences
 
+
         final SharedPreferences preferences = getPreferences(Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("calendar_id", item);
+        editor.putInt("calendar_id", (int) id);
         editor.commit();
+
+        // TODO: refresh
+        readCalendar();
+        //readCalendar(
+        //    System.currentTimeMillis(),
+        //    item
+        //    );
 
         dialog.dismiss();
       }
