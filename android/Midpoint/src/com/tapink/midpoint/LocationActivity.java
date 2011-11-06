@@ -219,12 +219,20 @@ public class LocationActivity extends MapActivity {
       avgLat /= count;
       avgLon /= count;
 
-      Location loc = new Location(GeoHelper.LOCATION_PROVIDER);
-      loc.setLongitude(avgLon);
-      loc.setLatitude(avgLat);
+      Location midpoint = new Location(GeoHelper.LOCATION_PROVIDER);
+      midpoint.setLongitude(avgLon);
+      midpoint.setLatitude(avgLat);
+
+      Location theirLoc = null;
+      if (addresses.length > 1) {
+        theirLoc = GeoHelper.addressToLocation(addresses[1]);
+      }
+
       navigateToVenuePicker(
-          loc
+          midpoint,
+          theirLoc
       );
+
       //navigateToVenuePicker();
     }
   }
@@ -264,8 +272,12 @@ public class LocationActivity extends MapActivity {
     task.execute(userLocation, theirLocation);
   }
 
-  private void navigateToVenuePicker(Location midpoint) {
+  private void navigateToVenuePicker(Location midpoint, Location theirLocation) {
     Intent i = new Intent(LocationActivity.this, PickVenueActivity.class);
+
+    if (theirLocation != null) {
+      i.putExtra("their_location", theirLocation);
+    }
 
     i.putExtra("midpoint", midpoint);
     i.putExtra("event", mEvent);

@@ -31,6 +31,7 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 import com.tapink.midpoint.calendar.Event;
 import com.tapink.midpoint.map.MidpointOverlay;
+import com.tapink.midpoint.map.TheirOverlay;
 import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.map.VenueItem;
 import com.tapink.midpoint.map.VenueOverlay;
@@ -47,6 +48,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
   private MapView mMapView;
   private VenueOverlay mVenueOverlay;
   private MidpointOverlay mMidpointOverlay;
+  private TheirOverlay mTheirOverlay;
   private MyLocationOverlay me;
 
   private VenueAdapter mAdapter;
@@ -91,22 +93,35 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     mVenueOverlay.setDelegate(this);
     mMapView.getOverlays().add(mVenueOverlay);
     
-    Drawable midpointMarker = this.getResources().getDrawable(R.drawable.midpoint_marker);
-    mMidpointOverlay = new MidpointOverlay(midpointMarker, mContext);
-    mMapView.getOverlays().add(mMidpointOverlay);
 
     Intent i = getIntent();
-    mEvent         = i.getParcelableExtra("event");
-    Location midpoint   = i.getParcelableExtra("midpoint");
-    String address = i.getStringExtra("address");
+    mEvent            = i.getParcelableExtra("event");
+    Location midpoint = i.getParcelableExtra("midpoint");
+    Location theirLocation = i.getParcelableExtra("their_location");
+    String address    = i.getStringExtra("address");
     
     Log.v(TAG, "Event: " + mEvent);
     Log.v(TAG, "Midpoint: " + midpoint);
     Log.v(TAG, "Address: " + address);
 
+    if (theirLocation != null) {
+      Drawable theirMarker = this.getResources().getDrawable(R.drawable.marker_inverse);
+      mTheirOverlay = new TheirOverlay(theirMarker, mContext);
+      mMapView.getOverlays().add(mTheirOverlay);
+      mTheirOverlay.addItem(
+          new OverlayItem(
+              GeoHelper.locationToGeoPoint(theirLocation),
+              "Their Location",
+              "Brett is here."
+              )
+          );
+    }
+
     if (midpoint != null) {
-      //mLocation = loc;
-      // Make a query using the location
+      Drawable midpointMarker = this.getResources().getDrawable(R.drawable.marker_grey);
+      mMidpointOverlay = new MidpointOverlay(midpointMarker, mContext);
+      mMapView.getOverlays().add(mMidpointOverlay);
+
       mMidpointOverlay.addItem(
           new OverlayItem(
               GeoHelper.locationToGeoPoint(midpoint),
@@ -114,6 +129,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
               "Halfway point"
               )
           );
+
+      // Make a query using the location
     } else if (address != null) {
       // Make a query using the address
 
