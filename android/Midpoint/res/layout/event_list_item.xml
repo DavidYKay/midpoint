@@ -11,16 +11,17 @@
     <ImageView
         android:id="@+id/icon"
         
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="19dip"
+        android:layout_height="wrap_content"
         
         android:layout_centerVertical="true"
         
         android:layout_alignParentRight="true"
         android:layout_marginLeft="6dip"
+        android:layout_marginRight="6dip"
         
         android:gravity="center"
-        
+        android:adjustViewBounds="true"
         android:src="@drawable/arrow" />   
      
      <TextView
@@ -36,7 +37,7 @@
         android:text="Sound the tumpits, this is the title"
         
         android:textSize="21dp"
-		android:textColor="#555555"
+		android:textColor="#111111"
 		android:shadowColor="#ffffffff"
 		android:shadowDx="0"
 		android:shadowDy="1"
