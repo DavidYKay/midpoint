@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,6 +24,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.tapink.midpoint.calendar.Attendee;
 import com.tapink.midpoint.calendar.Event;
+import com.tapink.midpoint.map.Venue;
 import com.tapink.midpoint.util.GeoHelper;
 import com.tapink.midpoint.util.TextHelper;
 
@@ -58,8 +61,31 @@ public class LocationActivity extends MapActivity {
     actionConfirmButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        findMidPointAndFinish();
-        //navigateToVenuePicker();
+        String theirInput = mMyLocation.getText().toString();
+        if (!TextHelper.isEmptyString(theirInput)) {
+          findMidPointAndFinish();
+        } else {
+          AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+          dialog.setTitle(R.string.their_location_missing);
+          dialog.setMessage(R.string.their_location_missing_explanation);
+
+          dialog.setNegativeButton(R.string.go_back, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+              // No need to do anything. Just dismiss the view.
+            }
+          });
+
+          dialog.setPositiveButton(R.string.run_solo, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              // Pass in our venue data.
+             
+            }
+          });
+
+          dialog.show();
+        }
       }
     });
 
@@ -244,6 +270,10 @@ public class LocationActivity extends MapActivity {
   ////////////////////////////////////////
   
   private void findMidPointAndFinish() {
+    findMidPointAndFinish(false);
+  }
+  
+  private void findMidPointAndFinish(boolean solo) {
     // If the user didn't enter anything:
     String userInput = mMyLocation.getText().toString();
 
@@ -260,14 +290,21 @@ public class LocationActivity extends MapActivity {
     }
 
     String theirLocation = null;
-    String theirInput = mTheirLocation.getText().toString();
-    if (!TextHelper.isEmptyString(theirInput)) {
-      theirLocation = theirInput;
+
+    if (solo) {
+
+      theirLocation = userLocation;
+
     } else {
-      //theirlocation = mLastKnownLocation;
-      //userLocation = 
-          //public static String locationToHumanReadable(GeoPoint geo) {
-          //i.putExtra("location", location);
+      String theirInput = mTheirLocation.getText().toString();
+      if (!TextHelper.isEmptyString(theirInput)) {
+        theirLocation = theirInput;
+      } else {
+        //theirlocation = mLastKnownLocation;
+        //userLocation = 
+        //public static String locationToHumanReadable(GeoPoint geo) {
+        //i.putExtra("location", location);
+      }
     }
     
     GeocodeTask task = new GeocodeTask();

@@ -78,10 +78,11 @@ public final class R {
         public static final int create_new_event=0x7f05000a;
         public static final int dk_dev_key=0x7f050001;
         public static final int go=0x7f05000d;
+        public static final int go_back=0x7f050018;
         public static final int hello=0x7f050003;
         /**  Hints 
          */
-        public static final int hint_keyword=0x7f050017;
+        public static final int hint_keyword=0x7f05001b;
         public static final int kennedy_dev_key=0x7f050002;
         public static final int list=0x7f05000b;
         public static final int location=0x7f05000c;
@@ -93,10 +94,15 @@ public final class R {
         public static final int pick_venue=0x7f050012;
         /**  Placeholders 
          */
-        public static final int placeholder_venue=0x7f050018;
+        public static final int placeholder_venue=0x7f05001c;
         public static final int push_me=0x7f050013;
+        public static final int run_solo=0x7f050017;
         public static final int settings=0x7f050016;
         public static final int their_location=0x7f050014;
+        /**  Long Form 
+         */
+        public static final int their_location_missing=0x7f050019;
+        public static final int their_location_missing_explanation=0x7f05001a;
         public static final int view_venue=0x7f050015;
     }
     public static final class style {

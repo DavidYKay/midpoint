@@ -24,6 +24,12 @@
   <string name="view_venue">View Venue</string>
   
   <string name="settings">Settings</string>
+  <string name="run_solo">Run Solo</string>
+  <string name="go_back">Go Back</string>
+  
+  <!-- Long Form -->
+  <string name="their_location_missing">Their Location Missing</string>
+  <string name="their_location_missing_explanation">You should enter two addresses so we can find the midpoint!</string>
   
   <!-- Hints -->
   <string name="hint_keyword">E.g. Tacos, Max\'s, drinks</string>
