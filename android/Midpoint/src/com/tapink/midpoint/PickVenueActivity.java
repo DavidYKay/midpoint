@@ -262,8 +262,8 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
       );
     }
   }
-  
-  
+
+
   private void populateSampleData() {
     DummyDataHelper helper = new DummyDataHelper(mContext);
     JSONArray venues = helper.getSampleVenues();
@@ -298,11 +298,14 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
     // TODO: Use real params
 
     ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-    if (!TextHelper.isEmptyString(query)) {
-      params.add(new BasicNameValuePair(
-          "q",
-          query));
+    if (TextHelper.isEmptyString(query)) {
+      query = "cafe";
     }
+
+    params.add(new BasicNameValuePair(
+        "q",
+        query));
+
     params.add(new BasicNameValuePair(
         "lat",
         Double.toString(
@@ -314,13 +317,13 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
             loc.getLongitude()
             )));
     params.add(new BasicNameValuePair(
-        "client_secret", 
+        "client_secret",
         getResources().getText(
             R.string.hyperpublic_client_secret
             ).toString()
         ));
     params.add(new BasicNameValuePair(
-        "client_id", 
+        "client_id",
         getResources().getText(
             R.string.hyperpublic_client_id
             ).toString()
@@ -718,7 +721,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
             java.security.cert.X509Certificate[] chain, String authType)
             throws java.security.cert.CertificateException {
           // TODO Auto-generated method stub
-          
+
         }
 
         @Override
@@ -726,7 +729,7 @@ public class PickVenueActivity extends MapActivity implements VenueOverlay.Deleg
             java.security.cert.X509Certificate[] chain, String authType)
             throws java.security.cert.CertificateException {
           // TODO Auto-generated method stub
-          
+
         }
       } };
 
