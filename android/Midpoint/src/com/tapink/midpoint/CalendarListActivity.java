@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -139,7 +140,7 @@ public class CalendarListActivity extends Activity {
     //filter.addAction(Intent.ACTION_DATE_CHANGED);
     //filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
     //registerReceiver(mIntentReceiver, filter);
-
+    
     mContentResolver.registerContentObserver(
         //Calendar.Events.CONTENT_URI,
         mCalendarUri,
@@ -432,6 +433,9 @@ public class CalendarListActivity extends Activity {
 
       // Kennedy, this is where you supply an XML file to base it on.
       View view = inflater.inflate(R.layout.event_list_item, null);
+      
+      final ImageView icon = (ImageView) view.findViewById(R.id.icon);
+      
 
       final TextView name = (TextView) view.findViewById(R.id.name);
       final TextView date = (TextView) view.findViewById(R.id.date);
